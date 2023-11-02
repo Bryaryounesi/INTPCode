@@ -1,3 +1,7 @@
+from cgi import print_arguments
+from csv import list_dialects
+
+
 print("hello world")
 name = "hasan"
 print(type(name))
@@ -62,3 +66,24 @@ print(status)
 print(f"I would walk  {500}  miles")
 price = 40
 print(f"glasses price: {price} dollar")
+
+vehicle = "airplane"
+vehicle = "train"
+vehicle = "bus"
+event = "movie"
+ticket_price = 50
+currency = "dollar"
+currency = "euro"
+print(f"{vehicle} ticket price: {ticket_price} {currency}")
+print(f"{event} ticket price: {ticket_price} {currency}")
+ticket_price = 30
+print(f"{event} ticket price: {ticket_price} {currency}")
+
+
+author= "agatha christi"
+description = f"a book by {author}"
+print(description)
+
+age = 18
+min_age = 16
+print(age >= min_age)
