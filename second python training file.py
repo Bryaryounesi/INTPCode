@@ -84,6 +84,14 @@ author= "agatha christi"
 description = f"a book by {author}"
 print(description)
 
-age = 18
-min_age = 16
-print(age >= min_age)
+age = 15
+legal_age = age >= 18
+print(age >= legal_age)
+if legal_age :
+    print("welcom")
+
+charge = 30
+low_charge = charge <= 20
+print(low_charge)
+if low_charge : 
+    print("battery is low")
