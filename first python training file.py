@@ -1,4 +1,5 @@
 greating = "hello world"
+print("-----------------lessson name : variables")
 print(greating)
 print("hello world")
 first_name= "Elizabeth"
@@ -48,6 +49,8 @@ print(total)
 print(total - private - 10)
 print("student:")
 print(private * 10)
+
+print("-------bool variable---------------")
 restart = True
 shutdown = False
 prevent_logout = False
