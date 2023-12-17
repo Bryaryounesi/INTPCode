@@ -1,7 +1,3 @@
-from cgi import print_arguments
-from csv import list_dialects
-
-
 print("hello world")
 name = "hasan"
 print(type(name))
