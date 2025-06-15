@@ -1,4 +1,13 @@
 {
     "python.analysis.typeCheckingMode": "off",
-    "python.analysis.autoImportCompletions": false
+    "python.analysis.autoImportCompletions": false,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "MySQLiteDB",
+            "database": "c:/Users/YourName/Desktop/mydb.sqlite"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
 }
