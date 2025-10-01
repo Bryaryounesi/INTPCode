@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv(r"e:\python\test-project\pandas_first_excercise\student1.csv", index_col="id")
+df = pd.read_csv(r"e:\python\test-project\pandas_first_excercise\student1.csv",index_col="id")
 """print(df.head())"""
 """print(df.info())"""
 """print(df.describe())"""
@@ -12,7 +12,7 @@ for x in ["name", "country"]:
 """print(df)"""
 # df.columns=["namha","keshwarha","sen","riyazi","zist","shimi"]
 # حذف نام ستون ایندکس
-df.index.name = None
+# df.index.name = None
 """print(df[df["sen"]>20])"""
 """print(df[["namha","sen"]])"""
 # print(df.sen)
@@ -29,8 +29,12 @@ df.index.name = None
 # print(df["math"].mean())
 # print()
 # print( df[df["biology"] == df["biology"].max()])
-print(
-    df[
-        (df["country"].str.contains("Ir")) | (df["math"] > 10 )
-        ]
-    )
+# print(df.iloc[-5:])
+# print(df.tail())
+# print(df.iloc[:5])
+# print(df.iloc[1:4])
+# print(df.loc[:5])
+# print(df.iloc[-5:])
+print(df.info())
+# df.reset_index(inplace=True)
+print(df)
