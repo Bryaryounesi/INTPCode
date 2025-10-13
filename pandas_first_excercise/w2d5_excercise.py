@@ -15,19 +15,18 @@ df.dropna(inplace=True)
 # p(df.query("country not in['Iran','Iraq'] and not age >40"))
 # p(df.query("not(age > 40 or math < 14)"))
 # p(df.query("not age >40 and not country == 'Iran'"))
-new_df = df.query("not age.between(20,40) ")
-# برای ذخیره شدن فیلترسازی یک متغیر جدید ساختیم
+df = df.query("not age.between(20,40) ")
+# p(df)
 
 # 4-داده ها را مرتب کن
-new_df.sort_values(by="age",inplace=True,ascending=False)
-# p(new_df)
+df.sort_values(by="age",inplace=True,ascending=False)
+p(df)
 
 # 5-نتایج آماری پایه را نمایش بده
 
-# p(new_df["age"].sum())
-# p(new_df[["age","math","chemistry"]].mean())
-p(new_df.agg({"math":["median","std","min"],
+# p(df["age"].sum())
+# p(df[["age","math","chemistry"]].mean())
+p(df.agg({"math":["median","std","min"],
                       "chemistry":["sum","max","mean"]}))
 # اعمال چند تابع آماری روی کل داتافریم به صورت یکجا
-# rmultidf = new_df.agg(["sum","min","max"])
-# p(rmultidf)
+p(df.agg(["sum","min","max"]))
