@@ -1,7 +1,7 @@
 # مرور تمام دستورات: انتخاب، فیلتر، مرتب‌سازی
 # 1.یک دیتاست را بخوان و  ستون‌های مهم را انتخاب کن
 import pandas as pd
-df = pd.read_csv(r"e:\python\test-project\pandas_first_excercise\student1.csv")
+df = pd.read_csv(r"e:\python\test-project\pandas\student1.csv")
 p = print
 # نمایش اسامی ستون ها
 # p(df.columns)

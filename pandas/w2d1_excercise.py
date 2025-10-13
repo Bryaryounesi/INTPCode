@@ -1,5 +1,5 @@
 import pandas as pd
-df= pd.read_csv(r"e:\python\test-project\pandas_first_excercise\student1.csv")
+df= pd.read_csv(r"e:\python\test-project\pandas\student1.csv")
 print(df.dtypes)
 p = print
 # 1 دسترسی به یک ستون
