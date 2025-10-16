@@ -16,7 +16,7 @@ print("✅ requests library imported successfully")
 
 # مثال پایه از درخواست GET
 print("Basic GET request example:")
-url = "https://rickandmorty.mimo.dev/api/character/1"
+url = "https://rickandmorty.dino.dev/api/character/1"
 response = requests.get(url)
 character_data = response.json()
 
@@ -33,7 +33,7 @@ print("-------------------------")
 print("=== HTTP Status Codes ===")
 
 # بررسی کد وضعیت با status_code
-url_pokemon = "https://pokedex.mimo.dev/api/pokemon/pikachu"
+url_pokemon = "https://pokedex.dino.dev/api/pokemon/pikachu"
 response_pokemon = requests.get(url_pokemon)
 
 print(f"Status Code: {response_pokemon.status_code}")
@@ -51,7 +51,7 @@ print("-------------------------")
 
 # تست با URL نامعتبر
 print("Testing with invalid URL:")
-url_invalid = "https://pokedex.mimo.dev/api/pokemon/invalid_pokemon"
+url_invalid = "https://pokedex.dino.dev/api/pokemon/invalid_pokemon"
 response_invalid = requests.get(url_invalid)
 
 print(f"Status Code for invalid request: {response_invalid.status_code}")
@@ -67,7 +67,7 @@ print("-------------------------")
 print("=== Using raise_for_status() ===")
 
 # روش بهتر برای مدیریت خطاها
-url_test = "https://pokedex.mimo.dev/api/pokemon/pikachu"
+url_test = "https://pokedex.dino.dev/api/pokemon/pikachu"
 
 try:
     response = requests.get(url_test)
@@ -89,9 +89,9 @@ print("=== Specific Error Handling ===")
 
 # مدیریت خطاهای مختلف به صورت اختصاصی
 test_urls = [
-    "https://pokedex.mimo.dev/api/pokemon/pikachu",  # معتبر
+    "https://pokedex.dino.dev/api/pokemon/pikachu",  # معتبر
     "https://invalid-domain-that-does-not-exist.com",  # دامنه نامعتبر
-    "https://pokedex.mimo.dev/api/pokemon/invalid_name",  # پوکمون ناموجود
+    "https://pokedex.dino.dev/api/pokemon/invalid_name",  # پوکمون ناموجود
     "http://httpbin.org/delay/5",  # تاخیر (برای تست timeout)
 ]
 
@@ -172,9 +172,9 @@ logging.basicConfig(
 
 # تست با logging
 test_cases = [
-    ("https://pokedex.mimo.dev/api/pokemon/pikachu", "Valid request"),
+    ("https://pokedex.dino.dev/api/pokemon/pikachu", "Valid request"),
     ("https://invalid-url-12345.com", "Invalid domain"),
-    ("https://pokedex.mimo.dev/api/pokemon/invalid_pokemon_123", "Invalid pokemon"),
+    ("https://pokedex.dino.dev/api/pokemon/invalid_pokemon_123", "Invalid pokemon"),
 ]
 
 for url, description in test_cases:
@@ -250,13 +250,13 @@ def make_http_request(url, method='GET', params=None, json_data=None, timeout=10
 print("Testing comprehensive function:")
 
 # تست درخواست موفق
-result1 = make_http_request("https://pokedex.mimo.dev/api/pokemon/pikachu")
+result1 = make_http_request("https://pokedex.dino.dev/api/pokemon/pikachu")
 print(f"Result 1 - Success: {result1['success']}")
 if result1['success']:
     print(f"Data: {result1['data']['name']}")
 
 # تست درخواست ناموفق
-result2 = make_http_request("https://pokedex.mimo.dev/api/pokemon/invalid_name")
+result2 = make_http_request("https://pokedex.dino.dev/api/pokemon/invalid_name")
 print(f"Result 2 - Success: {result2['success']}")
 if not result2['success']:
     print(f"Error: {result2['error']}")
@@ -271,7 +271,7 @@ print("=== Pokemon Information System ===")
 
 class PokemonAPI:
     def __init__(self):
-        self.base_url = "https://pokedex.mimo.dev/api/pokemon"
+        self.base_url = "https://pokedex.dino.dev/api/pokemon"
         self.timeout = 10
     
     def get_pokemon_info(self, pokemon_name):
@@ -366,7 +366,7 @@ with requests.Session() as session:
     responses = []
     for pokemon in ["pikachu", "charmander", "squirtle"]:
         try:
-            response = session.get(f"https://pokedex.mimo.dev/api/pokemon/{pokemon}", timeout=5)
+            response = session.get(f"https://pokedex.dino.dev/api/pokemon/{pokemon}", timeout=5)
             response.raise_for_status()
             responses.append(response.json()['name'])
         except requests.exceptions.RequestException as e:
@@ -413,7 +413,7 @@ def robust_request(url, retries=3, backoff_factor=0.5):
 
 # تست درخواست با قابلیت تکرار
 try:
-    data = robust_request("https://pokedex.mimo.dev/api/pokemon/pikachu")
+    data = robust_request("https://pokedex.dino.dev/api/pokemon/pikachu")
     print("✅ Robust request successful")
 except Exception as e:
     print(f"❌ All retries failed: {e}")
