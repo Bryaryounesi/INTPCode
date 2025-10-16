@@ -1,146 +1,312 @@
-print("Lesson: lists")
+# فایل ششم آموزش پایتون - عملیات لیست
+print("lesson: list operations")
+print("----------------------------")
+# min و max
+# ==============================
 
-todo = ["read" , "workout" , "code"]
-print(todo)
+# پیدا کردن بزرگترین و کوچکترین مقدار
+numbers = [12, 6, 5, 2, 7]
+print("List:", numbers)
+print("Max:", max(numbers))
+print("Min:", min(numbers))
 
-line = "--------------------------------"
-print(line)
+print("----------------------------")
 
-todo = []
-print(todo)
+# ذخیره min و max در متغیر
+max_list = max(numbers)
+min_list = min(numbers)
+print("Max + Min:", max_list + min_list)
 
-print("--------------------------------")
+print("----------------------------")
 
-active_users = ["fine"]
-print("active:")
-print(active_users)
+# استفاده عملی از max
+weekly_profits = [20, 59, 43, 76, 24, 60]
+max_profit = max(weekly_profits)
+print(f"max profit: {max_profit} usd")
 
-print("--------------------------------")
-characters = ["mario" , "luigi" , "bowser" , "peach" ]
-print(characters)
+print("----------------------------")
 
-print("--------------------------------")
-temperature = [ 20 , 16 , 12 , 30 , 19]
-print(temperature)
+# حلقه for روی لیست
+for profit in weekly_profits:
+    print(f"Profit: {profit}")
 
+print("----------------------------")
 
-print("--------------------------------")
+# ==============================
+# مرتب‌سازی لیست (sort)
+# ==============================
 
-print(temperature [1])
-temperature [2] = 5
-print(temperature)
+# مرتب‌سازی اعداد
+scores = [10, 9.25, 8, 4.5, 17, 11.75]
+print("Before sort:", scores)
+scores.sort()
+print("After sort:", scores)
 
-print("--------------------------------")
-top_speads = [100 , 120 , 200 , 240]
-print(top_speads [3])
-top_speads [3] = 250
-print(top_speads)
+print("----------------------------")
 
+# مرتب‌سازی اعداد منفی و مثبت
+temperature = [10, 4, -1, 7, -5, 16, 0]
+print("Before sort:", temperature)
+temperature.sort()
+print("After sort:", temperature)
 
-print("--------------------------------")
+print("----------------------------")
 
-users = ["jeremy" , "adam" , "Liza"]
-users.append("sara")
-print(users)
-print("--------------------------------")
+# مرتب‌سازی رشته‌ها
+names = ["cloe", "bill", "ana"]
+print("Before sort:", names)
+names.sort()
+print("After sort:", names)
 
-users.insert(2 , "Erik") 
-print(users)
+print("----------------------------")
 
-print("--------------------------------")
-fruits = ["apple" , "orange" , "banana"] 
-fruits.insert(1 , "coconut") 
-print(fruits)
-fruits.append("watermelon")
-print(fruits)
-fruits[2] = "ananas"
-print(fruits)
+# مرتب‌سازی حروف
+grades = ["A", "C", "F", "B", "G"]
+print("Before sort:", grades)
+grades.sort()
+print("After sort:", grades)
 
-print("--------------------------------")
-fruits.pop()
-print(fruits)
-fruits.pop(2)
-print(fruits)
-print("--------------------------------")
-remove = fruits.pop(2)
-print(remove)
+print("----------------------------")
 
-print("--------------------------------")
-first = "John"
-second = "Joseph"
-third = "Donnie"
-winners = [first, second, third]
+# مرتب‌سازی اعداد اعشاری
+oxygen_level = [19.99, 21.2, 20.85]
+print("Before sort:", oxygen_level)
+oxygen_level.sort()
+print("After sort:", oxygen_level)
 
-print(winners[2])
-print("--------------------------------")
-flavors = ["vanilla" , "chocolate" , "pistachio"]
-flavors [2] = "strawberry"
-print(flavors)
-print("--------------------------------")
-quiz_answer = [False , False , True , False]
-quiz_answer.pop()
-print(quiz_answer)
+print("----------------------------")
 
-print("--------------------------------")
-list = [1, 2 , 3 , 4 , 6 , 8 , 10 ]
-for i in list :
-     print (i)
-print("--------------------------------") 
-artists = ["chagall" , "lissitzky"]
-for artist in artists :
-    print(artist)
-    print("---------")
-print("--------------------------------") 
- 
-items = ["milk" , "tomato" , "apple"]
-for item in items:
-     print(item)
-     print("-------")
-print("--------------------------------")
-suplies = ["pencil" , "book"] 
-for value in suplies :
-    print(value)
-    
-print("--------------------------------") 
-data_points = [99 , 99 , 99 , 99 , 99]  
-for data in data_points :
-    print(data + 1)   
-print("--------------------------------") 
-minutes_worked = [123, 100, 99, 67]
+# ==============================
+# جمع‌زدن لیست (sum)
+# ==============================
 
-for minutes in minutes_worked:
-  print(minutes - 60)    
-print("--------------------------------")  
-print(len(data_points))
-print("--------------------------------")  
-if len(data_points) > 2 :
-    print("very good")
-print("--------------------------------")  
-ingredients = ["cafee" , "lemon" , "cream" ]    
-if len(ingredients) > 2 :
-    print("bring a bag")  
-print("--------------------------------") 
-update_version = [1.2 , 3.5 , 2] 
-for version in update_version : 
-    print(version + 1) 
-print("--------------------------------") 
-sodas = ["fanta" , "cocacola" + "pepsi"]  
-if len(sodas) >= 2 :
-    print("to much soda") 
-print("--------------------------------") 
-condidates = ["mishaeel"]  
-condidates_number = len(condidates)   
-if condidates_number < 2 :
-    print("one condidate needs opposition ")  
-print("--------------------------------")
-meals = ["omelet" , "salad" , "chicken"]
-print(f"breakfast menu: {meals[0]}")
-print(f"Lunch menu: {meals[1]}")
-meals[2] = "pizza"
-print(f"Dinner menu: {meals[2]}")
-print("--------------buying list------------------") 
+# جمع ساده لیست
+signups = [12, 30, 40, 10, 4, 8]
+print("List:", signups)
+print("Sum:", sum(signups))
 
-shopping_list = ["dish soap", "kleenex", "batteries", "aluminum foil", "pet food", "toothpaste", "lightbulbs"]
+# ذخیره sum در متغیر
+sumation = sum(signups)
+print("Sum stored in variable:", sumation)
 
-for shopping in shopping_list:
- print(f"Don't forget to buy {shopping}")
+print("----------------------------")
+
+# min روی لیست با اعداد تکراری
+coordinates = [0, 0, 0]
+print("Coordinates:", coordinates)
+print("Min coordinate:", min(coordinates))
+
+print("----------------------------")
+
+# ==============================
+# الحاق لیست‌ها (+)
+# ==============================
+
+# الحاق لیست‌های عددی
+database_1 = [1, 2, 3]
+database_2 = [4, 5]
+print("Database 1:", database_1)
+print("Database 2:", database_2)
+print("Combined:", database_1 + database_2)
+
+print("----------------------------")
+
+# الحاق لیست‌های مختلف
+seats = [1, 2, 3]
+taken = [True, True, False]
+print("Seats:", seats)
+print("Taken status:", taken)
+print("Combined:", seats + taken)
+
+print("----------------------------")
+
+# ذخیره لیست الحاق شده
+combine = database_1 + database_2
+print("Stored combination:", combine)
+
+print("----------------------------")
+
+# الحاق لیست‌های مشتریان و سفارشات
+consumers = ["jess", "mike", "lyne"]
+order_numbers = [3, 2, 1]
+print("Consumers:", consumers)
+print("Order numbers:", order_numbers)
+print("Combined:", consumers + order_numbers)
+
+print("----------------------------")
+
+# الحاق لیست‌های تیم‌ها
+team_1 = ["ana", 78, "kim", 25, "rose", 40]
+team_2 = ["jerry", 24, "henry", 28]
+print("Team 1:", team_1)
+print("Team 2:", team_2)
+print("Combined teams:", team_1 + team_2)
+
+print("----------------------------")
+
+# الحاق لیست‌های روزانه
+day_1 = [3.5, 2, 4]
+day_2 = [1, 2]
+overview = day_1 + day_2
+print("Day 1:", day_1)
+print("Day 2:", day_2)
+print("Overview:", overview)
+
+print("----------------------------")
+
+# ==============================
+# شمارش المنت‌ها (count)
+# ==============================
+
+# شمارش رشته‌ها
+answers = ["yes", "no", "sometimes", "yes", "no"]
+print("Answers:", answers)
+print("Count of 'yes':", answers.count("yes"))
+
+print("----------------------------")
+
+# شمارم مقادیر boolean
+free_seats = [True, False, True, True, False]
+print("Free seats:", free_seats)
+print("Count of True:", free_seats.count(True))
+
+print("----------------------------")
+
+# ذخیره count در متغیر
+seats_count = free_seats.count(True)
+print("Seats count stored:", seats_count)
+
+print("----------------------------")
+
+# شمارش در لیست ماموریت‌ها
+missions = ["mars", "moon", "mars", "ISS"]
+print("Missions:", missions)
+print("Count of 'mars':", missions.count("mars"))
+
+print("----------------------------")
+
+# شمارش طعم‌ها
+flavors = ["vanilla", "chocolate", "strawberry", "vanilla", "vanilla"]
+print("Flavors:", flavors)
+print("Count of 'vanilla':", flavors.count("vanilla"))
+
+print("----------------------------")
+
+# شمارش کدها
+code = [0, 3, 2, 0, 1, 0]
+print("Code:", code)
+print("Count of 0:", code.count(0))
+
+print("----------------------------")
+
+# ==============================
+# بررسی وجود المنت (in)
+# ==============================
+
+# بررسی وجود در لیست مواد
+ingredients = ["milk", "suger", "eggs", "flour", "butter"]
+print("Ingredients:", ingredients)
+print("'suger' in ingredients:", "suger" in ingredients)
+
+print("----------------------------")
+
+# ذخیره نتیجه in در متغیر
+has_suger = "suger" in ingredients
+print("Has suger stored:", has_suger)
+
+print("----------------------------")
+
+# بررسی در لیست اعداد برنده
+winning_numbers = [2, 36, 40, 13]
+print("Winning numbers:", winning_numbers)
+print("13 in winning_numbers:", 13 in winning_numbers)
+print("20 in winning_numbers:", 20 in winning_numbers)
+
+has_21 = 21 in winning_numbers
+print("Has 21 stored:", has_21)
+
+print("----------------------------")
+
+# بررسی در برنامه زمانبندی
+schedule = ["ballet", "swimming", "running", "ballet"]
+print("Schedule:", schedule)
+print("'ballet' in schedule:", "ballet" in schedule)
+print("'running' in schedule:", "running" in schedule)
+print("'going' in schedule:", "going" in schedule)
+
+print("----------------------------")
+
+# ==============================
+# مثال‌های ترکیبی و کاربردی
+# ==============================
+
+# الحاق لیست دانش‌آموزان
+students_1 = ["Anna", 16, "Kim", 16]
+students_2 = ["Joe", 17, "Lee", 15]
+print("Students 1:", students_1)
+print("Students 2:", students_2)
+print("All students:", students_1 + students_2)
+
+print("----------------------------")
+
+# سیستم سفارشات
+customers = ["Jess", "Mike", "Lynn"]
+order_numbers = [3, 1, 2]
+orders = customers + order_numbers
+print("Customers:", customers)
+print("Order numbers:", order_numbers)
+print("Orders list:", orders)
+
+print("----------------------------")
+
+# محاسبه میانگین
+savings = [220, 50, 1000, 70]
+total = sum(savings)
+number = len(savings)
+average = total / number
+print("Savings:", savings)
+print("Total savings:", total)
+print("Number of entries:", number)
+print("Average savings:", average)
+
+print("----------------------------")
+
+# استفاده از in در شرط
+savings_check = [220, 50, 1000, 70]
+if 50 in savings_check:
+    print("Good luck! Found 50 in savings")
+
+print("----------------------------")
+
+# ترکیب عملیات مختلف
+data = [15, 3, 8, 20, 3, 8]
+print("Data:", data)
+print("Max:", max(data))
+print("Min:", min(data))
+print("Sum:", sum(data))
+print("Count of 3:", data.count(3))
+print("Sorted:", sorted(data))  # بدون تغییر لیست اصلی
+
+print("----------------------------")
+
+# سیستم موجودی کالا
+inventory = [10, 5, 8, 3, 15]
+print("Inventory:", inventory)
+print("Max stock:", max(inventory))
+print("Min stock:", min(inventory))
+print("Total items:", sum(inventory))
+if min(inventory) < 5:
+    print("Warning: Low stock alert!")
+
+print("----------------------------")
+
+# سیستم نمرات
+grades_list = [85, 92, 78, 90, 65]
+print("Grades:", grades_list)
+print("Highest grade:", max(grades_list))
+print("Lowest grade:", min(grades_list))
+print("Average grade:", sum(grades_list) / len(grades_list))
+grades_list.sort()
+print("Sorted grades:", grades_list)
+
+print("End of list operations training")
