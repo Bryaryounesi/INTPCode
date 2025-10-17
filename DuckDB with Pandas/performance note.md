@@ -1,1 +1,1 @@
-.
+This comparative analysis between DuckDB and Pandas reveals distinct performance characteristics: DuckDB excels at processing medium to large datasets using SQL, particularly for complex aggregations and joins, while Pandas remains superior for in-memory data manipulation and rapid prototyping on smaller datasets. The implementation highlights the importance of maintaining raw SQL proficiency through DuckDB's execution engine, providing a valuable benchmark for selecting appropriate data processing tools based on specific use cases and dataset sizes.
