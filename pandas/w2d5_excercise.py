@@ -1,6 +1,6 @@
 import pandas as pd
 # 1- یک داتاست واقعی بخون
-df = pd.read_csv(r"e:\python\test-project\pandas\student1.csv",index_col="id")
+df = pd.read_csv(r"e:\python\INTPCode\pandas\student1.csv",index_col="id")
 p = print
 df.dropna(inplace=True)
 # 2- ستون ها و ردیف ها رو انتخاب کن

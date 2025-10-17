@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv(r"e:\python\test-project\pandas\student1.csv",index_col="id")
+df = pd.read_csv(r"e:\python\INTPCode\pandas\student1.csv",index_col="id")
 """print(df.head())"""
 """print(df.info())"""
 """print(df.describe())"""
