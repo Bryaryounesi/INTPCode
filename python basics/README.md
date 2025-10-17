@@ -1,2 +1,2 @@
-# test-project
- just for test
+# INTPCode
+A personal journey from python coding to Ai programming
