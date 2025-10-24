@@ -60,7 +60,11 @@ with pd.ExcelWriter(expath,mode='a',if_sheet_exists= "new") as writer:
 expath
 mode = "a"
 if_sheet_exists= "new"بهتر /"replace"/"error"
+<<<<<<< HEAD
 ---------------------------------------------
+=======
+-----------------------------------------------
+>>>>>>> ab5b65cf5fd723b2f0146f5cc9e75175ee066783
 pd.concat
 شکل رایج
 dfall = pd.concat([df1,df2,...],ignore_index=True)
@@ -69,6 +73,7 @@ objs = [,] / (,)
 ignore_index = False بهتر/ پیشفرض True 
 axis = پیش فرض 0 / 1
 
+<<<<<<< HEAD
 ----------------------------------
 pd.merge()
 شکل رایج
@@ -82,5 +87,25 @@ on = نام ستون" یا ["ستون های مشترک"] بین دو"داتاف
 left_on= نام متفاوت ستون مشترک در داتافریم چپ
 right_on = نام متفاوت ستون مشترک در داتافریم راست 
 
-'''
 
+
+=======
+-----------------------------------------------
+pd.merge
+شکل رایج 
+
+df = pd.merge(L,R, how='inner', on='col_name')
+left	 = سمت چپ df
+right	 =  سمت راست df 
+
+how	 = نوع join ('inner', 'left', 'right', 'outer')
+
+on	 = نام ستون مشترک بین دو df
+
+left_on	= 
+اگر نام ستون در df سمت چپ متفاوت باشد
+
+right_on	= 
+اگر نام ستون در df  سمت راست متفاوت باشد
+'''
+>>>>>>> ab5b65cf5fd723b2f0146f5cc9e75175ee066783
