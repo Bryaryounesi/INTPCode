@@ -35,7 +35,7 @@ df2 = pd.read_excel(path,sheet_name=1)
 -path = r"مسیر فایل"
 -sheet_name = "names"/Noneبهتر/پیشفرض 0 
 
-- use_cols = حالت ها در بالا توضیح داده شده اند
+- usecols = حالت ها در بالا توضیح داده شده اند
 - nrows = عدد
 - index_col = "column_name"/ None پیش فرض 
 
@@ -60,7 +60,7 @@ with pd.ExcelWriter(expath,mode='a',if_sheet_exists= "new") as writer:
 expath
 mode = "a"
 if_sheet_exists= "new"بهتر /"replace"/"error"
-----------------------------------------------------------
+---------------------------------------------
 pd.concat
 شکل رایج
 dfall = pd.concat([df1,df2,...],ignore_index=True)
@@ -68,4 +68,19 @@ dfall = pd.concat([df1,df2,...],ignore_index=True)
 objs = [,] / (,)
 ignore_index = False بهتر/ پیشفرض True 
 axis = پیش فرض 0 / 1
+
+----------------------------------
+pd.merge()
+شکل رایج
+dfm = pd.merge(L,R,how = "joinType",on="colname")
+
+L & R = داتافریم های چپ و راست
+نوشتن خود این دو حرف لازم نیست فقط نام داتافریم ها را بنویس
+how = "outer" بهتر/"inner"/"right"/"left"
+on = نام ستون" یا ["ستون های مشترک"] بین دو"داتافریم
+
+left_on= نام متفاوت ستون مشترک در داتافریم چپ
+right_on = نام متفاوت ستون مشترک در داتافریم راست 
+
 '''
+
