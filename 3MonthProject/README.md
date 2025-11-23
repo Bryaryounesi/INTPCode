@@ -1,93 +1,149 @@
-# INTPCode - Pandas Practice
+INTPCode – Data Analysis & ML Preparation Practice
 
-## Overview
-This repository contains my 3-month Pandas practice journey, designed to build a strong foundation in data manipulation, analysis, and preparation for machine learning. The exercises combine conceptual learning with hands-on practice on datasets.
+Overview
 
----
+This repository contains my 3-month journey in data analysis and machine-learning preparation. The project goes beyond Pandas and includes NumPy, Matplotlib, preprocessing techniques, and practical workflows for preparing datasets for future ML models. The exercises combine conceptual learning with hands-on practice on real datasets.
 
-## Three-Month Learning Goals
-- Master reading and preparing datasets using Pandas
-- Perform data cleaning and preprocessing
-- Analyze and visualize data with Matplotlib and NumPy
-- Prepare datasets for future machine learning projects
-- Build small practical projects to apply learned concepts
+Three-Month Learning Goals
 
----
+Master reading and preparing datasets using Python data tools
 
-## Folder Structure
-- A folder for daily exercises and practice scripts
-- README.md : This file describing the overall project
-- Future updates will include mini-projects, exercises, and analysis notebooks
+Perform data cleaning and preprocessing
 
----
+Analyze, transform, and visualize data with NumPy and Matplotlib
 
-## Month 1: Getting Started with Pandas (Weeks 1–4)
-**Goal:** Learn to read and prepare data for small projects
+Prepare datasets for future machine learning projects
 
-- **Week 1**
-  - Introduction to Pandas: Series and DataFrame
-  - Reading CSV files
-  - Inspecting and exploring data
+Build small practical projects to apply learned concepts
 
-- **Week 2**
-  - Selecting rows and columns
-  - Filtering data with conditions
-  - Sorting and limiting results
 
-- **Week 3**
-  - Reading and writing Excel files
-  - Combining datasets
-  - Handling missing values
+Folder Structure
 
-- **Week 4**
-  - Mini project: Analyze a small dataset
-  - Example: Summarizing data, creating simple charts
+A folder for daily exercises and practice scripts
+
+README.md: This file describing the overall project
+
+Future updates will include mini-projects, exercises, and analysis notebooks
+
+
 
 ---
 
-## Month 2: Basic Math and Data Analysis (Weeks 5–8)
-**Goal:** Prepare for learning machine learning
+Month 1: Getting Started with Data Tools (Weeks 1–4)
 
-- **Week 5**
-  - Basic linear algebra: vectors, matrices, matrix multiplication
-  - Hands-on practice with NumPy
+Goal: Learn to read, inspect, and prepare data for small projects
 
-- **Week 6**
-  - Numerical computations and basic NumPy functions
-  - Data visualization: line plots, histograms, scatter plots
+Week 1
 
-- **Week 7**
-  - Basic probability and statistics: mean, variance, distributions
-  - Practical exercises with NumPy and Pandas
+Introduction to data structures: Series and DataFrame
 
-- **Week 8**
-  - Mini project: Analyze a real dataset
-  - Example: Data distribution, visualization, checking missing values
+Reading CSV files
 
----
+Inspecting and exploring data
 
-## Month 3: Data Preprocessing and ML Preparation (Weeks 9–12)
-**Goal:** Prepare datasets for machine learning
 
-- **Week 9**
-  - Advanced data cleaning
-  - Normalization and standardization
-  - Handling categorical features (One-hot encoding)
+Week 2
 
-- **Week 10**
-  - Mini project: Prepare a real dataset for model training
-  - Example: Titanic or Iris dataset
+Selecting rows and columns
 
-- **Week 11**
-  - Inspect and prepare inputs for models
-  - Convert datasets to arrays or tensors for future machine learning
+Filtering data with conditions
 
-- **Week 12**
-  - Final mini project: Data-focused project
-  - Example: Analysis, preparation, and visualization without modeling
+Sorting and limiting results
+
+
+Week 3
+
+Reading and writing Excel files
+
+Combining datasets
+
+Handling missing values
+
+
+Week 4
+
+Mini-project: Analyze a small dataset
+
+Example: Summarizing data, creating simple charts
+
+
 
 ---
 
-## How to Run Exercises
-- Each exercise is implemented in a Python script
-- Run your scripts using Python in your local environment
+Month 2: Basic Math and Data Analysis (Weeks 5–8)
+
+Goal: Build mathematical foundations and analysis skills for ML
+
+Week 5
+
+Basic linear algebra: vectors, matrices, matrix multiplication
+
+Hands-on practice with NumPy
+
+
+Week 6
+
+Numerical computations and fundamental NumPy functions
+
+Data visualization: line plots, histograms, scatter plots
+
+
+Week 7
+
+Basic probability and statistics: mean, variance, distributions
+
+Practical exercises with NumPy and dataframes
+
+
+Week 8
+
+Mini-project: Analyze a real dataset
+
+Example: Data distribution, visualization, checking missing values
+
+
+
+---
+
+Month 3: Data Preprocessing and ML Preparation (Weeks 9–12)
+
+Goal: Prepare datasets for machine learning workflows
+
+Week 9
+
+Advanced data cleaning
+
+Normalization and standardization
+
+Handling categorical features (one-hot encoding)
+
+
+Week 10
+
+Mini-project: Prepare a real dataset for model training
+
+Example: Titanic or Iris dataset
+
+
+Week 11
+
+Inspect and prepare inputs for ML models
+
+Convert datasets to arrays or tensors for future machine-learning tasks
+
+
+Week 12
+
+Final mini-project: Data-focused project
+
+Example: Analysis, preparation, and visualization without modeling
+
+
+
+---
+
+How to Run Exercises
+
+Each exercise is implemented in a Python script
+
+Run scripts using Python in your local environment
