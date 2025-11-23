@@ -16,6 +16,7 @@ m2= np.random.randint(-8,28,size=(2,2))
 # انجام هر دو مرحله بالا در قالب یک شرط
 if m1.shape[1]== m2.shape[0]:
     c=m1@m2
+    # c=np.dot(m1,m2)
     p("matrix multiplication:",c)
 else:
     p("Two matrix was not matched")    
