@@ -6,6 +6,7 @@
 import numpy as np
 import random
 np.random.seed(1)
+random.seed(1)
 p=print
 m1= np.random.randint(-5,25,size=(2,2))
 m2= np.random.randint(-8,28,size=(2,2))

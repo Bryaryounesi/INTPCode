@@ -6,6 +6,7 @@
 import numpy as np
 import random
 np.random.seed(3)
+random.seed(3)
 p=print
 m=np.random.randint(-7,9,size=(3,3))
 p("matrix:",m)
