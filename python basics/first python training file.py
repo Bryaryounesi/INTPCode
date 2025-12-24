@@ -1,99 +1,87 @@
-# مثال‌های متغیرها (Variables)
-# ==============================
+# Variables - متغیرها
+# ============================================
+# 🔥 ضروری برای اتوماسیون
+# این متغیرها پایه هر اسکریپت هستند: ذخیره داده‌ها و وضعیت‌ها
+car = "porsche"        # استفاده در مثال‌های ذخیره و نمایش
+city = "miami"          # استفاده برای مسیر فایل/API
 
-# ذخیره مقدار رشته در متغیر
-Car_1 = "porsche"
-City = "miami"
+greeting = "hello world"  # پیام اولیه
+name = "Daenerys"         # نمونه نام کاربر
 
-# متغیرهای شخصی شما
-greating = "hello world"
-first_name = "Elizabeth"
-last_name = "tailor"
-name = "Elizabeth tailor"
-city = "las vegas"
-person_name = "Elizabeth tailor"
-city_name = "Washington DC"
-sport = "B-ball"
-frequency = "daily"
-job = "sherif"
+# ⚠️ غیرضروری / آموزشی / تکراری
+greating = "hello world"   # ⚠️ اشتباه تایپی
+first_name = "Elizabeth"   # ⚠️ تکراری
+last_name = "tailor"       # ⚠️
+name = "Elizabeth tailor"  # ⚠️
+city = "las vegas"         # ⚠️
+person_name = "Elizabeth tailor"  # ⚠️
+city_name = "Washington DC"       # ⚠️
+sport = "B-ball"                  # ⚠️
+frequency = "daily"               # ⚠️
+job = "sherif"                    # ⚠️
 
-# ==============================
-# مثال‌های دستور print()
-# ==============================
+# ============================================
+# Print - چاپ خروجی
+# ============================================
+# 🔥 ضروری برای اتوماسیون
+# نمایش نتایج و وضعیت برنامه
+print(greeting)
+print(name)
+print(city)
 
-# چاپ مستقیم رشته
+# ⚠️ غیرضروری / آموزشی
 print("3 , 2 , 1")
 print("go")
 print("hello world")
-print("have a delicious time")
 print("bye")
-
-# چاپ مقدار یک متغیر
-greeting = "hello world"
-name = "daenerys"
-print(name)
-print(greating)
 print(person_name)
 print(city_name)
 print(sport)
 print(frequency)
 
-# ==============================
-# چاپ با فرمت concatenation
-# ==============================
-
+# ============================================
+# String concatenation - الحاق رشته‌ها
+# ============================================
+# 🔥 ضروری → پیام‌ها، گزارش، درخواست API
+job = "artist"
+likes = "20"
 print("job:" + job)
+print("likes:" + likes)
+
+# ⚠️ غیرضروری / تکراری
 print("sport:" + sport)
 print("name:" + person_name)
 print("city:" + city_name)
 print("singer:" + person_name)
-print("job:" + "artist")
-
 label = "name:" + "joe"
 print(label)
 
-likes = "20"
-print("likes:" + likes)
-
-# ==============================
-# مثال‌های آپدیت متغیرها
-# ==============================
-
-# تغییر مقدار متغیر
-status = "whatching HBO"
+# ============================================
+# Update variables - به‌روزرسانی مقادیر
+# ============================================
+# 🔥 ضروری → تغییر وضعیت‌ها در اتوماسیون
+status = "watching HBO"
 status = "relaxing in bed"
 print(status)
 
-# انتساب مقدار یک متغیر به متغیر دیگر
+# ⚠️ غیرضروری / تمرینی
 default_option = "upload"
 new_status = "download"
 new_status = default_option
 print(new_status)
 
-# مثال دیگر برای تغییر مقدار متغیر
 temperature = "0 degree"
 temperature = "100 degree"
 print(temperature)
 
-# ==============================
-# مثال‌های اعداد و محاسبات
-# ==============================
-
-# متغیرهای عددی و محاسبات
+# ============================================
+# Numeric operations - محاسبات عددی
+# ============================================
+# 🔥 ضروری → محاسبات، شمارش، آمار، پردازش داده‌ها
 ticket = 200
 ticket2 = ticket * 10
 print(ticket2)
 
-# عملیات ریاضی با چند متغیر
-private = 32
-public = 10 - 5
-total = public + private
-print(total)
-print(total - private - 10)
-print("student:")
-print(private * 10)
-
-# عملیات ریاضی در فایل اصلی
 active_users = 5
 print(active_users + 1)
 active_users = 5 + 1
@@ -102,88 +90,61 @@ print(active_users)
 percent = 0.5 * 100
 print(percent)
 
+# ⚠️ غیرضروری / تمرینی
+private = 32
+public = 10 - 5
+total = public + private
+print(total)
+print(total - private - 10)
+print("student:")
+print(private * 10)
 private_old = 56
 public_old = 30
 total_old = private_old + public_old
 print(total_old)
 print(private_old - public_old)
 
-# ==============================
-# عملیات روی رشته‌ها
-# ==============================
-
-ticket = "1000"
-print(ticket)
-
-ticket_3 = "baba"
-ticket_4 = ticket_3 * 10
-test = city_name * 10
-print(ticket_4)
-print(test)
-
-# ==============================
-# نمایش دما و واحدها
-# ==============================
-
-tempreture = "15"
-print(tempreture)
-print("tempreture:" + tempreture + " degrees")
-print(tempreture + " degrees")
-
-# ==============================
-# مثال‌های Boolean و عملگر not
-# ==============================
-
-print("-------bool variable---------------")
+# ============================================
+# Boolean & NOT - بولین و نقیض
+# ============================================
+# 🔥 ضروری → شرط‌ها و کنترل وضعیت‌ها
 restart = True
-shutdown = False
-prevent_logout = False
-print(shutdown)
 print(not restart)
-print(prevent_logout)
-print(not True)
-print(not False)
-print(restart)
-print(not restart)
+
+is_open = True
+is_closed = not is_open
+print(is_closed)
 
 available = True
 print(not available)
 unavailable = not available
 print(unavailable)
 
-# مقادیر boolean از فایل اصلی
-powered_on = True
-print(powered_on)
-
-# نفی مستقیم مقدار
-print(not False)
-
-# نفی مقدار یک متغیر
-open = True
-close = not open
-print(close)
-
-# نفی در هنگام چاپ
-open = True
-print(not open)
-
-# مثال دیگر از نفی
 morning = True
 evening = not morning
 print(evening)
 
-# ==============================
-# مثال‌های عملگرهای مقایسه‌ای
-# ==============================
+# ⚠️ غیرضروری / تمرینی
+shutdown = False
+prevent_logout = False
+print(shutdown)
+print(not True)
+print(not False)
+print(restart)
+print(not restart)
+powered_on = True
+print(powered_on)
+print(not False)
+open = True
+print(not open)
 
-# عملگر برابری
-print(10 == 9)  # از یادداشت شما
-print(10 == 10)  # از فایل اصلی
-print(10 == 9)   # از فایل اصلی
-
-# مقایسه با متغیرها
+# ============================================
+# Comparisons - مقایسه‌ها
+# ============================================
+# 🔥 ضروری → تصمیم‌گیری در اتوماسیون
 entered_pin = 5448
 expected_pin = 5440
+print(entered_pin == expected_pin)
 
 one = 1
 two = 2
@@ -198,66 +159,53 @@ level = 10
 highest_level = 50
 print(level == highest_level)
 
-# عملگر نابرابری
-print(1 != 10)  # از فایل اصلی
-
+print(1 != 10)
 result = 1 != 10
 print(result)
-
-one = 1
-two = 2
 print(one != two)
 
-# ==============================
-# مثال‌های f-strings
-# ==============================
+# ⚠️ غیرضروری / آموزشی
+print(10 == 9)
+print(10 == 10)
+print(10 == 9)
 
-# f-string با مقدار مستقیم
-print(f"{2} new message")
-print(f"{3} friends")
-
-# f-string با متغیر
+# ============================================
+# f-strings - فرمت مدرن رشته‌ها
+# ============================================
+# 🔥 ضروری → گزارش، پیام، نمایش اطلاعات پویا
 new_message = 4
 print(f"{new_message} new messages")
 
-# f-string با عملیات ریاضی
+degree = 70
+print(f"temperature: {degree} F")
+
 new = 5
 read = 2
 print(f"{new - read} unread messages")
 
-# f-string با چندین متغیر
+# ⚠️ غیرضروری / تمرینی
+print(f"{2} new message")
+print(f"{3} friends")
 print(f"{3} new messages and {5} friend requests")
-
-# f-string با فرمول پیچیده‌تر
 x = 2
 y = 5
 t = f"{x/2} + {y/2}"
 print(t)
-
-# مثال‌های دیگر f-string
-degree = 70
-print(f"temperature: {degree} F")
-
 movie = "vertigo"
 display = f"airing tonight: {movie}"
 print(display)
 
-# ==============================
-# مثال‌های عبارت‌ها (Expressions)
-# ==============================
-
-# الحاق رشته‌ها با عملگر +
-print("folower :" + "55")
-
+# ============================================
+# Expressions - ترکیب‌ها و مثال‌ها
+# ============================================
+# ♻️ میان‌رده → فهم ساختار رشته‌ها و داده‌ها
 user = "snopdoge"
 print("username:" + user)
 
 temperature = "45"
 print("temperature:" + temperature + "degree")
 
-# الحاق رشته‌ها بدون فاصله
+# ⚠️ غیرضروری / تمرینی
+print("folower :" + "55")
 print("John" + "athan")
-
-title = "Ms."
-name = "Irene"
-print(title + name)
+print("Ms." + "Irene")
