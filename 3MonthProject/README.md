@@ -1,4 +1,4 @@
-# CV-Foundations: Data Skills for Computer Vision
+# 3monthproject: Data Skills for Computer Vision
 
 ## Project Path Explanation
 
