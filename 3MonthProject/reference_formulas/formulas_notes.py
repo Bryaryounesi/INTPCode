@@ -427,6 +427,78 @@ plt.tight.layout()
 # تابع تای لایوت در پایان و بعد از همه ساب پلات ها درج میشود
 # تا مانع تداخل اجزای نمودارها با هم شده و بین آنها فاصله بدهد
 --------------------------
+--------------------------
+جایگزین سه تابع 
+❌plt.figure()
+❌plt.subplot()
+❌plt.tight_layout()
+
+دیگر از سه تابع بالا استفاده نشود و 
+ به جای آن از تابع زیر
+استفاده شود که کار هر سه را یکجا و مدرن تر انجام میدهد. (هم در رسم (نمودار از مت پلات لیب و هم در پانداس
+
+✅figX, axsX =plt.subplots(nrows,ncols, figsize=(width,height),constrained_layout=True)
+
+X = شماره دلخواه 
+-------------
+figsize = اندازه کل صفحه 
+پیشفرض 4  × 6  اینچ
+عدد بزرگتر → عرض (width)
+عدد کوچکتر → ارتفاع (height)
+
+برای یک نمودار واحد(حتی برای دوتاهم) figsize لازم نیست.‌
+برای 4 نمودار: 10×12  
+--------------
+nrows و ncols 
+شماره ردیف و ستون جدول اکس ها هستند. برای یک نمودار واحد لازم نیستند ولی برای بیش از یک نمودار در یک فیگور باید درج شوند ولی فقط اعداد آنها درون فرمول تابع. 
+-------------
+constrained_layout
+پیشفرض False/ بهتر True
+
+جایگزینی بهتر برای تابع plt.tight_layout() در شرایطی تعدد سابپلات هاست ، اگر فقط یک نمودار واحد داشتیم نیازی به این پارامتر نیست
+------------
+(رسم از پانداس) مثال برای رسم دو نمودار:
+
+import matplotlib.pyplot as plt
+
+fig1,axs1=plt.subplots(2,1,figsize=None)
+df["gender"].value_counts().plot(kind="bar",ax=axs1[0],title=" Students Gender Bar Chart",color="green",edgecolor="black")
+# دو ردیف و یک ستون داریم
+# پس اکس یک بعدی است و باید به صورت یک عدد درون کروشه بیآید مثلا
+# ax=axs1[1] یا ax=axs[0] 
+# ax=axs[1,0] اشتباه است
+
+df["class"].value_counts().plot(kind="bar",ax=axs1[1],title="Students Class Bar Chart",color="grey",edgecolor="black")
+
+fig1.savefig(fname="Value_counts bar Cahrt.png",dpi=300)
+plt.show()
+-----------
+مثال برای رسم دو نمودار از مت پلات لیب خالص 
+
+import numpy as np
+np.random.seed(2)
+p=print
+
+a1=np.random.choice(range(-10,40),size=100)
+a2=np.random.uniform(-10,45,100).astype(int)
+# p(a2)
+
+import matplotlib.pyplot as plt
+fig1,axs1=plt.subplots(2,1,figsize=None,constrained_layout=True)
+axs1[0].hist(a1,color="green",edgecolor="black")
+axs1[0].set_title("A1 Hist")
+axs1[0].set_xlabel("digits")
+axs1[0].set_ylabel("Frequency")
+# برای گذاشتن عنوان و برچسبها باید از متدهای اکس استفاده کنیم
+# نه از پارامترها یا توابع پی ال تی 
+
+axs1[1].hist(a2,color="grey",edgecolor="black")
+axs1[1].set_title("A2 Hist")
+
+plt.show()
+
+------------------------------
+
 ✅plot✴️
 کاربرد: رسم نمودار خطی ساده یا چند خطی برای نمایش رابطه بین دو سری داده
 🧩 شکل رایج
@@ -817,16 +889,43 @@ x یا:
 🔰 همچنان نیاز به ایمپورت متپلات لیب داریم چون مراحل نمایش و ذخیره نمودار مثل قبل است و تنها ساخت نمودارها از پانداس است. 
 
 🧠 Pandas Plot – Cheat Sheet
+-----------------------------
+:در رسم نمودار از پانداس دو شیوه متفاوت داریم
+1)>>>>> df.plot() داتافریم پلات 
+نکات:
 
+پارامترهای ایگریک و ایکس(اگر لازم باشد) باید از درونِ پلات درج شوند
+ایکس و ایگریک نمیتوانند سری یا آرایه باشند
+مثلا 
+❌ df["col_name"]
+✅ df.columns[1]
+✅ "math score"
+بلکه باید رشته و معادل نام رشته ای یک ستون باشند
+-------------------
+حتی بدون درج پارامتر لیبل در پلات ، همه نمودارها لیبل دارند
+--------------------
+2)>>>>>  series.plot(label=df)
+مثلا df["col_name"].plot()
+نیازی به درج پارامترهای ایکس و ایگریک از درون پلات ندارد
+----------------------------
+هم در سری پلات و هم داتافریم پلات فیلتر تعداد ردیف ها قبل از پلات باشد
+مثلا
+df.head(20).plot(y="col1")
+df["col1"].tail(20).plot(kind="line")
+--------------------------------------------
+----------------------------
 ✅ plot✴️ (Line)
 نمودار خطی
 کاربرد: نمایش روند و تغییرات داده
-df.plot()
+
+df.plot() دی اف پلات خطی از پانداس 
 
 پارامترهای مهم:
 kind برای نمودار خطی لازم نیست 
-x → محور افقی (پیش‌فرض: index)
-y → ستون یا ستون‌ها
+x →  اگرآن را  ندهیم، ایندکس ستون ایگریک جایش را میگیرد (پیش‌فرض: index)
+اگر بدهیم، نام یک ستون واحد از داتافریم
+
+y →  اسم ستون یا لیستی از نام ستون‌های داتافریم
 color → رنگ
 linestyle → '-' '--' ':'
 marker → 'o' '*' 'x' '+'
@@ -841,31 +940,65 @@ figsize → (w, h)
 
 legend → True / False default 
 
-نمونه:
+مثال ها :
+import matplotlib.pyplot as plt
+fig1,axs1=plt.subplots()
+df.plot(x="year", y="sales", marker="o", grid=True,ax=axs1)
+# df.tail(20).plot(y=df.columns[-2],marker="*",linestyle="--",ax=axs1)
+# df.tail(20).plot(y="writing score",marker="*",linestyle="--",ax=axs1)
+اگر ایکس را بدهیم و ایگریک را نه، تمام ستون های عددی دی اف به عنوان ایگریک رسم میشوند
+ایگریک میتواند اسم یک تک ستون یا لیستی از اسامی ستون های عددی باشد
+-------------------------------------
+df["col_name"].plot(kind="line") سری پلات نمودار خطی از پانداس
 
-df.plot(x="year", y="sales", marker="o", grid=True)
+نمونه:
+import matplotlib.pyplot as plt
+fig1,axs1=plt.subplots()
+# df.iloc[:,6].head(20).plot(kind="line",marker="*",linestyle="--",ax=axs1)
+# df["writing score"].tail(30).plot(kind="line",marker="*",linestyle="--",ax=axs1)
 plt.show()
 ----------------------------------------
 📊 bar✴️ (ستونی)
 
 کاربرد: مقایسه مقادیر گسسته
-df.plot(kind="bar")
+
+df.plot(kind="bar") دی اف پلات میله ای 
+
 پارامترهای مهم:
 
-x
-y
+x →  اگرآن را  ندهیم، ایندکس ستون ایگریک جایش را میگیرد (پیش‌فرض: index)
+اگر بدهیم، نام یک ستون واحد از داتافریم
+
+y →  اسم ستون یا لیستی از نام ستون‌های داتافریم
+
 color
 width
 title
 grid
+
 نمونه:
-df.plot(x="city", y="population", kind="bar")
+
+import matplotlib.pyplot as plt
+fig1,axs1=plt.subplots()
+df.plot(x="city", y="population", kind="bar",ax=axs1)
+df.tail(20).plot(kind="bar",y="writing score",color="green",edgecolor="black",ax=axs1)
+df.tail(20).plot(kind="bar",y=df.columns[-2],color="green",edgecolor="black",ax=axs1)
 plt.show()
+------------------------------
+df["col_name"].plot("kind="bar") سری پلات میله ای از پانداس
+
+مثال ها
+df["writing score"].tail(25).plot(kind="bar",color="green",edgecolor="black",ax=axs1)
+df[df.columns[6]].tail(25).plot(kind="bar",color="green",edgecolor="black",ax=axs1)
+df.iloc[:,6].tail(25).plot(kind="bar",color="green",edgecolor="black",ax=axs1)
+
 ---------------------------------------
 📉 hist✴️ (هیستوگرام)
+------------------------
+دی‌اف پلات هیستوگرام (DataFrame.plot hist)
+df.plot(kind="hist")
 
 کاربرد: بررسی توزیع داده
-df["col"].plot(kind="hist")
 
 پارامترهای مهم:
 bins → تعداد بازه‌ها
@@ -873,10 +1006,22 @@ color
 alpha → شفافیت
 grid
 edgecolor
-نمونه:
 
-df["age"].plot(kind="hist", bins=20, alpha=0.7)
+مثال‌ها:
+fig1, axs1 = plt.subplots()
+df.plot(y="writing score", kind="hist", bins=20, ax=axs1)
+df.tail(50).plot(y=df.columns[-2], kind="hist", bins=15, ax=axs1)
 plt.show()
+-----------------------------
+سری پلات هیستوگرام (Series.plot hist)
+
+df["col_name"].plot(kind="hist")
+
+مثال‌ها:
+
+df["writing score"].plot(kind="hist", bins=20)
+df[df.columns[6]].plot(kind="hist", bins=15)
+df.iloc[:, 6].plot(kind="hist", bins=10)
 -------------------------------
 📦 box✴️ (جعبه‌ای)
 کاربرد: تشخیص پراکندگی و داده پرت
@@ -894,17 +1039,34 @@ plt.show()
 ---------------------------------------
 🔘 scatter✴️ (پراکندگی)
 کاربرد: بررسی رابطه دو متغیر
-df.plot(kind="scatter", x="xcol", y="ycol")
 
-پارامترهای مهم:
+دی‌اف پلات اسکتر (DataFrame.plot scatter)
+
+df.plot(kind="scatter", x="col_x", y="col_y")
+
+نکته مهم:
+نمودار اسکتر فقط با دی اف رسم می‌شود (سری پلات اسکتر ندارد).
+-------------------
+پارمترهای مهم:
 
 x
 y
+ایکس و ایگریک نمیتوانند سری باشند
+مثلا 
+❌ df["col_name"]
+✅ df.columns[1]
+✅ "math score"
+بلکه باید رشته و معادل نام رشته ای یک ستون باشند
+
 color
 s → اندازه نقاط
 alpha
-نمونه:
-df.plot(kind="scatter", x="age", y="salary", alpha=0.6)
+----------------
+مثال‌ها:
+
+fig1, axs1 = plt.subplots()
+df.plot(kind="scatter", x="math score", y="writing score", ax=axs1)
+df.tail(50).plot(kind="scatter", x=df.columns[3], y=df.columns[6], ax=axs1)
 plt.show()
 --------------------------------
 🥧 pie✴️ (دایره‌ای)

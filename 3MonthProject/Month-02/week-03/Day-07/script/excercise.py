@@ -47,7 +47,7 @@ df["class"].value_counts().plot(kind="bar",ax=axs1[1],title="Students Class Bar 
 plt.tight_layout()
 # برای داده های دسته ای نمودار میله ای رسم کردیم 
 
-fig1.savefig(fname="Value_counts bar Cahrt.png",dpi=300)
+# fig1.savefig(fname="Value_counts bar Cahrt.png",dpi=300)
 
 p("-------------------------------------")
 fig2 ,axs2=plt.subplots(2,2,figsize=(12,10),constrained_layout=True)
@@ -59,16 +59,16 @@ df["chemistry"].plot(kind="hist",color="green",edgecolor="black",label=True,titl
 
 df["ecology"].plot(kind="hist",color="brown",edgecolor="black",label=True,title="Ecology Hist",ax=axs2[1,0])
 
-df["biology"].plot(kind="hist",color="pink",edgecolor="black",label=True,title="Biology Hist",ax=axs2[1,1])
+df["biology"].plot(kind="hist",color="pink",edgecolor="black",label=True,title="Biology Hist",ax=axs2[1,1],xlabel="Test")
 # برای ستون های عددی هیستوگرام رسم شد
 
-fig2.savefig(fname="Students Scores Histograms.png",dpi=300)
+# fig2.savefig(fname="Students Scores Histograms.png",dpi=300)
 plt.show()
 
 # 5. خلاصه تحلیلی از داده‌ها بنویس
 '''
 از آنجایی که داده ها با تابع راندوم چویز نامپی تولید شده اند 
 تا حد زیادی شبیه توزیع نرمال هستند پس اغلب حول میانگین خود هستند
-و چندان داده پرت و نویز قابل توجهی ندارند
+و چندان، داده پرت و نویز قابل توجهی ندارند
 پس نیاز به تحلیل نیست و از قبل معلوم است چه وضعیتی دارند
 '''
