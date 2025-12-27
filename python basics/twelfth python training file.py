@@ -3,6 +3,7 @@
 
 print("lesson name : advanced object-oriented programming")
 
+# ♻️ میان‌رده / برای درک تفاوت با شیءگرایی
 # ==============================
 # مقایسه برنامه‌نویسی تابعی و شیءگرا
 # ==============================
@@ -32,6 +33,7 @@ print(f"Perimeter: {perimeter}")
 
 print("-------------------------")
 
+# 🔥 ضروری برای مسیر هوش مصنوعی و اتوماسیون
 # برنامه‌نویسی شیءگرا (Object-Oriented Programming)
 print("--- برنامه‌نویسی شیءگرا ---")
 
@@ -60,6 +62,7 @@ print(rect.get_info())
 
 print("-------------------------")
 
+# 🔥 ضروری برای مسیر APIها و مدل‌سازی داده
 # ==============================
 # کپسوله‌سازی (Encapsulation)
 # ==============================
@@ -115,6 +118,7 @@ print("Transaction History:", account.get_transaction_history())
 
 print("-------------------------")
 
+# 🔥 ضروری برای طراحی کلاس‌های هوش مصنوعی
 # ==============================
 # وراثت (Inheritance)
 # ==============================
@@ -195,6 +199,7 @@ print(motorcycle.do_wheelie())
 
 print("-------------------------")
 
+# 🔥 ضروری برای طراحی سیستم‌های پیچیده
 # ==============================
 # انتزاع (Abstraction)
 # ==============================
@@ -322,6 +327,7 @@ print(my_pc.start_computer())
 
 print("-------------------------")
 
+# 🔥 بسیار ضروری برای طراحی APIها و مدل‌ها
 # ==============================
 # چندریختی (Polymorphism)
 # ==============================
@@ -350,11 +356,11 @@ class Dog(Animal):
         self.breed = breed
     
     def speak(self):
-        """تولید صدا - پیاده‌سازی خاص سگ"""
+        """تولید صدا"""
         return f"{self.name} says: Woof!"
     
     def fetch(self):
-        """آوردن توپ - متد مخصوص سگ"""
+        """آوردن توپ"""
         return f"{self.name} is fetching the ball"
 
 class Cat(Animal):
@@ -365,11 +371,11 @@ class Cat(Animal):
         self.color = color
     
     def speak(self):
-        """تولید صدا - پیاده‌سازی خاص گربه"""
+        """تولید صدا"""
         return f"{self.name} says: Meow!"
     
     def climb(self):
-        """بالا رفتن از درخت - متد مخصوص گربه"""
+        """بالا رفتن از درخت"""
         return f"{self.name} is climbing the tree"
 
 class Bird(Animal):
@@ -380,11 +386,11 @@ class Bird(Animal):
         self.can_fly = can_fly
     
     def speak(self):
-        """تولید صدا - پیاده‌سازی خاص پرنده"""
+        """تولید صدا"""
         return f"{self.name} says: Tweet!"
     
     def move(self):
-        """حرکت کردن - اورراید کردن متد والد"""
+        """حرکت - اورراید"""
         if self.can_fly:
             return f"{self.name} is flying"
         else:
@@ -416,6 +422,7 @@ print(cat.climb())
 
 print("-------------------------")
 
+# ♻️ میان‌رده / تمرین سناریوی واقعی
 # ==============================
 # مثال کاربردی: سیستم مدیریت دانشگاه
 # ==============================
@@ -435,7 +442,7 @@ class UniversityMember:
         return f"ID: {self.member_id}, Name: {self.name}, Department: {self.department}"
     
     def work(self):
-        """کار کردن - متد پایه"""
+        """کار کردن"""
         raise NotImplementedError("Subclasses must implement this method")
 
 class Student(UniversityMember):
@@ -448,20 +455,20 @@ class Student(UniversityMember):
         self.courses = []
     
     def enroll_course(self, course_name):
-        """ثبت نام در درس"""
+        """ثبت نام درس"""
         self.courses.append(course_name)
         return f"Enrolled in {course_name}"
     
     def study(self):
-        """مطالعه کردن"""
+        """مطالعه"""
         return f"{self.name} is studying"
     
     def work(self):
-        """کار کردن - پیاده‌سازی برای دانشجو"""
+        """کار دانشجو"""
         return f"{self.name} is working on assignments"
     
     def get_info(self):
-        """اورراید کردن متد والد"""
+        """اورراید"""
         base_info = super().get_info()
         return f"{base_info}, Year: {self.year}, GPA: {self.gpa}"
 
@@ -475,20 +482,20 @@ class Professor(UniversityMember):
         self.courses_teaching = []
     
     def teach_course(self, course_name):
-        """تدریس درس"""
+        """تدریس"""
         self.courses_teaching.append(course_name)
         return f"Teaching {course_name}"
     
     def conduct_research(self):
-        """انجام تحقیق"""
-        return f"{self.name} is conducting research in {self.specialty}"
+        """تحقیق"""
+        return f"{self.name} researching {self.specialty}"
     
     def work(self):
-        """کار کردن - پیاده‌سازی برای استاد"""
+        """کار استاد"""
         return f"{self.name} is teaching and researching"
     
     def get_info(self):
-        """اورراید کردن متد والد"""
+        """اورراید"""
         base_info = super().get_info()
         return f"{base_info}, Specialty: {self.specialty}, Salary: ${self.salary}"
 
@@ -500,22 +507,22 @@ class Staff(UniversityMember):
         self.position = position
     
     def perform_duties(self):
-        """انجام وظایف"""
-        return f"{self.name} is performing {self.position} duties"
+        """وظایف"""
+        return f"{self.name} performing {self.position} duties"
     
     def work(self):
-        """کار کردن - پیاده‌سازی برای کارمند"""
-        return f"{self.name} is working as a {self.position}"
+        """کار کارمند"""
+        return f"{self.name} working as {self.position}"
     
     def get_info(self):
-        """اورراید کردن متد والد"""
+        """اطلاعات"""
         base_info = super().get_info()
         return f"{base_info}, Position: {self.position}"
 
 # استفاده از سیستم مدیریت دانشگاه
 university_members = [
     Student("Ali Mohammadi", "S001", "Computer Science", 3, 3.8),
-    Professor("Dr. Smith", "P001", "Mathematics", "Algebra", 75000),
+    Professor("Dr. Smith", "P001", "Mathematatics", "Algebra", 75000),
     Staff("Maryam Johnson", "ST001", "Administration", "Secretary"),
     Student("Sara Williams", "S002", "Physics", 2, 3.5)
 ]
@@ -529,7 +536,7 @@ for member in university_members:
     print(member.work())
 
 print("\n=== Special Activities ===")
-# فعالیت‌های خاص هر کلاس
+# فعالیت‌های خاص
 student = university_members[0]
 professor = university_members[1]
 staff = university_members[2]
@@ -541,6 +548,7 @@ print(staff.perform_duties())
 
 print("-------------------------")
 
+# ⚠️ غیرضروری (تمرین صرفاً برای پروژه‌های پایه)
 # ==============================
 # تمرین‌های عملی
 # ==============================
@@ -558,15 +566,12 @@ class Shape:
         self.color = color
     
     def area(self):
-        """محاسبه مساحت"""
         raise NotImplementedError("Subclasses must implement this method")
     
     def perimeter(self):
-        """محاسبه محیط"""
         raise NotImplementedError("Subclasses must implement this method")
     
     def describe(self):
-        """توصیف شکل"""
         return f"This is a {self.color} {self.name}"
 
 class Circle(Shape):
@@ -577,11 +582,9 @@ class Circle(Shape):
         self.radius = radius
     
     def area(self):
-        """محاسبه مساحت دایره"""
         return 3.14159 * self.radius ** 2
     
     def perimeter(self):
-        """محاسبه محیط دایره"""
         return 2 * 3.14159 * self.radius
 
 class Rectangle(Shape):
@@ -593,11 +596,9 @@ class Rectangle(Shape):
         self.height = height
     
     def area(self):
-        """محاسبه مساحت مستطیل"""
         return self.width * self.height
     
     def perimeter(self):
-        """محاسبه محیط مستطیل"""
         return 2 * (self.width + self.height)
 
 class Triangle(Shape):
@@ -609,12 +610,9 @@ class Triangle(Shape):
         self.height = height
     
     def area(self):
-        """محاسبه مساحت مثلث"""
         return 0.5 * self.base * self.height
     
     def perimeter(self):
-        """محاسبه محیط مثلث (فرض مثلث متساوی‌الساقین)"""
-        # برای سادگی، فرض می‌کنیم مثلث متساوی‌الساقین است
         side = (self.base**2 + self.height**2)**0.5
         return self.base + 2 * side
 
