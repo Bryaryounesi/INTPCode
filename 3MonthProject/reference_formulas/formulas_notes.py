@@ -472,7 +472,7 @@ df["class"].value_counts().plot(kind="bar",ax=axs1[1],title="Students Class Bar 
 
 fig1.savefig(fname="Value_counts bar Cahrt.png",dpi=300)
 plt.show()
------------
+---------------
 مثال برای رسم دو نمودار از مت پلات لیب خالص 
 
 import numpy as np
@@ -486,6 +486,10 @@ a2=np.random.uniform(-10,45,100).astype(int)
 import matplotlib.pyplot as plt
 fig1,axs1=plt.subplots(2,1,figsize=None,constrained_layout=True)
 axs1[0].hist(a1,color="green",edgecolor="black")
+# اگر فقط یک نمودار داشته باشیم نیاز به براکت عدد دار نیست
+# یعنی مثلا باید بنویسیم  
+# axs1.hist()
+
 axs1[0].set_title("A1 Hist")
 axs1[0].set_xlabel("digits")
 axs1[0].set_ylabel("Frequency")
