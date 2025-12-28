@@ -63,3 +63,6 @@ Although the original three-month plan was discontinued, the completed two month
 
 - **Data handling and basic math sections** completed for Month 1 and Month 2  
 - The Computer Vision portion will continue in the next five-month program, but this repository now reflects the **foundational data skills** portion
+
+## Daily Log
+A detailed daily log documenting each exercise and key learnings is available in `DailyLog.md`.
