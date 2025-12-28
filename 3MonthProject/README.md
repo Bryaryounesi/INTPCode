@@ -65,4 +65,9 @@ Although the original three-month plan was discontinued, the completed two month
 - The Computer Vision portion will continue in the next five-month program, but this repository now reflects the **foundational data skills** portion
 
 ## Daily Log
-A detailed daily log documenting each exercise and key learnings is available in `DailyLog.md`.
+
+### English
+The detailed daily log of exercises and key learnings is available in DailyLog.md.
+
+### Persian
+A Persian version is available in DailyLog_FA.md.
