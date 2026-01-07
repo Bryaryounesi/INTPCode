@@ -159,7 +159,13 @@ if age >= 18:
     print("Allowed to enter")
 if age < 18:
     print("not allowed to access")
-
+# نوشتن همین مثال به شکلی دیگر و با 
+# else
+if age >= 18:
+    print("Allowed to enter")
+else:
+    print("not allowed to access")
+        
 # بررسی نمره
 score = 50
 pass_grade = score >= 51
@@ -185,13 +191,14 @@ if gender != "female":
     print("You can drive")
 
 # بررسی آب و هوا
+
 weather = "rainy"
 color_code = "yellow"
 if weather == "rainy":
     color_code = "blue"
     print(color_code)
 print(color_code)
-
+# در این مثال، به شرط تحقق کاندیشن، متغیر والیویی جدید می گیرد
 character = "Wizard"
 if character != "Wizard":
     print("You can't use spells")
@@ -217,7 +224,18 @@ has_permit = True
 is_insured = True
 if age > 16 and has_permit and is_insured:
     print("Can drive")
-
+# انجام همین مثال با 
+# elif ,else
+driver_age=50
+has_permit =False
+if driver_age >=18 and has_permit:
+    print("driver can drive")
+elif has_permit == False:
+    print("driver has not driving permit")
+else:
+    print("driver age is under 18")
+    
+     
 year = 1998
 if year > 1900 and year < 2005:
     print("valid entry")
@@ -256,7 +274,7 @@ level = 5
 if score > highest_score or level == 5:
     print("You won!")
 
-# تغییر مقدار با or
+#  تغییر مقدار متغیر با شرط دارای or
 promote_article = False
 views = 100
 shares = 30

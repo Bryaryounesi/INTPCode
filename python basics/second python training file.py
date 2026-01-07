@@ -119,6 +119,7 @@ price = 12.3  # از یادداشت شما
 price_converted = int(price)
 print(price_converted)
 print(int(price))
+#  اگر فلوت رو اینتیجر کنیم، روند میشود
 
 price_main = 9.99  # از فایل اصلی
 print(int(price_main))
@@ -134,6 +135,7 @@ print(float(weeks_main))
 member = True
 not_member = False
 value = int(member)
+# ترو تبدیل به عدد 1 و فولز تبدیل به صفر میشود در کنسول
 second_value = int(not_member)
 print(value)
 print(second_value)
@@ -141,14 +143,19 @@ print(int(member))
 print(int(not_member))
 
 # تبدیل به boolean
-member_name = "sam"
-middle_name = ""
-sibling = 0
-foot_size = 8.5
-print(bool(member_name))
-print(bool(sibling))
-print(bool(foot_size))
-print(bool(middle_name))
+# اگر متغیر هر نوع والیویی داشته باشد و بول شود، در کنسول ترو
+# ولی اگر خالی باشد فولز میشود
+
+p=print
+a=12.5
+member=False
+city="albakerki"
+number= 45
+emp=""
+p("float to bool: ",bool(a))
+p("str to bool: ",bool(city))
+p("int to bool: ",bool(number))
+p("empty variable to bool: ",bool(emp))
 
 detail = "i love you"
 response = bool(detail)

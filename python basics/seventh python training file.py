@@ -4,7 +4,12 @@
 print("lesson name : string operations")
 
 # ==============================
-# تقسیم رشته‌ها (split)
+# (تبدیل رشته ها به لیست)تقسیم رشته‌ها (split)
+# (مهم)دخیره تغییرات آن، نیازمند به سلف اساینمنت است 
+
+# مهمترین کاربرد اسپلیت، فراهم کردن امکان درج رشته ای داده هاست
+# چون بعدها اسپلیت قادر است آنها را از هم جدا کرده و به یک لیست تبدیل کند
+# جداکننده پیش فرض،فاصله ولی اگر جدا کننده خاصی داشتیم لزوم درج آن در پرانتز اسپلیت
 # ==============================
 
 # تقسیم رشته با فاصله پیش‌فرض
@@ -14,6 +19,11 @@ print("Original string:", new_users)
 print("Split list:", users_list)
 print("Direct split:", new_users.split())
 
+# (مهم)مثال بعدی
+p=print
+new_users = "reza.hadi.ali.ana.ahmad.saif.vania.gandi.salam.jalal.omid.zainab"
+new_list=new_users.split(".")
+p(new_list)
 print("-------------------------")
 
 # تقسیم رشته با جداکننده مشخص
@@ -28,7 +38,6 @@ print("-------------------------")
 user = "Lauren_25 F Architect"
 print("Original:", user)
 print("Split with underscore:", user.split("_"))
-
 print("-------------------------")
 
 # تقسیم اعداد در رشته
@@ -81,6 +90,9 @@ print("-------------------------")
 
 # ==============================
 # جایگزینی در رشته‌ها (replace)
+
+#  ذخیره تغییرات ریپلیس شده در رشته ها،
+# نیاز به سلف اساینمنت یا ذخیره سازی در متغیر جدید دارد
 # ==============================
 
 # جایگزینی ساده
@@ -172,7 +184,6 @@ print("Updated tech stack:", tech_stack)
 print("Tech stack list:", tech_stack_list)
 
 print("-------------------------")
-
 # جایگزینی در لیست فیلم‌ها
 old_top_movies = "the power of the dog - trapped - tenet"
 new_top_movies = old_top_movies.replace("trapped", "moonfall")

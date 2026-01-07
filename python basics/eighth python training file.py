@@ -3,6 +3,8 @@
 print("lesson: functions")
 # ==============================
 # توابع پایه بدون پارامتر
+# void functions: without return
+p=print 
 def greet_ron():
     name = "Ron"
     print(f"hello , {name}")
@@ -14,7 +16,7 @@ def greet_lesli():
 greet_lesli() 
 
 print("-----------two variable---------------------")
-
+# void
 def user_status():
     status = "active"
     username = "bob"
@@ -22,13 +24,14 @@ def user_status():
 user_status()
 
 print("------------boolin variable-------------------")
-
+# Void
 def lamp_status():
     power = True
     print(f"powerd on : {power}")
 lamp_status()
 
 print("-----------parameter------------------")
+# Void function with input data(parameter)
 
 def greet(name):
     print(f"hello , {name}")
@@ -36,7 +39,7 @@ greet("ana")
 greet("barbara")
 
 print("--------------------------------")
-
+# Void function + parameter
 def mounth(name):
     print(f"in {name} I go to travel")
 mounth("april")
@@ -44,11 +47,13 @@ mounth("november")
 mounth("october")
 
 print("-------------------------------------")
+# Void function + parameter
 def user_status(status):
     print(f"bob is {status}")
 user_status("inactive") 
 
 print("------------number parameter-------------------")
+# Void function + parameter + calculation
 
 def display_half(number):
     half = number/2
@@ -56,7 +61,7 @@ def display_half(number):
 display_half(18)
 
 print("--------------------------------")
-
+# ''
 def double_number(number):
     result = number*2
     print(result)
@@ -64,20 +69,23 @@ def double_number(number):
 double_number(95)
 
 print("-------------------------------------")
+# ''
+
 def greet(name):
     print(f"good morning {name}")
 greet("johanna")
 
 print("---------------return ----------------------")
-
+# Pure function: parameter + return. without side effect(inside print)
 def age_label(age):
     label = "user_age:" + age
-    return label
+    return label  #والیوی خروجی تابع 
 
 print(age_label("20"))
+# خروجی تابع ذخیره نشده ولی استفاده شده
 
 print("-------------------------------------")
-
+# ''
 def add_ten(number):
     total = number + " number"
     return total
@@ -85,15 +93,17 @@ print(add_ten("30"))
 print(add_ten("20"))
 
 print("-------------------------------------")
-
+# ''
 def update(user):
     updater = "no emails:" + user
     return updater
 result = update("Ann")
 print(result)
+# خروجی ذخیره شده
 
-print("---------best examples--------------")
-
+print("---------some Void functions--------------")
+# void functions, just have side effect(inside print)
+# 1
 def one():
     print(1)
     print(2)
@@ -101,21 +111,21 @@ def one():
 one()
 
 print("--------------")
-
+# 2
 def two():
      name = "Ali"
      print(name) 
 two() 
 
 print("--------------")
-
+# 3
 def three():
     username = "nahid" 
     print(f"hello , {username}")
 three()    
 
 print("--------------")
-
+# 4
 def five():
     user = "bahram"
     user_2 = "sasan"
@@ -123,7 +133,7 @@ def five():
 five() 
 
 print("--------------")
-
+# 5
 def six(name):
     print(f"hello , {name}")
 six("hadi")
@@ -132,7 +142,7 @@ six("fati")
 six("hena")
 
 print("-----boolin---------")
-
+# 6
 def user_sleeping(check):
     user = "shadi"
     print(f"{user} is awake: {check}")
@@ -140,7 +150,7 @@ user_sleeping(True)
 user_sleeping(False)
 
 print("-----------number---------------")
-
+# 7
 def student_numbers(number):
     classroom_1 = 85/number
     classroom_2 = 46/number
@@ -149,7 +159,7 @@ def student_numbers(number):
 student_numbers(3)
 
 print("------return--------")
-
+# Pure Function. return but no side effect so is a pure funcion
 def student_numbers(number):
     sum = (5*number)/3
     return sum
@@ -158,6 +168,7 @@ print(student_numbers(40))
 
 print("-------------------------------------")
 # توابع با پارامترهای چندگانه
+# void
 def display(first, last):
     print(first + " " + last)
 display("Alex", "Morgan")
@@ -167,7 +178,8 @@ def show_winners(first, second, third):
     print("Second place: " + second)
     print("Third place: " + third)
 show_winners("Kim", "Lee", "Ava")
-
+print("----------------------------------")
+# pure
 def combine(first, second, third):
     return first + second + third
 result = combine("big", "bad", "wolf")
@@ -182,7 +194,8 @@ def add_prefix(prefix, word):
     return prefix + word
 new_word = add_prefix("re", "do")
 print(new_word)
-
+print("---------------------------------")
+# void
 def show_queue(current, up_next):
     print("now playing: " + current)
     print("up next: " + up_next)
@@ -194,6 +207,7 @@ mix("Peter", "Piper", "Picked")
 
 print("-------------------------------------")
 # نام‌گذاری توصیفی توابع
+# pure
 def get_final_price(price, tax):
     return price + tax
 price = get_final_price(30, 1.5)
@@ -220,11 +234,14 @@ def calculate_sum(num_1, num_2):
 
 def calculate_difference(num_1, num_2):
     return num_1 - num_2
-
+print("----------------------------")
+# void
 def display_item_price(item, price):
     print(f"{item}: ${price}")
 display_item_price("chocolate", 3)
 
+print("----------------------------")
+# pure
 def generate_username(name, b_day):
     return f"{name}_{b_day}"
 user = generate_username("ty", 17)
@@ -249,7 +266,7 @@ print(predecessor)
 print("-------------------------------------")
 # محدوده متغیرها (Variable Scope)
 # ==============================
-# Global scope
+# Global scope  # متغیر بیرونی
 shipping = 10
 def calculate_total(cart):
     print(cart + shipping)
@@ -260,13 +277,42 @@ def calculate_spendings(groceries):
     print(f"Total: {rent + groceries}")
 print(f"Rent: {rent}")
 calculate_spendings(300)
+# در این دو مثال از متغیر بیرونی تنها در محاسبات و پرینت استفاده شده
+# پس نیاز به کلید واژه 
+# global 
+# قبل از متغیر بیرونی نیست
 
-# Local scope
+# مثال بعدی (مهم)
+# تغییر متغیر بیرونی و نیاز به کلید واژه گلوبال
+balance=5000
+def calculate_sold(sell):
+    global balance  #اگر این سطر را ننویسیم، کد ارور می دهد
+    balance += sell
+    p("your balance is: ", balance)
+    return balance
+calculate_sold(50)
+calculate_sold(100)
+calculate_sold(80)
+p("---------------")
+# همان مثال بالا با والیوی خروجی ناون اگر ریترن نداشته باشد
+balance=5000
+def calculate_sold(sell):
+    global balance  #اگر این سطر را ننویسیم، کد ارور می دهد
+    balance += sell
+    # p("your balance is: ", balance)  پیام یا همان ساید افکت تابع را با کامنت غیرفعال کردیم
+    # return balance  ریترن را هم همین طور 
+p(calculate_sold(50))
+# خروجی ناون است
+
+print("------------------------------")
+# Local scope #متغیر داخلی
+# void
 def add_bonus(salary):
-    bonus = 100
+    bonus = 100  #این یک متغیر داخلی است
     print(salary + bonus)
 add_bonus(1900)
 
+# pure
 def apply_discount(price):
     discount = 20
     discount = 10
@@ -277,6 +323,8 @@ print(final_price)
 print("-------------------------------------")
 # ==============================
 # توابع با شرط‌ها
+# void
+# در تمام مثال های زیر پارامتر تابع، مبنای شرط و پرینت مبتنی بر شرط قرار گرفته
 def add_shipping(cart):
     if cart < 100:
         print(f"Total: {cart + 10}")
@@ -331,6 +379,16 @@ def get_off(price, discount):
 get_off(50, 20) 
 get_off(102, 20) 
 
+# مثال دوم در مورد تخفیف
+def get_off(price):
+    off= (5/100) * price
+    if price > 1000:
+        p("congradulation, you get 5% off, you will paid: ", price - off)
+    else:
+        p("total: ", price)
+get_off(5000)  
+get_off(400)  
+
 def show_score(score):
     if score < 30:
         print("Score too low")
@@ -344,6 +402,8 @@ print("-------------------------------------")
 # ==============================
 # توابع با لیست‌ها
 # ==============================
+# void
+# در تمام مثال های این بخش ،آرگومان(والیویی که وارد میکینم) یک لیست است
 
 def display_programme(movies):
     print("Airing tonight:")
@@ -408,6 +468,8 @@ print(plans)
 print("-------------------------------------")
 # ==============================
 # توابع با حلقه‌ها
+# all examples are void function
+
 def onboard_passengers(bookings):
     counter = 1
     while counter <= bookings:
@@ -463,6 +525,7 @@ cart_list = [5, 20, 8]
 new_cart_list = [20, 15, 35, 60]
 halve_prices(cart_list)
 halve_prices(new_cart_list)
+# آرگومان یک لیست است
 
 def display_players(team):
     number = 1
@@ -471,6 +534,7 @@ def display_players(team):
 team_1 = ["Kim", "Lee"]
 team_2 = ["Meg", "Jo"]
 display_players(team_1)
+# آرگومان یک لیست است
 
 def show_next_track():
     playlist = ["Hey Jude", "Helter Skelter", "Something"]
@@ -485,6 +549,7 @@ beatles = ["Hey Jude", "Helter Skelter", "Something"]
 beethoven = ["Symphony No. 1", "Symphony No. 9"]
 show_next_track(beethoven)
 show_next_track(beatles)
+# آرگومان یک لیست است
 
 def showing_list(film): 
     for movie in film:
@@ -493,6 +558,7 @@ movie_list = ["terminator", "lusy"]
 movie_list_2 = ["seven", "lust", "gone girl", "falling"]
 showing_list(movie_list)
 showing_list(movie_list_2)  
+# آرگومان یک لیست است
 
 print("-------------------------------------")
 # ==============================
@@ -509,6 +575,7 @@ def display_instructions(add_sugar):
         print("Enter amount of sugar")
     print("Select coffee type")
 display_instructions(False)
+# آرگومان یک والیوی بولین است 
 
 def get_score_data(listo, new):
     score_list[4] = new

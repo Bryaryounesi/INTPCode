@@ -48,7 +48,10 @@ print("name:" + person_name)
 print("city:" + city_name)
 print("singer:" + person_name)
 print("job:" + "artist")
-
+# (پرینت با کاما)راه حل بهتر : نوشتن کاما به جای علامت به اضافه
+print("job:",job)
+print("my lover city is",city,",what about you?")
+print("-------------------------------")
 label = "name:" + "joe"
 print(label)
 
