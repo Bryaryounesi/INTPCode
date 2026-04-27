@@ -47,3 +47,6 @@ axes[2].imshow(vertiacal_fliped)
 axes[2].set_title("vertiacal_fliped")
 axes[2].axis("off")
 # fig.savefig(fname="pictures comparision.png",dpi=300,bbox_inches ="tight")
+
+# نکته مهم : این تمرین با متپلات لیب انجام شده و
+# بیشتر بر روی نمایش دادن تصاویر تمرکز کرده است.
