@@ -82,6 +82,8 @@ else:
     print("Good night")
 
 # سیستم نمره‌دهی
+# ساخت سطح بندی عددی با شرط های زنجیره ای
+
 score = 75
 if score >= 90:
     print("Your grade is A")
@@ -91,6 +93,10 @@ elif score >= 50:
     print("Your grade is C")
 else:
     print("Your grade is D")
+# اگر بخواهیم نوعی سطح بندی عددی را با 
+# شرط های زنجیره ای ایجاد کنیم 
+# میتوانیم با علامت بزرگتر و مساوی و از بالاترین سطح شروع کنیم
+# یا با علامت کوچکتر و مساوی و از پایین ترین سطح 
 
 # سیستم رانندگی بر اساس سن
 age = 25
@@ -186,7 +192,17 @@ if likes > 50 or shares >= 80 or comments >= 70:
     print("Article promoted!")
 else:
     print("Article needs more engagement")
-
+# -----------------------------------------------
+# شکل تابعی مثال بالا 
+p = print
+def article_promotion(likes=0,shares=0,comments = 0):
+    # به سه آرگومان یک مقدار پیش فرض دادیم 
+    # اگر کاربر مقادیر جدید نداد مقادیر پیشفرض، ملاک قرار میگیرد
+    if (likes +  shares) >=100 or comments >= 90:
+        p("article was promoted")
+    else :
+        p("Article needs more engagement")    
+article_promotion(40,0)      
 # ==============================
 # سیستم‌های منو و انتخاب
 # ==============================
@@ -307,9 +323,32 @@ elif is_vip and age >= 18:
     discount = 15
 else:
     discount = 0
-
 print(f"Your discount: {discount}%")
+# ----------------------------------------------
+# ترتیب شرط ها در ساختار IF_ELIF
 
+# همیشه شرط های با بیشترین 
+# AND یا OR (جزتی تر )
+# بالاتر از بقیه باشند 
+# (کمترین محدودیت) و طبق این روال تا پایین و به سمت کلی ترین شرط 
+
+p = print
+def calculate_discount(age, is_student ,is_vip):
+    if is_student and is_vip and age > 50:
+        p("discount percent: ", 60,"%")
+    elif is_student and is_vip:
+        p("discount percent: ", 40,"%")    
+    elif is_student:
+        p("discount percent: ", 20,"%")
+    else:
+        p("unfortunatly you haven't discount")    
+calculate_discount(90,True, True)  
+'''
+دستورات شرطی، از بالا به پایین خوانده میشوند و
+به محض یافتن اولین شرط درست، بقیه نادیده گرفته میشوند
+پس باید شرط های طویل تر در بالا بیایند
+'''
+# --------------------------------------------
 # سیستم توصیه سفر
 weather = "sunny"
 day_type = "weekend"

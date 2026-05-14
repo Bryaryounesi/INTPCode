@@ -127,13 +127,14 @@ if low_charge:
     print("battery is low")
 
 # بررسی صندوق پیام
-inbox_message = 502
+p =print
+inbox_message = 400
 inbox_capacity = 500
-full = inbox_message >= inbox_capacity
-print(full)
-if full:
-    print("you're inbox is full")
-
+if inbox_message >= inbox_capacity:
+    p("inbox is full")
+else:
+    p("inbox remained capacity: ", inbox_capacity - inbox_message)
+    
 # بررسی موجودی برای خرید بلیط
 balance = 70
 ticket_price = 66

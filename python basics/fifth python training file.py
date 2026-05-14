@@ -357,5 +357,23 @@ if len(sodas_check) > 3:
     print("Too much soda")
 else:
     print("Reasonable amount of soda")
+# ---------------------------------------------
+# پیمایش همزمان دو لیست 
+# با لوپ for 
+# و zip
 
+# زیپ، ابزاری است برای جفت کردن عناصر متناضر از چند لیست 
+# برای پیمایش یا برای ساخت مجموعه های جدید
+# زیپ از تعداد عناصر لیست کوچکتر پیروی میکند و به محض اتمام ، جفت سازی را متوقف می کند
+p = print
+meals = ["omelet", "salad", "chicken"]
+days = ["satureday","sunday","monday","tuesday"]
+
+for i,j in zip(days,meals):
+    p(f"today is {i} and our meal is {j} ")
+# ------------------------------------------
+# ساخت تاپل از عناصر دو لیست با zip    
+tuplee = [(i,j) for i,j in zip(meals,days)]
+p(tuplee)
+# ---------------------------------------------
 print("End of lists training file")

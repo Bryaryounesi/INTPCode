@@ -106,6 +106,41 @@ print(type(best_grade))
 print(type(number_of_pets))
 print(type(fuel_deposite))
 
+# ----------------------------------------------------
+# خلاصه حالت های تبدیل انواع 
+integerr = 25
+booli = True
+floati = 2.5
+ 
+#  integer to others
+p = print
+p(str(integerr))
+p(bool(integerr))
+p(bool(floati))
+p(float(integerr))
+# فلوت نیز رفتار مشابهی با اینتیجر دارد 
+
+# booling to others
+p(int(booli))
+# برای ترو عدد یک و برای فولز، صفر چاپ میشود
+p(float(booli))
+# برای ترو عدد یک و برای فولز، صفر چاپ میشود
+p(str(booli))
+
+# sring to others
+stringo = "nana"
+stringo2 = "65239"
+# p(int(stringo))
+p(int(stringo2))
+p(float(stringo2))
+#  استرینگ تبدیل به عدد و فلوت نمیشود
+# مگر اینکه عدد صرف درون دابل کوت باشد
+
+p(bool(stringo))
+# تمام رشته ها در صورت تبدیل به بولین، ترو میشوند
+# مگر اینکه خالی باشند
+# ----------------------------------------------------
+
 # تبدیل رشته به عدد
 age = "18"  # از یادداشت شما
 print(type(age))
@@ -168,6 +203,7 @@ has_pets = bool(pets)
 has_kids = bool(kids)
 print(has_pets)
 print(has_kids)
+
 
 # ==============================
 # f-strings و نمایش داده‌ها

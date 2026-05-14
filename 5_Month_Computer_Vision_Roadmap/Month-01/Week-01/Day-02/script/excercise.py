@@ -6,23 +6,22 @@
 # BMI
 # وضعیت کاربر را تشخیص دهد (ساده، دقیق نباشد)
 
-weight=input("please inter your weight by kg ")
-height=input("please inter your height by cm ")
-bmi=round(int(weight)/(int(height)/100)**2)
-p=print
+p = print
 
-if bmi< 18.5:
-    p(f"your bmi is {bmi}, so you are low weight")
-elif bmi >=18.5 or bmi< 25:
-    p(f"your bmi is {bmi}, so your weight is normal")
-elif bmi>=25 or bmi <30:   
-    p(f"your bmi is {bmi}, so you have extra weight")
-else:
-    p(f"your bmi is {bmi}, so you are fat")
-    # از اف استرینگ استفاده کردیم که در مباحث مرور شده نبود
-    # از مبحث عملگرهای مقایسه ای و 
-    # if,elif,else , input
-
-# این کد صرفا برای یادآوری مبحث شرط هاست
-# چون از لوپ ها، مدیریت خطا و مدیریت ورودیِ درست استفاده نشده
-# ممکن است به سرعت خطا دهد    
+def bmi(height,wight):
+    bmi = wight/(height/100)**2
+#   ابتدا فرمول بی ام آی را در تابع تعریف کردیم
+    if bmi >=40:
+        p("extra fat","bmi: ", round(bmi))
+    elif bmi  >=35:
+        p("fat class 2","bmi: ", round(bmi))  
+    elif bmi  >=30:
+        p("fat class 1","bmi: ", round(bmi)) 
+    elif bmi  >=25:
+        p("extra weight","bmi: ", round(bmi)) 
+    elif bmi  >=18.5:
+        p("normal","bmi: ", round(bmi)) 
+    else:
+        p("low weight","bmi: ", round(bmi)) 
+p("weight is by kg and height is by cm")           
+bmi(172,84)  
