@@ -2,6 +2,7 @@
 print("lesson: list operations")
 print("----------------------------")
 # min و max
+# p(min(list))         #p(max(list))
 # ==============================
 
 # پیدا کردن بزرگترین و کوچکترین مقدار
@@ -36,6 +37,7 @@ print("----------------------------")
 # مرتب‌سازی لیست (list.sort()/sorted(list))
 # list.sort(reverse=True/False)  نمیتوان مستقیم این عبارت را پرینت کرد
 # sorted(list)  ولی این یکی را میتوان
+# دومی نیاز به سلف اساینمنت یا ذخیره دارد ولی اولی نه
 # ==============================
 # مرتب‌سازی اعداد
 
@@ -51,9 +53,9 @@ print("----------------------------")
 # مرتب‌سازی اعداد منفی و مثبت
 temperature = [10, 4, -1, 7, -5, 16, 0]
 print("Before sort:", temperature)
-temperature.sort()
+temperature.sort(reverse=True)
 print("After sort:", temperature)
-
+# لیست به صورت نزولی مرتب شد
 print("----------------------------")
 # مرتب‌سازی رشته‌ها
 
@@ -83,6 +85,7 @@ print("----------------------------")
 
 # ==============================
 # جمع‌زدن لیست (sum)
+# p(sum(num_lists))
 # ==============================
 # میگه کل لیست چند المنته
 
@@ -114,6 +117,15 @@ database_2 = [4, 5]
 print("Database 1:", database_1)
 print("Database 2:", database_2)
 print("Combined:", database_1 + database_2)
+# -------------------------------------
+# مثال بعدی
+p = print
+shopping = ["dish soap", "kleenex", "batteries", "aluminum foil", "pet food", "toothpaste", "lightbulbs"]
+
+tempe = [10, 4, -1, 7, -5, 16, 0]
+grades = ["A", "C", "F", "B", "G"]
+new = shopping + grades + tempe
+p(new)
 
 print("----------------------------")
 
@@ -162,6 +174,7 @@ print("----------------------------")
 
 # ==============================
 # شمارش المنت‌ها (count)
+# p(list.count(element))
 # ==============================
 # میگه فلان المنت چند بار در لیست تکرار شده
 
@@ -208,6 +221,7 @@ print("----------------------------")
 
 # ==============================
 # بررسی وجود المنت (in)
+# p(element in list)
 # ==============================
 
 # بررسی وجود در لیست مواد
@@ -263,7 +277,10 @@ orders = customers + order_numbers
 print("Customers:", customers)
 print("Order numbers:", order_numbers)
 print("Orders list:", orders)
-
+# --------------
+# روش دوم
+complex = [(csm , orders) for csm,orders in zip(customers,order_numbers)]
+p(complex)
 print("----------------------------")
 
 # محاسبه میانگین

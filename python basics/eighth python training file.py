@@ -74,11 +74,21 @@ print("-------------------------------------")
 def greet(name):
     print(f"good morning {name}")
 greet("johanna")
+# ----------------------------------------------------
+# مثال برای ساخت لیست با تابع void
+p = print
+listo = []
+def create_email(name, year):
+    email =  f"{name}{year}@gmail.com"
+    listo.append(email)
+    p(listo)
+create_email("barzan",1990)
+create_email("valan",2020)
 
 print("---------------return ----------------------")
 # Pure function: parameter + return. without side effect(inside print)
 def age_label(age):
-    label = "user_age:" + age
+    label = "user_age:" + age   #لیبل، یک متغیر محلی ساده 
     return label  #والیوی خروجی تابع 
 
 print(age_label("20"))
@@ -87,7 +97,7 @@ print(age_label("20"))
 print("-------------------------------------")
 # ''
 def add_ten(number):
-    total = number + " number"
+    total = number + " number"    #local variable, created using parameter
     return total
 print(add_ten("30"))
 print(add_ten("20"))
@@ -95,9 +105,9 @@ print(add_ten("20"))
 print("-------------------------------------")
 # ''
 def update(user):
-    updater = "no emails:" + user
+    updater = "no emails:" + user       #متغیر درونی
     return updater
-result = update("Ann")
+result = update("Ann")         #متغیر دریافت کننده نتیجه
 print(result)
 # خروجی ذخیره شده
 
@@ -113,7 +123,7 @@ one()
 print("--------------")
 # 2
 def two():
-     name = "Ali"
+     name = "Ali"   #متغیر محلی با مقدار پیشفرض (default value variable)
      print(name) 
 two() 
 
@@ -152,9 +162,10 @@ user_sleeping(False)
 print("-----------number---------------")
 # 7
 def student_numbers(number):
-    classroom_1 = 85/number
-    classroom_2 = 46/number
-    sum = (classroom_1 + classroom_2)*number
+    classroom_1 = 85/number           #1
+    classroom_2 = 46/number            #2
+    sum = (classroom_1 + classroom_2)*number        #3
+    # سه متغیر محلی ساده و مختص همین تابع
     print(f"students number: {sum}")
 student_numbers(3)
 
@@ -162,7 +173,7 @@ print("------return--------")
 # Pure Function. return but no side effect so is a pure funcion
 def student_numbers(number):
     sum = (5*number)/3
-    return sum
+    return sum          #متغیر محلی با ریترن، تبدیل به خروجی تابع شده
 print(student_numbers(50))
 print(student_numbers(40))
 
@@ -181,8 +192,8 @@ show_winners("Kim", "Lee", "Ava")
 print("----------------------------------")
 # pure
 def combine(first, second, third):
-    return first + second + third
-result = combine("big", "bad", "wolf")
+    return first + second + third     #متغیر نتیجه(Result variable_متغیری بدون ذخیره سازی و ریترن شده)
+result = combine("big", "bad", "wolf")   #یک متغیر رسیور بیرونی 
 print(result)
 
 def create_email(name, year):
@@ -244,7 +255,7 @@ print("----------------------------")
 # pure
 def generate_username(name, b_day):
     return f"{name}_{b_day}"
-user = generate_username("ty", 17)
+user = generate_username("ty", 17)  #متغیر رسیور
 print(user)
 
 def get_free_seats(booked, total):
@@ -269,19 +280,18 @@ print("-------------------------------------")
 # Global scope  # متغیر بیرونی
 shipping = 10
 def calculate_total(cart):
-    print(cart + shipping)
-calculate_total(54)
-
+    print(cart + shipping)      
+calculate_total(54)               
+#متغیر بیرونی تنها در محاسبات استفاده شده و خودش تغییر نکرده
+#پس نیازی به global نیست
+# ------------------------------
 rent = 1000
 def calculate_spendings(groceries):
     print(f"Total: {rent + groceries}")
 print(f"Rent: {rent}")
 calculate_spendings(300)
-# در این دو مثال از متغیر بیرونی تنها در محاسبات و پرینت استفاده شده
-# پس نیاز به کلید واژه 
-# global 
-# قبل از متغیر بیرونی نیست
 
+# ----------------------------------
 # مثال بعدی (مهم)
 # تغییر متغیر بیرونی و نیاز به کلید واژه گلوبال
 balance=5000
@@ -297,25 +307,37 @@ p("---------------")
 # همان مثال بالا با والیوی خروجی ناون اگر ریترن نداشته باشد
 balance=5000
 def calculate_sold(sell):
-    global balance  #اگر این سطر را ننویسیم، کد ارور می دهد
+    global balance 
     balance += sell
     # p("your balance is: ", balance)  پیام یا همان ساید افکت تابع را با کامنت غیرفعال کردیم
     # return balance  ریترن را هم همین طور 
 p(calculate_sold(50))
 # خروجی ناون است
-
+# ------------------------------------------
+# تابع با متغیر خارجی گلوبال شده برای اعمال تغییرات بر متغیر 
+p = print
+shipingz = 1000
+def calculate(cart):
+    global shipingz
+    shipingz += cart
+    p("Total is: ",shipingz)   
+calculate(60)
+calculate(80)
+calculate(-500)  #اعمال اعداد منفی به متغیر بیرونی
+calculate(-200)
+# خروجی این تابع نه ذخیره و نه پرینت شده
+# و اگر هیج جای دیگر استفاده نشه از دست رفته محسوب میشه
 print("------------------------------")
 # Local scope #متغیر داخلی
 # void
 def add_bonus(salary):
-    bonus = 100  #این یک متغیر داخلی است
+    bonus = 100  # متغیر داخلی با مقدار پیشفرض
     print(salary + bonus)
 add_bonus(1900)
 
 # pure
 def apply_discount(price):
     discount = 20
-    discount = 10
     return price - discount
 final_price = apply_discount(50)
 print(final_price)
@@ -400,7 +422,7 @@ show_score(100)
 
 print("-------------------------------------")
 # ==============================
-# توابع با لیست‌ها
+# توابع با آرگومان لیست‌
 # ==============================
 # void
 # در تمام مثال های این بخش ،آرگومان(والیویی که وارد میکینم) یک لیست است
@@ -408,35 +430,37 @@ print("-------------------------------------")
 def display_programme(movies):
     print("Airing tonight:")
     print(movies)
-movie_list = ["Alien", "Moon"]
+    # ---------
+movie_list = ["Alien", "Moon"]    #لیست خارج از تابع است(منطق داده از منطق تابع جداست)
 display_programme(movie_list)
-
+# ------------------------------------
+passengers = ["June", "Sam", "Lee"]    #در اینجا نیز لیست جدا از تابع ولی قبل از تابع آمده(فرقی ندارد)
 def count_passengers(passengers):
     print(len(passengers))
-passengers = ["June", "Sam", "Lee"]
-count_passengers(passengers)
 
+count_passengers(passengers)
+# ------------------------------------
+passengers = ["June", "Sam", "Lee"]
 def is_booked(passengers):
     print(len(passengers) > 4)
-passengers = ["June", "Sam", "Lee"]
 is_booked(passengers)
-
+# ------------------------------------
+basket_items = ["t-shirt", "jeans", "jeans"]
 def has_two_for_one(basket):
     print(len(basket) >= 2)
-basket_items = ["t-shirt", "jeans", "jeans"]
 has_two_for_one(basket_items)
-
+# ------------------------------------
+players = ["Amy", "Jay"]
 def is_multiplayer(players):
     print(len(players) == 2)
-players = ["Amy", "Jay"]
 is_multiplayer(players)
-
+# ------------------------------------
 def get_winner(top_players):
     winner = top_players[0]
     print(f"Game winner: {winner}")
 top_players = ["Jay", "Meg", "Cy"]
 get_winner(top_players)
-
+# ------------------------------------
 def update_first_place(player_list, player):
     player_list[0] = player
     return player_list
@@ -444,13 +468,13 @@ player_list = ["Jay", "Meg", "Cy"]
 print(player_list)
 player_list = update_first_place(player_list, "Lena")
 print(player_list)
-
+# ------------------------------------
 def set_initials(names, initial):
     names[0] = initial
     print(names)
 author_names = ["Francis", "Scott", "Fitzgerald"]
 set_initials(author_names, "F.")  
-
+# ------------------------------------
 def tabeh(names, fav): 
     print(names)
     names[3] = fav
@@ -458,7 +482,7 @@ def tabeh(names, fav):
     return names
 names = ["barbi", "gala", "hadi", "jamal", "yana"]  
 tabeh(names, "raha")
-
+# ------------------------------------
 def add_sports(plans):
     plans[0] = "jogging"
 plans = ["reading", "brunch with Meg", "cooking", "netflix"]
@@ -476,72 +500,84 @@ def onboard_passengers(bookings):
         print(f"Passenger {counter} on board")
         counter += 1
 onboard_passengers(5)
-
+# ------------------------------------
 def functiona(books):
     counter = 1
     while counter < books:
         print(f"we have anything")
         counter += 1
 functiona(4)
-
+# ------------------------------------
 def display_progress(total_files):
     for i in range(total_files):
         print(f"Downloading file {i} out of {total_files}")
 display_progress(3)
-
+# ------------------------------------
 def do_countdown(counter):
     while counter > 0:
         print(counter)
         counter -= 1
     print("Go!")  
 do_countdown(3)
-
+# ------------------------------------
 def display_stars(rows):
     counter = 0
     while counter < rows:
         print("***")
         counter += 1
 display_stars(2)
-
+# ------------------------------------
 def show_progress(total):
     for i in range(total):
         print(f"Installing next update")
 show_progress(3)
-
+# ------------------------------------
 def display_progress():
     for i in range(3):
         print(f"Downloading file {i} out of 3")
 display_progress()
-
+# ------------------------------------
 def show_notifications(messages):
     for i in range(messages):
         print("Failed to send message")
 show_notifications(3)
-
+# -------------------------------------------------------
+# توابع حلقه دار با آرگومان لیست
+# -------------------------------------------------------
 def halve_prices(cart):
     for price in cart:
         print(f"New price: {price/2}")
+        # پایان محدوده تابع 
 cart_list = [5, 20, 8]
 new_cart_list = [20, 15, 35, 60]
 halve_prices(cart_list)
 halve_prices(new_cart_list)
+#لیست ها خارج از تابع تعریف شدن تا منطق پردازش تابع از منطق ساخت داده جدا باشه
 # آرگومان یک لیست است
-
+# ------------------------------------
 def display_players(team):
     number = 1
     for name in team:
         print(f"Player {number}: {name}")
-team_1 = ["Kim", "Lee"]
+team_1 = ["Kim", "Lee"]       
 team_2 = ["Meg", "Jo"]
 display_players(team_1)
-# آرگومان یک لیست است
 
+# شکل دیگری از مثال بالا 
+p = print
+team_1 = ["Kim", "Lee"]       
+team_2 = ["Meg", "Jo"]
+def printer(items):
+    for index,item in enumerate(items):
+        p(f"you'r mother is {items[index]}")
+printer(team_1) 
+# ------------------------------------
 def show_next_track():
-    playlist = ["Hey Jude", "Helter Skelter", "Something"]
     for track in playlist:
         print(f"Next up: {track}")
+playlist = ["Hey Jude", "Helter Skelter", "Something"]       
 show_next_track()
-
+# ------------------------------------
 def show_next_track(playlist):
     for track in playlist:
         print(f"Next up: {track}")
@@ -550,7 +586,7 @@ beethoven = ["Symphony No. 1", "Symphony No. 9"]
 show_next_track(beethoven)
 show_next_track(beatles)
 # آرگومان یک لیست است
-
+# ------------------------------------
 def showing_list(film): 
     for movie in film:
         print(f"my favourite movie is {movie}")
@@ -569,14 +605,23 @@ alarm_time = 7
 def set_alarm():
     print(f"New alarm set for {alarm_time}AM")
 set_alarm()
-
+# -------------------------------------------
 def display_instructions(add_sugar):
     if add_sugar:
         print("Enter amount of sugar")
     print("Select coffee type")
 display_instructions(False)
-# آرگومان یک والیوی بولین است 
-
+# در شرط ها الزاما نیاز به ساخت یک برابری یا نابرابری نیست
+# مثلا 
+def showing(it):
+    if it:
+        p("lets go")
+    else:
+        p("bye bye")  
+showing(0)             #lets go printed
+showing("")            #lets go printed
+showing("bing")      #bye bye printed
+# -------------------------------------------
 def get_score_data(listo, new):
     score_list[4] = new
     print(f"new list : {score_list}")
@@ -621,5 +666,5 @@ monday = ["Swan Lake", "Ravel - Piano Concerto"]
 tuesday = ["La Boheme"]
 show_programme(monday)
 show_programme(tuesday)
-
+# ------------------------------------------
 print("End of functions training")

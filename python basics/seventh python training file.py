@@ -1,6 +1,6 @@
 # فایل هفتم آموزش پایتون - عملیات رشته‌ها
 # ==============================
-# ÷÷÷÷ کاربرد find و join  بررسی شود ÷÷÷÷÷
+
 print("lesson name : string operations")
 
 # ==============================
@@ -19,12 +19,46 @@ print("Original string:", new_users)
 print("Split list:", users_list)
 print("Direct split:", new_users.split())
 
+
+# --------------------------------------------------
+#join
+# --------------------------------------------------
+# برای تبدیل لیست های رشته ای به رشته (با و یا بدون جداکننده)
+# Join  new_string ="هرنوع فاصله دهنده".join(string_list)
+
+# ----------------------------------------------------------
+# مثلا تبدیل دوباره لیست بالا به رشته با جوین
+new_string = "--".join(users_list)    #با جداکننده دلخواه
+new_string2 = "".join(users_list)     #بدون جداکننده 
+# -----------------------------------------
+# تبدیل لیست عددی به رشته با join
+
+p = print
+numbers = [i for i in range(15,30)]
+#ابتدا تبدیل لیست عددی به لیستی از رشته های عددی
+str_numbers = [str(i) for i in numbers]    
+striq = "".join(str_numbers)
+p(striq)
+
+# -------------------------------------------
 # (مهم)مثال بعدی
+# تبدیل رشته به لیست
+
 p=print
 new_users = "reza.hadi.ali.ana.ahmad.saif.vania.gandi.salam.jalal.omid.zainab"
 new_list=new_users.split(".")
 p(new_list)
-print("-------------------------")
+# -------------------------------------
+# تبدیل رشته به لیستی از حروف مجزا
+string1 = "kjdssjksdkllkfjsfksfjklhn"
+letter_list = [let for let in string1]
+p(letter_list)
+# -----------------------------------------
+# تبدیل رشته عددی به لیستی از اعداد مجزا
+int_str = "84561518916483155"
+int_list = [ int(digit) for digit in int_str]
+p(int_str)
+# -----------------------------------------
 
 # تقسیم رشته با جداکننده مشخص
 words = "gear fault lights build-up"
@@ -90,7 +124,7 @@ print("-------------------------")
 
 # ==============================
 # جایگزینی در رشته‌ها (replace)
-
+# new_str = str.replace("a","b")
 #  ذخیره تغییرات ریپلیس شده در رشته ها،
 # نیاز به سلف اساینمنت یا ذخیره سازی در متغیر جدید دارد
 # ==============================
@@ -191,6 +225,17 @@ print("Original movies:", old_top_movies)
 print("Updated movies:", new_top_movies)
 
 print("-------------------------")
+# ------------------------------------------------------------
+# مثال برای اصلاح(حذف برخی اجزا) یک رشته با ریپلیس
+# ------------------------------------------------------------
+stri= "ab kdldl ;d;kldk /jdkfk _kflk 95"
+
+def replace(letter,new):
+    global stri
+    stri= stri.replace(letter , new)
+    p(stri) 
+replace(" ","")
+replace(";","")  
 
 # ==============================
 # مثال‌های تکمیلی از فایل اصلی
@@ -326,5 +371,6 @@ for i in range(0, len(csv_list), 3):
     record = csv_list[i:i+3]
     records.append(record)
 print("Grouped records:", records)
+# -------------------------------------
 
 print("End of string operations training")
