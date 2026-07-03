@@ -3,7 +3,7 @@
 # Day-01
 
 import pandas as pd
-df= pd.read_csv(r"e:\python\INTPCode\pandas\student1.csv")
+df= pd.read_csv(r"e:\python\INTPCode\3MonthProject\Month-01\data\student1.csv")
 print(df.dtypes)
 p = print
 # 1 دسترسی به یک ستون
