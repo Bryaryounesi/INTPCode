@@ -1,16 +1,3 @@
 {
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "driver": "SQLite",
-            "name": "new_connectoin",
-            "database": "${workspaceFolder:Test}/new_database"
-        }
-    ],
-    "vscode_custom_css_silent.imports": [
-        "file:///c%3A/Users/venous%20pc/.vscode/extensions/alirezakay.rtltextdocuments-0.1.4/assets/cascadia.css",
-        "file:///c%3A/Users/venous%20pc/.vscode/extensions/alirezakay.rtltextdocuments-0.1.4/assets/rtl.css",
-        "file:///c%3A/Users/venous%20pc/.vscode/extensions/alirezakay.rtltextdocuments-0.1.4/assets/rtl.js"
-    ],
-    "python.analysis.autoImportCompletions": true
+  
 }
