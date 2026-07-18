@@ -8,13 +8,10 @@ p = print
 import cv2
 path = r"e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-03\Data\lamborghini.jpg"
 img = cv2.imread(path)
-cv2.imshow("my image",img)
-cv2.waitKey(0)
-# نمایش تصویر اولیه
-
+# -------------------------------------
 h,w = img.shape[:2]
 new_h = int(h/2)
-# ارتفاع را نصف کردیم و عدد ارتفاع را اینتیجر ساختیم تا 
+# ارتفاع را نصف کردیم و عدد ارتفاع را اینتیجر ساختیم تا
 # تابع ریسایز ارور ندهد
 new_w = int((w*new_h)/h)
 # تناسب گیری برای ایجاد ابعاد جدید تصویر برای مرحله ریسایز

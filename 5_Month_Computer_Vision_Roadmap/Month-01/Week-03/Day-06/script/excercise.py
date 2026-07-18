@@ -33,7 +33,7 @@ plt.axis("off")
 plt.show()
 
 # 2-نتیجه را ذخیره و با تصویر اصلی مقایسه کن
-# ذخیره هر سه تصویر در یک فیگور با سابپلات برای مقایسه 
+# ذخیره هر سه تصویر در یک فیگور با سابپلات برای مقایسه
 fig, axes = plt.subplots(1,3, figsize=None,constrained_layout=True)
 axes[0].imshow(rgb_img)
 axes[0].set_title("orginal")

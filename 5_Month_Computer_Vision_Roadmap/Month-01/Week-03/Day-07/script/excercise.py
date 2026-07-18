@@ -1,53 +1,60 @@
 # Month-01
 # Week-03
 # Day-07
+# weekly task
+# ----------------------
 
 # 1-  سه تصویر دلخواه انتخاب کن و  برای هر کدام،
 # حداقل ۳ نسخه با این تغییرات ( تغییر اندازه، برش، چرخش) بساز و ذخیره کن
-
-path1 = r"e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-07\Data\input\cow.jpg"
-
-path2 = r"e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-07\Data\input\duck.jpg"
-
-path3 = r"e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-07\Data\input\rooster.jpg"
-
 import cv2
+from pathlib import Path
+# from cvtools import cvt
 p = print
+folder = Path(
+    r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-07\Data")
+pathes = [str(i) for i in folder.glob("*.jpg")]
+# چون تصاویر بیش از یک مورد بودند به جای وارد کردن تک تک مسیر ها، با پزلیب یک لیست از کل مسیر های تصاویر ساختیم و حالا باید برای سرعت کار روی این لیست حلقه بزنیم
+# ---------------------------------------------
+for i in pathes:
+    img = cv2.imread(i)     #خواندن تصویر
+    if img is None:         #کد جلوگیری از ارور در صورت مشکل دار بودن تصاویر
+        p(f"error in reading: {i}")
+        continue
+    # ----------------------------
+    resized = cv2.resize(img,dsize=None,fx=0.7,fy = 0.7,interpolation=cv2.INTER_LINEAR)  #ریسایز
+    # ----------------------
+    h,w = img.shape[:2]
+    roi = img[h//4:3*h//4,w//4:3*w//4]      #برش تصویر
+    # -------------------------
+    rotated = cv2.rotate(img,cv2.ROTATE_90_COUNTERCLOCKWISE)       #چرخش تصویر
+    # cvt.imshow("win",rotated)
+    # -------------------------
+    # ساخت نام بدون پسوند تصاویر از مسیر آنها برای نام گذاری نهایی تصاویر در هنگام ذخیره سازی
+    name = Path(i).stem
+    # name = i.split("\\")[-1].split(".")[0]   کد معادل
+    # --------------------------------------
+    # ساخت مسیر خروجی :
+    output = Path(
+        r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-07\Output"
+    )
+    output.mkdir(parents= True,exist_ok=True)
+    # کد ایمنی در برابر نبود احتمالی پوشه خروجی
+    # --------------------------------
+    # خواندن تصویر:
+    # cv2.imwrite(output / f"resized_{name}.jpg",resized)
+    # cv2.imwrite(output / f"roi_{name}.jpg", roi)
+    # cv2.imwrite(output / f"rotated_{name}.jpg", rotated)
 
-def Change_pictures(pathes,resize_name,flip_name,rotate_name,crop_name,crop_area):
-    img = cv2.imread(pathes)    #reading pictures
-    #-------------------------------------
-    resized = cv2.resize(img,None, fx=0.6,fy = 0.6,interpolation= cv2.INTER_AREA)    #resizing pictures
-    #-----------------------------------------
-    fliped = cv2.flip(img,1)   #fliping pictures
-    #-----------------------------------------
-    h,w = img.shape[:2]       #roatating pictures
-    center = (w//2,h//2)
-    M = cv2.getRotationMatrix2D(center,15,0.8)
-    rotated = cv2.warpAffine(img,M,(w,h))
-    #-----------------------------------------
-    w1,h1,w2,h2 = crop_area         #crapping pictures
-    croped = img[h1:h2,w1:w2]
-    #-----------------------------------------
-    cv2.imwrite(resize_name,resized)    #writing pictures
-    cv2.imwrite(flip_name,fliped)
-    cv2.imwrite(rotate_name,rotated)
-    cv2.imwrite(crop_name,croped)   
-    #-----------------------------------------
-# ساخت یک تاپل برای حلقه زدن روی آن و 
-# قراردهی تابع فراخوانی درون این حلقه برای
-# ورودی گرفتن اتوماتیک از عناصر تاپل  
+# تمام عملیات ها و ذخیره آنها درون یک حلقه انجام شد تا از تکرار بیهوده کد جلوگیری شود
+# ---------------------------------------
+# 2- بررسی کن که تصاویر برای پروژه آماده شده(آمادگی فنی تصاویر )
+# Image processing ready
+# این نوع آمادگی با آمادگی برای آموزش مدل فرق میکند و سطحی ابتدایی تر از آمادگی است
 
-tuples = [(path1,"cow_resized.jpg","cow_fliped.jpg","cow_rotated.jpg","cow_croped.jpg",(29,189 ,513 ,647)),(path2,"duck_resized.jpg","duck_fliped.jpg","duck_rotated.jpg","duck_croped.jpg",(39,194 ,550 ,730 )),(path3,"rooster_resized.jpg","rooster_fliped.jpg","rooster_rotated.jpg","rooster_croped.jpg",(167,164 ,400 ,443))]
-
-for i,j,f,g,k,m in tuples:
-    Change_pictures(i,j,f,g,k,m)
-# 2-بررسی کن که تصاویر آماده برای پروژه شده باشند
-'''
-تصاویر برای انجام پروژه مناسب نیستند زیرا هدف اولیه این تمرین 
-صرفا اعمال تغییرات دلخواه روی تصاویر بوده و نه تغییرات مناسب برای پروژه 
-مثلا تصاویر مربعی نیستند و ابعاد متفاوتی دارند که برای پروژه ها معمولا باید همگی ابعاد و شکل هندسی یکسانی داشته باشند
-
-در تمرین پایانی هفته این مشکل برطرف خواهد شد
-'''
-p("-------------------------------------------------------")
+# چک لیست آمادگی فنی:
+# ✅ تصویر خوانده می‌شود
+# ✅ تغییر اندازه انجام می‌شود
+# ✅ برش انجام می‌شود
+# ✅ چرخش انجام می‌شود
+# ✅ ذخیره خروجی انجام می‌شود
+# پس بله تصاویر، این مرحله از آمادگی را دارند

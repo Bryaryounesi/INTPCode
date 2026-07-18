@@ -1,3 +1,11 @@
-ManuelNotes.py
-united.code-workspace
+# فایل‌های شامل note
+**/*note*
 
+# فایل‌ها/پوشه‌های شامل workspace
+**/*workspace*
+
+# پوشه‌های __pycache__ پایتون
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
