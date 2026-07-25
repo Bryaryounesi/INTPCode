@@ -1,6 +1,17 @@
 '''
 🎨Opencv Cheatsheet
+---------------------------------
+مواردی که باید بعدا اصلا شوند در چیت شیت:
+
+یکی از مشکلات این چیت شیت درج دقیق پزهای مثال های حل شده است در حالی که یک کلمه نمادین برای درک مطلب کافی بود
+
+مشکل بعدی، پارامترهایی  در فرمول هاست که مقدار پیشفرض دارند و مقدار پیشفرض آنها بهتر است. اینگونه پارامتر ها را بهتر است اصلا در شکل رایج فرمول ننویسیم چون درج نکردن پارامتر به صورت اتوماتیک سبب اعمال شکل پیشفرض آنها میشود
+البته در بخش پارامتر ها همچنان باید توضیحاتشان باشد
+
+سوم : اگر قرار است کل چیت شیت را درون تریپل کوت بگذاریم دیگر شاید نیاز به این همه هشتگ گذاری نباشد
+
 ---------------------------------------
+
 مثال اولیه برای انجام یکجای چند عملیات رو تصاویر
 (برای پرهیز از درگیر شدن در سینتکس مراحل عملیات ها)
 # حلقه زدن روی عملیات تصویر
@@ -105,7 +116,15 @@ cv2.resizeWindow("win", width, height)      # ابعاد دلخواه
 cv2.imshow("My Image", img_color)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
+# --------------------------
+مثال دوم برای نمایش چند تصویر
+cv2.imshow("small blur",small_blur)
+cv2.imshow("medium blur", medium_blur)
+cv2.imshow("extra blur", extra_blur)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+# اگر تصاویر  زیاد باشند باید عملیات ها را درون حلقه فور تعریف کنیم
+# ------------------------
 نکته : یک ماژول در پروژه تعریف کردم که نیاز به توابع کنترل پنجره را از بین میبرد تنها کافیست آن را ایمپورت کنیم و برپایه آن فایل را بخوانیم به این صورت:
 from cvtools import cvt
 cvt.imshow("win",img)
@@ -190,7 +209,7 @@ img:متغیر حاوی تابع خواندن تصویری که میخاهیم �
 مثال:
 cv2.imwrite("gray_image.jpg", img_gray)
 # --------------------------------------------------------------------
-# ذخیره تصویر خروجی در پوشه دلخواه
+# ذخیره تصویر خروجی در پوشه دلخواه(ساخت مسیر خروجی)
 ---------------------------------------------------------------------
 # باید مسیر پوشه دلخواه را به ابتدای اسامی فایل های خروجی اضافه کنیم
 # برای کوتاه کردن مسیر پوشه از کتابخانه پزلیب استفاده میکنیم
@@ -753,7 +772,7 @@ def sample_project_pipeline(path):
 
 # برای اجرا، مسیر تصویر را تنظیم و خط زیر را از کامنت خارج کنید:
 # sample_project_pipeline(DEFAULT_IMAGE_PATH)
-'''
+
 # ----------------------------------------------------------------
 # راهنمای استفاده از کتابخانه pathlib
 # -----------------------------------------------------------------
@@ -764,15 +783,17 @@ p = print
 # تا بعدا از آن در فرمول خواندن تصویر استفاده کنیم
 # قبل از پَز ها باید یک آر درج کنیم تا پزها قابل خواندن
 # ----
-# اگر پز رو از خود ویندوز بگیریم و نه وی اس کد نیازی به این آر ها نیست
-# ولی علامت / تبدیل به \ یا \\ میشوند
+# اگر پز رو از خود ویندوز بگیریم و نه وی اس کد، علامت \ شاید به صورت / یا // خواهد بود که باید
+# دوباره آن را به \ تبدیل کنیم
+# مثلا پز گرفته شده از ویندوز : E://BEAUTIFULL
+# اصلاح آن به صورت زیر: r"E:\BEAUTIFULL"
 
 path = r"e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-07\Data\input\cow.jpg"
 image = cv2.imread(path)
-'''
+
 ولی برای تصاویر بیشتر، منطقی نیست پَز ها رو تک تک وارد کنیم
 بهتر است تصاویر منبع را در یک پوشه، ذخیره کنیم و پز پوشه را به کتابخانه پَزلیب بدهیم تا لیستی از اسامی تصاویر به ما بده
-'''
+
 # --------------------------------
 # نحوه استفاده از پزلیب
 # 1) ایمپورت کردن کلاس پَز از کتابخانه پَزلیب
@@ -798,7 +819,7 @@ pathes = [str(i) for i in folder.glob("*.jpg")]
 # cv2.imwrite(output / f"roi_{name}.jpg", roi)
 # --------------------------
 # مثال کامل:
-'''
+
 import cv2
 from pathlib import Path
 # from cvtools import cvt
@@ -824,7 +845,7 @@ for i in pathes:
     # --------------------------------
     # خواندن تصویر:
     # cv2.imwrite(output / f"resized_{name}.jpg",resized)
-'''
+
 # ------------------------------------------------------------
 # بررسی آمادگی فنی تصاویر خروجی و آمادگی تصاویر برای آموزش مدل
 # تفاوت آمادگی فنی با آمادگی دیتاست
@@ -856,3 +877,394 @@ for i in pathes:
 # - YOLO استفاده کنیم
 # - مدل تشخیص یا طبقه‌بندی بسازیم
 # -------------------------------------------------------
+# غربالگیری تصاویر با انحراف معیار (به طور غیر مستقیم با کنتراست)
+# -----------------------------------------------------------
+# اگر انحراف معیار یک تصویر بالای 40 باشد یعنی کنتراست خوبی دارد
+# کنتراست، معیاری است که میتواند 70 تا 80 درصد تصاویر نامناسب برای آستانه گذاری را فیلتر کند
+# یعنی دلیل نامناسب بودن اغلب تصاویر کنتراست پایین است
+
+# نحوه غربالگری تصاویر یک پوشه با انحراف معیار:
+import cv2
+from pathlib import Path
+from cvtools import cvt
+import numpy as np
+p = print
+folder = Path(r"E:\BEAUTIFULL")
+pathes = [str(i) for i in folder.glob("*.jpg")]
+
+for i in pathes:
+    img = cv2.imread(i, 0)
+    if img is None:
+        continue
+    if np.std(img) > 60:
+        name = Path(i).stem
+        cvt.imshow(f"{name}_win",img)
+# -------------------------------------------------------
+# ============================================================
+# 🎨 OpenCV Cheatsheet — Week 04
+# Filters, Thresholding & Edge Detection
+# ============================================================
+
+import cv2
+import numpy as np
+from pathlib import Path
+
+p = print
+
+# ============================================================
+# ✅ ۱. فیلتر Gaussian — کاهش نویز نرم
+# ============================================================
+
+# 📌 شکل رایج:
+# blurred = cv2.GaussianBlur(src, ksize, sigmaX, sigmaY=0, borderType=cv2.BORDER_DEFAULT)
+
+# 📌 پارامترها:
+# src        → تصویر ورودی (رنگی یا خاکستری)
+# ksize      → اندازه کرنل — تاپل (width, height) — هر دو باید فرد باشند
+#              والیوهای رایج: (3,3) کم, (5,5) متوسط, (9,9) زیاد, (15,15) خیلی زیاد
+# sigmaX     → انحراف معیار افقی — اگر 0 بدهی OpenCV خودش از روی ksize حساب می‌کند (پیشنهادی)
+# sigmaY     → انحراف معیار عمودی — پیشفرض 0 یعنی برابر با sigmaX
+# borderType → نوع برخورد با لبه‌ها — پیشفرض BORDER_DEFAULT (معمولاً تغییر نمی‌دهیم)
+
+# 📌 دو حالت استفاده:
+# حالت اول: ksize می‌دهی, sigmaX=0 (اپن‌سی‌وی خودش محاسبه کند — روش پیشنهادی)
+# حالت دوم: ksize=(0,0) می‌دهی, sigmaX را دستی تعیین می‌کنی
+
+# 📌 مثال:
+path = r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-01\Data\The man.png"
+img = cv2.imread(path)
+
+# حالت پیشنهادی — ksize داری, sigmaX=0
+small_blur = cv2.GaussianBlur(img, (3, 3), sigmaX=0)
+medium_blur = cv2.GaussianBlur(img, (5, 5), sigmaX=0)
+extra_blur = cv2.GaussianBlur(img, (9, 9), sigmaX=0)
+
+# نمایش
+cv2.imshow("small blur (3,3)", small_blur)
+cv2.imshow("medium blur (5,5)", medium_blur)
+cv2.imshow("extra blur (9,9)", extra_blur)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# ذخیره
+output = Path(r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-01\Output")
+output.mkdir(parents=True, exist_ok=True)
+cv2.imwrite(str(output / "man_small_blur.jpg"), small_blur)
+cv2.imwrite(str(output / "man_medium_blur.jpg"), medium_blur)
+cv2.imwrite(str(output / "man_extra_blur.jpg"), extra_blur)
+
+
+# ============================================================
+# ✅ ۲. فیلتر Median — حذف نویز نمک-فلفل
+# ============================================================
+
+# 📌 شکل رایج:
+# median = cv2.medianBlur(src, ksize)
+
+# 📌 پارامترها:
+# src   → تصویر ورودی (رنگی یا خاکستری)
+# ksize → اندازه کرنل — یک عدد فرد (نه تاپل! برخلاف Gaussian)
+#         والیوهای رایج: 3 (کم), 5 (متوسط، پیشنهادی), 9 (زیاد)
+#         نکته: اعداد بین اینها (مثلاً 7) تفاوت محسوسی ندارند،
+#         فقط 3 و 5 و 9 هستند که اختلاف معنادار ایجاد می‌کنند
+
+# 📌 مقایسه با Gaussian:
+# Gaussian = میانگین وزن‌دار پیکسل‌های همسایه — نویز پخش می‌شود — لبه‌ها محو
+# Median   = میانه آماری پیکسل‌های همسایه — نویز حذف می‌شود — لبه‌ها تیز
+# Median برای نویز نمک-فلفل (پیکسل‌های سفید و سیاه پراکنده) بهترین انتخاب است
+
+# 📌 مثال:
+path = r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-02\Data\Chaplin.jpg"
+img = cv2.imread(path)
+
+ksizes = [3, 5, 9]
+for k in ksizes:
+    gaussian = cv2.GaussianBlur(img, (k, k), sigmaX=0)
+    median = cv2.medianBlur(img, k)
+
+    output = Path(r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-02\Output")
+    output.mkdir(parents=True, exist_ok=True)
+
+    cv2.imwrite(str(output / f"chaplin_original.jpg"), img)
+    cv2.imwrite(str(output / f"chaplin_gaussian_{k}.jpg"), gaussian)
+    cv2.imwrite(str(output / f"chaplin_median_{k}.jpg"), median)
+
+
+# ============================================================
+# ✅ ۳. Thresholding ساده — آستانه‌گذاری سراسری
+# ============================================================
+
+# 📌 شکل رایج:
+# ret, dst = cv2.threshold(src, thresh, maxval, type)
+
+# 📌 پارامترها:
+# src    → تصویر ورودی — باید Grayscale باشد (تک کاناله)
+#          اگر رنگی بدهی، خودش کانال به کانال اعمال می‌کند ولی توصیه نمی‌شود
+# thresh → عدد آستانه (0 تا 255)
+#          والیوهای رایج: 50 (روشن), 127 (متوسط، رایج‌ترین), 200 (تیره)
+#          thresh کم = تصویر سفیدتر | thresh زیاد = تصویر سیاه‌تر
+# maxval → مقدار پیکسل‌های عبورکرده از آستانه — معمولاً 255
+#          نکته: در نوع THRESH_BINARY یعنی سفید مطلق
+# type   → نوع آستانه‌گذاری
+#          والیوهای رایج:
+#          cv2.THRESH_BINARY      → بالای آستانه = maxval, پایین = 0 (پیشفرض ذهنی)
+#          cv2.THRESH_BINARY_INV  → معکوس حالت بالا
+#          cv2.THRESH_TRUNC       → بالای آستانه = خود آستانه, پایین = بدون تغییر
+#          cv2.THRESH_TOZERO      → بالای آستانه = بدون تغییر, پایین = 0
+#          cv2.THRESH_TOZERO_INV  → معکوس حالت بالا
+
+# 📌 خروجی:
+# ret → همان مقدار thresh استفاده‌شده (در آستانه‌گذاری دستی)
+#        اگر OpenCV خودش آستانه را تعیین کند (مثل Otsu) از ret استفاده کن
+# dst → تصویر باینری شده (آرایه NumPy)
+
+# 📌 مثال:
+path = r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-03\Data\huawei.jpg"
+img = cv2.imread(path)
+grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+tresh_list = [50, 127, 200]
+for t in tresh_list:
+    ret, th = cv2.threshold(grey, thresh=t, maxval=255, type=cv2.THRESH_BINARY)
+
+    output = Path(r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-03\Output")
+    output.mkdir(parents=True, exist_ok=True)
+    cv2.imwrite(str(output / f"huawei_thresh_{t}.jpg"), th)
+
+
+# ============================================================
+# ✅ ۴. Adaptive Thresholding — آستانه‌گذاری تطبیقی
+# ============================================================
+
+# 📌 شکل رایج:
+# dst = cv2.adaptiveThreshold(src, maxValue, adaptiveMethod, thresholdType, blockSize, C)
+
+# 📌 پارامترها (هر ۶ پارامتر اجباری هستند، هیچکدام پیشفرض ندارند):
+# src            → تصویر ورودی — باید Grayscale باشد (تک کاناله)
+# maxValue       → مقدار پیکسل‌های سفید — معمولاً 255
+# adaptiveMethod → روش محاسبه آستانه محلی
+#                  والیوها:
+#                  cv2.ADAPTIVE_THRESH_MEAN_C     → میانگین ساده همسایه‌ها
+#                  cv2.ADAPTIVE_THRESH_GAUSSIAN_C → میانگین وزن‌دار (بهتر، پیشنهادی)
+# thresholdType  → نوع باینری‌سازی
+#                  والیوی رایج: cv2.THRESH_BINARY
+#                  نکته: cv2.THRESH_BINARY_INV هم مجاز است
+# blockSize      → اندازه ناحیه بررسی — یک عدد فرد
+#                  والیوهای رایج: 11 (جزئیات بیشتر), 21 (نرم‌تر، پیشنهادی برای متون)
+#                  بزرگتر = نرم‌تر | کوچکتر = جزئیات بیشتر اما نویز بیشتر
+# C              → ثابت تصحیح — از میانگین محلی کم می‌شود
+#                  والیوهای رایج: 2 (پیشفرض ذهنی), 3 (معمولی), 7 (خطوط پیوسته‌تر)
+#                  بزرگتر = تصویر تیره‌تر (سخت‌گیرانه‌تر)
+
+# 📌 نکته مهم — رفتار شبه‌کنی:
+# هرچه C بزرگتر ← پیوستگی خطوط بیشتر
+# هرچه blockSize کوچکتر (حتی زیر 11) ← خطوط باریکتر
+# در برخی تصاویر: adaptiveThreshold با C بالا و blockSize پایین
+# عملکردی مشابه Canny پیدا می‌کند
+
+# 📌 این تابع برخلاف threshold، تاپل برنمی‌گرداند — فقط dst
+
+# 📌 مثال:
+path = r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-04\Data\panther.jpg"
+img = cv2.imread(path, 0)
+
+# آستانه‌گذاری ساده برای مقایسه
+_, simple_thresh = cv2.threshold(img, 50, 255, cv2.THRESH_BINARY)
+
+# آستانه‌گذاری تطبیقی
+adaptive_thresh = cv2.adaptiveThreshold(
+    img, 255,
+    cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+    cv2.THRESH_BINARY,
+    21,  # blockSize
+    3    # C
+)
+
+output = Path(r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-04\Output")
+output.mkdir(parents=True, exist_ok=True)
+cv2.imwrite(str(output / "simple_threshold_panther.jpg"), simple_thresh)
+cv2.imwrite(str(output / "adaptive_threshold_panther.jpg"), adaptive_thresh)
+
+
+# ============================================================
+# ✅ ۵. تشخیص لبه — Canny Edge Detection
+# ============================================================
+
+# 📌 شکل رایج:
+# edges = cv2.Canny(image, threshold1, threshold2, apertureSize=3, L2gradient=False)
+
+# 📌 پارامترها:
+# image         → تصویر ورودی — ترجیحاً Grayscale (تک کاناله 8-بیتی)
+# threshold1    → حد پایین (minVal) — برای هیسترزیس
+# threshold2    → حد بالا (maxVal) — برای هیسترزیس
+#                 نسبت پیشنهادی: 1:2 یا 1:3 (مثلاً 50:150, 100:300)
+#                 والیوهای رایج برای threshold1: 50, 100, 150
+#                 بهترین ترشهولدهای تجربی کنی: (50,150) (80,200) (80,240)
+#                 threshold1 پایین = لبه‌های بیشتر (حتی نویز)
+#                 threshold1 بالا = لبه‌های کمتر ولی دقیق‌تر
+# apertureSize  → اندازه دیافراگم برای عملگر Sobel — باید فرد باشد (3, 5, 7)
+#                 پیشفرض 3 (معمولاً تغییر نمی‌دهیم)
+# L2gradient    → نوع محاسبه گرادیان
+#                 False (پیشفرض) = فرمول ساده‌تر و سریع‌تر
+#                 True = فرمول دقیق‌تر (L2 norm)
+
+# 📌 منطق هیسترزیس Canny:
+# اگر گرادیان > threshold2 → قطعاً لبه
+# اگر گرادیان < threshold1 → قطعاً غیرلبه
+# اگر بین این دو → لبه است فقط اگر به یک لبه قطعی متصل باشد
+
+# 📌 مثال:
+folder = Path(r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Data")
+paths = [str(i) for i in folder.glob("*.jpg")]
+
+thresholds = [
+    (50, 150),
+    (80, 200),
+    (80, 240)
+]
+
+for i in paths:
+    img = cv2.imread(i, 0)
+    if img is None:
+        continue
+    if np.std(img) > 50:  # غربالگری با کنتراست
+        for minval, maxval in thresholds:
+            # بدون بلور (نادرست)
+            edge_raw = cv2.Canny(img, minval, maxval)
+            # با بلور (صحیح)
+            blurred = cv2.GaussianBlur(img, (5, 5), 0)
+            edge_clean = cv2.Canny(blurred, minval, maxval)
+
+            cv2.imshow(f"{minval}_{maxval}_raw", edge_raw)
+            cv2.imshow(f"{minval}_{maxval}_clean", edge_clean)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
+
+# ============================================================
+# ✅ ۶. پایپلاین‌ها — قوانین و الگوها
+# ============================================================
+
+# 📌 تعریف پایپلاین:
+# زنجیره‌ای از مراحل متوالی که خروجی هر مرحله = ورودی مرحله بعد
+# اگر نتیجه یک مرحله در مرحله بعد استفاده نشود = نقص در پایپلاین
+
+# 📌 قانون اول — ترتیب Gray و Blur:
+# همیشه Gray را قبل از Blur انجام بده
+# دلیل: پردازش Blur روی ۱ کانال سریع‌تر از ۳ کانال است
+# img >> gray >> blur   ✅
+# img >> blur >> gray   ❌ (پردازش اضافه)
+
+# 📌 قانون دوم — جدا بودن مسیر Threshold و Canny:
+# هدف Threshold = جداسازی و بخش‌بندی (Segmentation)
+# هدف Canny = تشخیص لبه و ویژگی (Feature Detection)
+# این دو هدف متفاوت دارند — در یک مسیر خطی قرار نمی‌گیرند
+
+# 📌 قانون سوم — Canny را روی Threshold نزن:
+# blur >> threshold >> Canny   ❌
+# مشکل: Threshold (مخصوصاً Adaptive) نویز تضعیف‌شده توسط Blur را دوباره تشدید می‌کند
+# خروجی: تصویری شبیه به آغشتگی با براده چوب
+
+# 📌 قانون چهارم — Threshold را روی Canny نزن:
+# blur >> Canny >> threshold   ❌
+# مشکل: Canny خودش نوعی Threshold داخلی دارد (هیسترزیس)
+# Threshold بعد از Canny تقریباً بی‌تأثیر است
+
+# 📌 نتیجه — دو مسیر موازی از یک ریشه:
+# پایپلاین اصلی (مشترک):
+# img >> gray >> blur
+#                   >> branch a) threshold >> save    (بخش‌بندی)
+#                   >> branch b) Canny >> save        (تشخیص لبه)
+
+# 📌 پایپلاین شماره ۱: تشخیص لبه استاندارد (تصاویر طبیعی)
+# img >> gray >> GaussianBlur(5,5) >> Canny(50,150)
+
+# 📌 پایپلاین شماره ۲: نویز نمک-فلفل
+# img >> gray >> MedianBlur(5) >> Canny(50,150)
+
+# 📌 پایپلاین شماره ۳: بخش‌بندی (Segmentation)
+# img >> gray >> GaussianBlur(5,5) >> threshold(127) / adaptiveThreshold(...)
+
+# ============================================================
+# ✅ ۷. پایپلاین کامل — Mini Project هفته (با پایپلاین اصلاح‌شده)
+# ============================================================
+folder = Path(r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Data")
+paths = [str(i) for i in folder.glob("*.jpg")]
+
+for i in paths:
+    # ۱. خواندن تصویر به صورت خاکستری
+    img = cv2.imread(i, 0)
+    if img is None:
+        p(f"error reading: {i}")
+        continue
+
+    if np.std(img) > 50:
+        # ۲. بلور کردن (gray قبل از blur انجام شده چون img را 0 خواندیم)
+        blurred = cv2.GaussianBlur(img, (5, 5), 0)
+        # نکته: اگر تصاویر نویز فلفل نمکی داشتند از MedianBlur استفاده کن
+
+        # ۳. انشعاب a — آستانه‌گذاری (بخش‌بندی)
+        _, simple_th = cv2.threshold(blurred, 100, 255, cv2.THRESH_BINARY)
+        adaptive_th = cv2.adaptiveThreshold(
+            blurred, 255,
+            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY,
+            11,  # blockSize
+            7    # C — C بالا = خطوط پیوسته‌تر
+        )
+        # نکته: C=7 و blockSize=11 یعنی خطوط نازک ولی پیوسته (شبیه Canny)
+        # هرچه C بزرگتر ← پیوستگی خطوط بیشتر
+        # هرچه blockSize کوچکتر ← خطوط باریکتر
+
+        # ۴. انشعاب b — تشخیص لبه (روی blur، نه روی threshold!)
+        thresholds = [(50, 150), (80, 200), (80, 240)]
+        for minval, maxval in thresholds:
+            edge = cv2.Canny(blurred, minval, maxval)
+
+            # ۵. ذخیره خروجی‌ها
+            output = Path(r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-07\Output")
+            output.mkdir(parents=True, exist_ok=True)
+
+            name = Path(i).stem
+            cv2.imwrite(str(output / f"{name}_simple_threshold.jpg"), simple_th)
+            cv2.imwrite(str(output / f"{name}_adaptive_threshold.jpg"), adaptive_th)
+            cv2.imwrite(str(output / f"{name}_{minval}_{maxval}_canny.jpg"), edge)
+
+
+# ============================================================
+# 📌 خلاصه نهایی مفاهیم هفته
+# ============================================================
+
+# Gaussian Blur:
+#   فرمول: cv2.GaussianBlur(src, ksize, sigmaX)
+#   ksize = (فرد, فرد) | sigmaX=0 یعنی خودکار
+#   کاربرد: کاهش نویز عمومی، پیش‌پردازش قبل از Canny
+
+# Median Blur:
+#   فرمول: cv2.medianBlur(src, ksize)
+#   ksize = عدد فرد (نه تاپل)
+#   کاربرد: نویز نمک-فلفل
+
+# Simple Threshold:
+#   فرمول: ret, dst = cv2.threshold(src, thresh, maxval, type)
+#   src = Grayscale | thresh = 0 تا 255 | maxval = معمولاً 255
+#   کاربرد: تصاویر با نور یکنواخت
+
+# Adaptive Threshold:
+#   فرمول: dst = cv2.adaptiveThreshold(src, maxValue, method, type, blockSize, C)
+#   هر ۶ پارامتر اجباری | blockSize = عدد فرد | C = ثابت تصحیح
+#   کاربرد: تصاویر با نور غیریکنواخت (سایه‌دار)
+
+# Canny Edge:
+#   فرمول: edges = cv2.Canny(image, threshold1, threshold2)
+#   نسبت threshold1:threshold2 = 1:2 یا 1:3
+#   بهترین مقادیر تجربی: (50,150) (80,200) (80,240)
+#   قانون طلایی: همیشه قبل از Canny بلور کن
+
+# قوانین پایپلاین:
+#   ۱. Gray قبل از Blur (بهینه‌تر)
+#   ۲. Threshold و Canny هدف متفاوت دارند — در یک مسیر خطی نیستند
+#   ۳. Canny روی Threshold نزن (نویز تشدید می‌شود)
+#   ۴. Threshold روی Canny نزن (بی‌تأثیر است)
+#   الگوی صحیح: img >> gray >> blur >> [انشعاب a: threshold] [انشعاب b: Canny]
+'''
