@@ -5,7 +5,7 @@ print("lesson name : string operations")
 
 # ==============================
 # (تبدیل رشته ها به لیست)تقسیم رشته‌ها (split)
-# (مهم)دخیره تغییرات آن، نیازمند به سلف اساینمنت است 
+# (مهم)دخیره تغییرات آن، نیازمند به سلف اساینمنت است
 
 # مهمترین کاربرد اسپلیت، فراهم کردن امکان درج رشته ای داده هاست
 # چون بعدها اسپلیت قادر است آنها را از هم جدا کرده و به یک لیست تبدیل کند
@@ -29,14 +29,14 @@ print("Direct split:", new_users.split())
 # ----------------------------------------------------------
 # مثلا تبدیل دوباره لیست بالا به رشته با جوین
 new_string = "--".join(users_list)    #با جداکننده دلخواه
-new_string2 = "".join(users_list)     #بدون جداکننده 
+new_string2 = "".join(users_list)     #بدون جداکننده
 # -----------------------------------------
 # تبدیل لیست عددی به رشته با join
 
 p = print
 numbers = [i for i in range(15,30)]
 #ابتدا تبدیل لیست عددی به لیستی از رشته های عددی
-str_numbers = [str(i) for i in numbers]    
+str_numbers = [str(i) for i in numbers]
 striq = "".join(str_numbers)
 p(striq)
 
@@ -233,9 +233,9 @@ stri= "ab kdldl ;d;kldk /jdkfk _kflk 95"
 def replace(letter,new):
     global stri
     stri= stri.replace(letter , new)
-    p(stri) 
+    p(stri)
 replace(" ","")
-replace(";","")  
+replace(";","")
 
 # ==============================
 # مثال‌های تکمیلی از فایل اصلی
@@ -266,13 +266,14 @@ numbers_no_space = numbers_example.replace(" ", "")
 print("After removing spaces:", numbers_no_space)
 
 # تبدیل به int
+'''
 try:
     numbers_int = int(numbers_no_space)
     print("As integer:", numbers_int)
     print("Type after:", type(numbers_int))
 except ValueError:
     print("Cannot convert to integer - contains multiple numbers")
-
+'''
 print("-------------------------")
 
 # تقسیم کدهای منطقه‌ای

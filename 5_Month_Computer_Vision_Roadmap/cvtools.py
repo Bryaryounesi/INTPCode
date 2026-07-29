@@ -25,14 +25,13 @@ cv2.imwrite("output.jpg", rotated)
 # ------------------
 resized = cvt.resize(img, new_w=800)
 # ------------------
-# مثال برای جستجوی مسیر فایل و پوشه ها
 cvt.search_path("pandas_cheatsheet.py")
-cvt.search_path("my_image")  # finds my_image.jpg, my_image.png, etc.
+cvt.search_path("my_image")
 cvt.search_path(["utils.py", "data/", "models"])
 # ------------------
 cvt.auto_comp("key_word")
 مثال:
-cv.auto_comp(".drop")
+cvt.auto_comp(".drop")
 # -------------------------
 Future: Any frequently used utility requiring repetitive code
 will be added to this module.
@@ -54,6 +53,7 @@ import os
 import inspect
 import numpy as np
 import re
+
 # ==============================================
 # Patch cv2.imwrite to save in the correct directory
 # ==============================================
@@ -64,6 +64,8 @@ _original_imwrite = cv2.imwrite
 ذخیره کننده تصویر خروجی در همان پوشه ای که اسکریپ در آن است
 مثال: cv2.imwrite("output.jpg", rotated)
 """
+
+
 def _new_imwrite(filename, img, *args, **kwargs):
     if not os.path.isabs(filename):
         caller_frame = inspect.stack()[1]
@@ -85,7 +87,6 @@ class CVTools:
 
     # ------------------------------------------
     # Display image with keyboard zoom
-
     # ------------------------------------------
     def imshow(self, winname, img):
         """
@@ -144,7 +145,6 @@ class CVTools:
 
     # ============================================================
     # Resize: ریسایز با حفظ نسبت اتوماتیک ابعاد
-    # ریسایز تنها با یک بعد از تصویر و بدون تناسب گیری بعد دیگر
     # ============================================================
     @staticmethod
     def resize(img, new_h=None, new_w=None, interpolation=None):
@@ -156,7 +156,6 @@ class CVTools:
             new_h: ارتفاع جدید (optional — اگر ندهیم، محاسبه از روی عرض جدید)
             new_w: عرض جدید (optional — اگر ندهیم محاسبه از روی ارتفاع جدید)
             یکی از این دو اجباری و دومی اختیاری است
-            # -----------------------------------
             interpolation: Interpolation method (اختیاری)
                 پیشفرض: cv2.INTER_AREA برای کوچک سازی
                 , cv2.INTER_CUBIC برای بزرگنمایی
@@ -182,21 +181,21 @@ class CVTools:
 
         if interpolation is None:
             if new_h * new_w < h * w:
-                interpolation = cv2.INTER_AREA  # downscaling
+                interpolation = cv2.INTER_AREA
             else:
-                interpolation = cv2.INTER_CUBIC  # upscaling
+                interpolation = cv2.INTER_CUBIC
 
         return cv2.resize(img, (new_w, new_h), interpolation=interpolation)
 
     # ============================================================
-    # جستجوی فایل یا پوشه در کل پروژه و درج پَز به صورت هشتگ‌شده
+    # جستجوی فایل یا پوشه در کل پروژه و درج مسیر به صورت هشتگ‌شده
     # ============================================================
     def search_path(self, names):
         """
         جستجوی فایل یا پوشه در کل پروژه و درج مسیر کامل آن‌ها به صورت هشتگ‌شده در فایل جاری.
 
         قابلیت‌ها:
-        - جستجوی case-insensitive (بدون حساسیت به حروف بزرگ/کوچک)
+        - جستجوی case-insensitive
         - جستجوی فایل‌ها و پوشه‌هایی که حاوی عبارت مورد نظر باشند
         - پشتیبانی از جستجوی همزمان چند نام
 
@@ -204,22 +203,18 @@ class CVTools:
             names: نام فایل/پوشه (رشته) یا لیستی از نام‌ها برای جستجو
 
         مثال‌ها:
-            cvt.search_path("pandas")  # همه فایل‌ها/پوشه‌های حاوی "pandas"
-            cvt.search_path("cow")  # Cow, COW, cow_images و غیره
-            cvt.search_path(["utils", "data", "model"])  # ترکیبی
+            cvt.search_path("pandas")
+            cvt.search_path("cow")
+            cvt.search_path(["utils", "data", "model"])
         """
-        # Get the path of the calling script (the current file)
         caller_frame = inspect.stack()[1]
         caller_file = caller_frame.filename
 
-        # Get the project root directory (parent of cvtools module)
         project_root = _self_dir.parent.resolve()
 
-        # Convert names to a list if a string is provided
         if isinstance(names, str):
             names = [names]
 
-        # Collect all found paths
         found_paths = {}
         not_found = []
 
@@ -227,12 +222,14 @@ class CVTools:
             name_found = False
             name_lower = name.lower()
 
-            # Walk through the entire project directory
             for root, dirs, files in os.walk(project_root):
-                # Skip hidden directories and common non-project folders
-                dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['__pycache__', 'venv', 'env', 'node_modules']]
+                dirs[:] = [
+                    d
+                    for d in dirs
+                    if not d.startswith(".")
+                    and d not in ["__pycache__", "venv", "env", "node_modules"]
+                ]
 
-                # Check for directory matches (case-insensitive contains)
                 for dir_name in dirs:
                     if name_lower in dir_name.lower():
                         full_path = os.path.join(root, dir_name)
@@ -241,7 +238,6 @@ class CVTools:
                         found_paths[name].append(full_path)
                         name_found = True
 
-                # Check for file matches (case-insensitive contains)
                 for file_name in files:
                     if name_lower in file_name.lower():
                         full_path = os.path.join(root, file_name)
@@ -253,7 +249,6 @@ class CVTools:
             if not name_found:
                 not_found.append(name)
 
-        # Prepare hashtagged output in the exact requested format
         hashtag_lines = []
         hashtag_lines.append(f"# ----------------------------------------")
         hashtag_lines.append(f"# Path search results")
@@ -263,7 +258,7 @@ class CVTools:
         total_not_found = len(not_found)
 
         for name, paths in found_paths.items():
-            hashtag_lines.append(f"# Search: '{name}' → Found {len(paths)} match(es)")
+            hashtag_lines.append(f"# Search: '{name}' -> Found {len(paths)} match(es)")
             hashtag_lines.append("")
             for path in paths:
                 hashtag_lines.append(f"# path: {path}")
@@ -272,75 +267,66 @@ class CVTools:
             if found_paths:
                 hashtag_lines.append("")
             for name in not_found:
-                hashtag_lines.append(f"# Search: '{name}' → Not found")
+                hashtag_lines.append(f"# Search: '{name}' -> Not found")
 
         hashtag_lines.append(f"# ----------------------------------------")
-        hashtag_lines.append(f"# Summary: Found {total_found} | Not found {total_not_found}")
+        hashtag_lines.append(
+            f"# Summary: Found {total_found} | Not found {total_not_found}"
+        )
         hashtag_lines.append(f"# ----------------------------------------")
 
-        # Append results to the end of the current file
         try:
-            with open(caller_file, 'a', encoding='utf-8') as f:
-                f.write('\n'.join(hashtag_lines) + '\n')
+            with open(caller_file, "a", encoding="utf-8") as f:
+                f.write("\n".join(hashtag_lines) + "\n")
 
-            # Print summary to console
             if found_paths:
                 for name, paths in found_paths.items():
-                    print(f"'{name}' → Found {len(paths)} match(es):")
+                    print(f"'{name}' -> Found {len(paths)} match(es):")
                     for path in paths:
                         print(f"  + {path}")
 
             if not_found:
                 for name in not_found:
-                    print(f"'{name}' → Not found")
+                    print(f"'{name}' -> Not found")
 
             print(f"\nResults appended to: {caller_file}")
 
         except Exception as e:
             print(f"Error writing to file '{caller_file}': {e}")
 
-        # ============================================================
+    # ============================================================
     # اتوکامپلیت کد از تمام فایل‌های پروژه
     # ============================================================
     def auto_comp(self, keyword):
         """
         اتوکامپلیت هوشمند کد: جستجوی کدهای مرتبط با کلیدواژه در تمام فایل‌های پایتون پروژه.
 
-        این متد تمام فایل‌های py. در کل پروژه (workspace) را جستجو کرده،
-        سپس خطوط کدی که حاوی کلیدواژه هستند را استخراج می‌کند.
-        خطوط کد پشت سر هم مرتبط را به صورت بلوک‌های مجزا و هشتگ‌شده نمایش می‌دهد.
-
         پارامترها:
-            keyword: کلمه کلیدی برای جستجوی کد (مثلاً "fig", "plt.plot", "cv2.imread")
+            keyword: کلمه کلیدی برای جستجوی کد
 
         مثال‌ها:
-            >>> fig
-            >>> cvt.auto_comp("fig")
-
-            >>> cvt.auto_comp("axs")
-            # بلوک‌های مجزا برای axs[0] و axs[1] و fig, axs = plt.subplots
+            cvt.auto_comp("fig")
+            cvt.auto_comp("axs")
         """
-        # Get the path of the calling script (the current file)
         caller_frame = inspect.stack()[1]
         caller_file = caller_frame.filename
 
-        # Get the project root directory
         project_root = _self_dir.parent.resolve()
-
-        # Get the path of this module file to exclude it
         module_file = os.path.abspath(__file__)
 
-        # Step 1: Find all Python files in the entire project workspace
         search_files = []
 
         for root, dirs, files in os.walk(project_root):
-            # Only skip hidden and cache directories
-            dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['__pycache__', 'venv', 'env', 'node_modules']]
+            dirs[:] = [
+                d
+                for d in dirs
+                if not d.startswith(".")
+                and d not in ["__pycache__", "venv", "env", "node_modules"]
+            ]
 
             for file_name in files:
-                if file_name.endswith('.py'):
+                if file_name.endswith(".py"):
                     file_path = os.path.join(root, file_name)
-                    # Skip the cvtools module file itself
                     if os.path.abspath(file_path) != module_file:
                         search_files.append(file_path)
 
@@ -348,51 +334,40 @@ class CVTools:
             print(f"No Python files found in project.")
             return
 
-        # Step 2: Search for the keyword and extract code blocks
         keyword_lower = keyword.lower()
         all_code_blocks = []
 
         for file_path in search_files:
             try:
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
 
-                # Extract code from triple-quoted strings (docstrings)
                 code_lines = self._extract_code_from_docstrings(content)
-
-                # Also get regular code lines (outside docstrings)
                 regular_lines = self._extract_regular_code_lines(content)
                 code_lines.extend(regular_lines)
 
-                # Find lines containing the keyword
                 matching_indices = []
                 for i, line in enumerate(code_lines):
                     if keyword_lower in line.lower():
                         matching_indices.append(i)
 
-                # Group consecutive lines into blocks
                 if matching_indices:
                     blocks = self._group_consecutive_lines(code_lines, matching_indices)
                     for block in blocks:
-                        all_code_blocks.append({
-                            'lines': block,
-                            'file': file_path
-                        })
+                        all_code_blocks.append({"lines": block, "file": file_path})
 
             except Exception as e:
                 print(f"Warning: Could not read file '{file_path}': {e}")
 
-        # Step 3: Remove duplicate blocks
         unique_blocks = []
         seen_blocks = set()
 
         for block in all_code_blocks:
-            block_key = '\n'.join(block['lines'])
+            block_key = "\n".join(block["lines"])
             if block_key not in seen_blocks:
                 seen_blocks.add(block_key)
                 unique_blocks.append(block)
 
-        # Step 4: Prepare hashtagged output
         hashtag_lines = []
         hashtag_lines.append(f"# ----------------------------------------")
         hashtag_lines.append(f"# Auto-complete results for: '{keyword}'")
@@ -403,20 +378,19 @@ class CVTools:
             block_num = 0
 
             for block in unique_blocks:
-                if block['file'] != current_file:
+                if block["file"] != current_file:
                     if current_file is not None:
                         hashtag_lines.append("#")
-                    file_name = os.path.basename(block['file'])
+                    file_name = os.path.basename(block["file"])
                     hashtag_lines.append(f"# From: {file_name}")
-                    current_file = block['file']
+                    current_file = block["file"]
                     block_num = 0
 
                 block_num += 1
                 if len(unique_blocks) > 1:
                     hashtag_lines.append(f"# Block {block_num}:")
 
-                # All code lines are hashtagged to avoid linter errors
-                for line in block['lines']:
+                for line in block["lines"]:
                     hashtag_lines.append(f"# {line}")
                 hashtag_lines.append("#")
 
@@ -427,16 +401,17 @@ class CVTools:
 
         hashtag_lines.append(f"# ----------------------------------------")
 
-        # Step 5: Append results to the current file
         try:
-            with open(caller_file, 'a', encoding='utf-8') as f:
-                f.write('\n'.join(hashtag_lines) + '\n')
+            with open(caller_file, "a", encoding="utf-8") as f:
+                f.write("\n".join(hashtag_lines) + "\n")
 
             if unique_blocks:
-                print(f"Auto-complete for '{keyword}' -> Found {len(unique_blocks)} block(s):")
+                print(
+                    f"Auto-complete for '{keyword}' -> Found {len(unique_blocks)} block(s):"
+                )
                 for block in unique_blocks[:2]:
                     print(f"  {block['lines'][0][:80]}")
-                    if len(block['lines']) > 1:
+                    if len(block["lines"]) > 1:
                         print(f"  ... ({len(block['lines'])} lines)")
             else:
                 print(f"Auto-complete for '{keyword}' -> No results found")
@@ -447,35 +422,25 @@ class CVTools:
             print(f"Error writing to file '{caller_file}': {e}")
 
     def _extract_code_from_docstrings(self, content):
-        """
-        Extract only code lines from triple-quoted docstrings.
-        Ignores Persian text, explanations, and comment lines.
-        """
         code_lines = []
-
-        # Find all triple-quoted strings
         triple_pattern = re.compile(r'("""|\'\'\')(.*?)\1', re.DOTALL)
 
         for match in triple_pattern.finditer(content):
             doc_content = match.group(2)
-            lines = doc_content.split('\n')
+            lines = doc_content.split("\n")
 
             for line in lines:
                 stripped = line.strip()
 
-                # Skip empty lines
                 if not stripped:
                     continue
 
-                # Skip comment lines (start with #)
-                if stripped.startswith('#'):
+                if stripped.startswith("#"):
                     continue
 
-                # Check if it looks like code (contains Python syntax)
                 if self._looks_like_code(stripped):
-                    # Remove inline comments
-                    if '#' in stripped:
-                        code_part = stripped.split('#')[0].rstrip()
+                    if "#" in stripped:
+                        code_part = stripped.split("#")[0].rstrip()
                         if code_part:
                             code_lines.append(code_part)
                     else:
@@ -484,27 +449,19 @@ class CVTools:
         return code_lines
 
     def _extract_regular_code_lines(self, content):
-        """
-        Extract code lines that are not inside docstrings.
-        """
         code_lines = []
+        no_docstrings = re.sub(r'("""|\'\'\')(.*?)\1', "", content, flags=re.DOTALL)
 
-        # Remove docstrings first
-        no_docstrings = re.sub(r'("""|\'\'\')(.*?)\1', '', content, flags=re.DOTALL)
-
-        lines = no_docstrings.split('\n')
+        lines = no_docstrings.split("\n")
         for line in lines:
             stripped = line.strip()
 
-            # Skip empty lines and comments
-            if not stripped or stripped.startswith('#'):
+            if not stripped or stripped.startswith("#"):
                 continue
 
-            # Skip lines that look like plain text (Persian or English sentences)
             if self._looks_like_code(stripped):
-                # Remove inline comments
-                if '#' in stripped:
-                    code_part = stripped.split('#')[0].rstrip()
+                if "#" in stripped:
+                    code_part = stripped.split("#")[0].rstrip()
                     if code_part:
                         code_lines.append(code_part)
                 else:
@@ -513,40 +470,64 @@ class CVTools:
         return code_lines
 
     def _looks_like_code(self, line):
-        """
-        Check if a line looks like Python code rather than plain text.
-        Returns True if it looks like code.
-        """
-        # Must contain Python-specific characters or patterns
         code_indicators = [
-            '=', '(', ')', '[', ']', '{', '}', ':', '.', ',',
-            'import ', 'from ', 'def ', 'class ', 'return ',
-            'plt.', 'cv2.', 'np.', 'pd.', 'tf.', 'torch.',
-            'axs', 'fig', 'ax.', 'print(', 'len(', 'range(',
-            '+', '-', '*', '/', '==', '!=', '<', '>',
-            'True', 'False', 'None', 'self', 'lambda'
+            "=",
+            "(",
+            ")",
+            "[",
+            "]",
+            "{",
+            "}",
+            ":",
+            ".",
+            ",",
+            "import ",
+            "from ",
+            "def ",
+            "class ",
+            "return ",
+            "plt.",
+            "cv2.",
+            "np.",
+            "pd.",
+            "tf.",
+            "torch.",
+            "axs",
+            "fig",
+            "ax.",
+            "print(",
+            "len(",
+            "range(",
+            "+",
+            "-",
+            "*",
+            "/",
+            "==",
+            "!=",
+            "<",
+            ">",
+            "True",
+            "False",
+            "None",
+            "self",
+            "lambda",
         ]
 
-        # If line is too long and has no code indicators, probably text
-        if len(line) > 100 and not any(ind in line for ind in ['=', '(', '.', 'import']):
+        if len(line) > 100 and not any(
+            ind in line for ind in ["=", "(", ".", "import"]
+        ):
             return False
 
-        # Check if it contains any code indicators
         for indicator in code_indicators:
             if indicator in line:
                 return True
 
-        # If line is short and has no spaces, might be a variable name
-        if len(line) < 30 and ' ' not in line:
+        if len(line) < 30 and " " not in line:
             return True
 
         return False
 
     def _group_consecutive_lines(self, all_lines, matching_indices):
-        """
-        Group consecutive matching lines into blocks.
-        Lines that are consecutive (index difference of 1) are grouped together.
-        """
         if not matching_indices:
             return []
 
@@ -554,17 +535,15 @@ class CVTools:
         current_block = [all_lines[matching_indices[0]]]
 
         for i in range(1, len(matching_indices)):
-            if matching_indices[i] == matching_indices[i-1] + 1:
-                # Consecutive line, add to current block
+            if matching_indices[i] == matching_indices[i - 1] + 1:
                 current_block.append(all_lines[matching_indices[i]])
             else:
-                # New block starts
                 blocks.append(current_block)
                 current_block = [all_lines[matching_indices[i]]]
 
-        # Don't forget the last block
         blocks.append(current_block)
 
         return blocks
+
 
 cvt = CVTools()

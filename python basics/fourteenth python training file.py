@@ -176,10 +176,10 @@ def calculate_average(numbers):
     """Calculate average of numbers"""
     if not numbers:
         raise ValueError("Numbers list cannot be empty")
-    
+
     if any(not isinstance(num, (int, float)) for num in numbers):
         raise TypeError("All values must be numeric")
-    
+
     return sum(numbers) / len(numbers)
 
 print("--- Average Calculation Test ---")
@@ -254,20 +254,20 @@ def process_user_data(user_data):
         name = user_data["name"]
         age = user_data["age"]
         print(f"  Processing data for {name}...")
-        
+
     except KeyError as e:
         print(f"  Error: Field {e} does not exist")
         return None
-    
+
     except Exception as e:
         print(f"  Unexpected error: {e}")
         return None
-    
+
     else:
         # If no error occurs
         print("  Data processed successfully")
         return {"name": name, "age": age}
-    
+
     finally:
         # Always executes
         print("  Processing operation completed")
@@ -292,7 +292,7 @@ class CustomError(Exception):
     def __init__(self, message, error_code):
         super().__init__(message)
         self.error_code = error_code
-    
+
     def __str__(self):
         return f"{self.args[0]} (Error Code: {self.error_code})"
 
@@ -300,13 +300,13 @@ def validate_password(password):
     """Password validation"""
     if len(password) < 8:
         raise CustomError("Password must be at least 8 characters", 1001)
-    
+
     if not any(char.isdigit() for char in password):
         raise CustomError("Password must contain at least one digit", 1002)
-    
+
     if not any(char.isupper() for char in password):
         raise CustomError("Password must contain at least one uppercase letter", 1003)
-    
+
     return "Password is valid"
 
 print("--- Password Validation Test ---")
@@ -329,76 +329,76 @@ print("=== Bank Management System ===")
 
 class BankAccount:
     """Bank account class with error handling"""
-    
+
     def __init__(self, account_holder, initial_balance=0):
         self.account_holder = account_holder
         self.balance = initial_balance
         self.transaction_history = []
-    
+
     def deposit(self, amount):
         """Deposit to account"""
         try:
             if amount <= 0:
                 raise ValueError("Deposit amount must be positive")
-            
+
             self.balance += amount
             self.transaction_history.append(f"Deposit: +${amount}")
             return f"Amount ${amount} deposited successfully"
-        
+
         except ValueError as e:
             return f"Deposit error: {e}"
         except Exception as e:
             return f"Unexpected error: {e}"
-    
+
     def withdraw(self, amount):
         """Withdraw from account"""
         try:
             if amount <= 0:
                 raise ValueError("Withdrawal amount must be positive")
-            
+
             if amount > self.balance:
                 raise ValueError("Insufficient balance")
-            
+
             self.balance -= amount
             self.transaction_history.append(f"Withdrawal: -${amount}")
             return f"Amount ${amount} withdrawn successfully"
-        
+
         except ValueError as e:
             return f"Withdrawal error: {e}"
         except Exception as e:
             return f"Unexpected error: {e}"
-    
+
     def transfer(self, amount, target_account):
         """Transfer to another account"""
         try:
             if not isinstance(target_account, BankAccount):
                 raise TypeError("Target account must be a BankAccount")
-            
+
             # Withdraw from current account
             withdraw_result = self.withdraw(amount)
             if "error" in withdraw_result.lower():
                 raise ValueError(withdraw_result)
-            
+
             # Deposit to target account
             target_account.deposit(amount)
             self.transaction_history.append(f"Transfer to {target_account.account_holder}: -${amount}")
-            
+
             return f"Amount ${amount} transferred to {target_account.account_holder}"
-        
+
         except (TypeError, ValueError) as e:
             return f"Transfer error: {e}"
         except Exception as e:
             return f"Unexpected error: {e}"
-    
+
     def get_balance(self):
         """Get account balance"""
         return f"Account balance for {self.account_holder}: ${self.balance}"
-    
+
     def get_transaction_history(self):
         """Get transaction history"""
         if not self.transaction_history:
             return "No transactions performed"
-        
+
         history = f"Transaction history for {self.account_holder}:\n"
         for i, transaction in enumerate(self.transaction_history, 1):
             history += f"  {i}. {transaction}\n"
@@ -433,12 +433,12 @@ def safe_calculator():
     """Calculator with error handling"""
     print("Safe Calculator")
     print("Operations: +, -, *, /")
-    
+
     try:
         num1 = float(input("Enter first number: "))
         operator = input("Enter operator: ")
         num2 = float(input("Enter second number: "))
-        
+
         if operator == "+":
             result = num1 + num2
         elif operator == "-":
@@ -451,9 +451,9 @@ def safe_calculator():
             result = num1 / num2
         else:
             raise ValueError("Invalid operator")
-        
+
         print(f"Result: {result}")
-    
+
     except ValueError as e:
         print(f"Error: Invalid input - {e}")
     except ZeroDivisionError as e:
@@ -491,7 +491,7 @@ print("--- Form Validation System ---")
 def validate_form_data(data):
     """Form data validation"""
     errors = []
-    
+
     # Name validation
     try:
         if not data.get("name"):
@@ -500,7 +500,7 @@ def validate_form_data(data):
             raise ValueError("Name must be at least 2 characters")
     except ValueError as e:
         errors.append(f"Name: {e}")
-    
+
     # Email validation
     try:
         email = data.get("email", "")
@@ -510,24 +510,24 @@ def validate_form_data(data):
             raise ValueError("Invalid email format")
     except ValueError as e:
         errors.append(f"Email: {e}")
-    
+
     # Age validation
     try:
         age = data.get("age")
         if age is None:
             raise ValueError("Age is required")
-        
+
         age = int(age)
         if age < 18:
             raise ValueError("Age must be at least 18")
         if age > 100:
             raise ValueError("Age cannot be more than 100")
-    
+
     except ValueError as e:
         errors.append(f"Age: {e}")
     except TypeError:
         errors.append("Age: Must be numeric")
-    
+
     return errors
 
 # Test form validation
@@ -559,28 +559,28 @@ def safe_file_operations():
         with open("example.txt", "r") as file:
             content = file.read()
             print("File content read successfully")
-    
+
     except FileNotFoundError:
         print("File does not exist, creating new file...")
-        
+
         try:
             # Create new file
             with open("example.txt", "w") as file:
                 file.write("This is a sample file\n")
                 file.write("Error handling in Python\n")
             print("New file created successfully")
-        
+
         except PermissionError:
             print("Error: No permission to create file")
         except Exception as e:
             print(f"Unexpected error in file creation: {e}")
-    
+
     except PermissionError:
         print("Error: No permission to read file")
-    
+
     except Exception as e:
         print(f"Unexpected error: {e}")
-    
+
     finally:
         print("File operation completed")
 
