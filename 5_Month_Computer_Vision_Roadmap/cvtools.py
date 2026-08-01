@@ -11,6 +11,8 @@ Current Features:
 • cv2.imwrite()  → Auto-save image to the calling script's directory (patched)
 • cvt.resize()   → Resize by providing only one dimension
 • cvt.search_path() → Search for files or folders in the entire project and insert their paths as hashtagged comments
+• cvt.auto_comp() → Auto-complete code from all project files
+• cvt.venv.*     → Interactive Virtual Environment Cheat Sheet (hover for commands)
 
 نحوه استفاده:
 import cv2
@@ -32,6 +34,12 @@ cvt.search_path(["utils.py", "data/", "models"])
 cvt.auto_comp("key_word")
 مثال:
 cvt.auto_comp(".drop")
+# ------------------
+# Virtual Environment Cheat Sheet:
+cvt.venv.create       # هاور: python -m venv venv
+cvt.venv.activate     # هاور: venv\Scripts\activate
+cvt.venv.freeze       # هاور: pip freeze > requirements.txt
+cvt.venv.check        # هاور: pip -V
 # -------------------------
 Future: Any frequently used utility requiring repetitive code
 will be added to this module.
@@ -79,11 +87,125 @@ cv2.imwrite = _new_imwrite
 
 
 # ==============================================
+# VenvCheatSheet Class: Interactive Virtual Environment Reference
+# ==============================================
+
+class VenvCheatSheet:
+    """
+    چیت‌شیت تعاملی محیط مجازی.
+    با نوشتن cvt.venv. تمام دستورات در Pylance ظاهر می‌شوند و با هاور، دستور کامل ترمینال نمایش داده می‌شود.
+
+    مثال:
+        cvt.venv.create       ← هاور: python -m venv venv
+        cvt.venv.activate     ← هاور: venv\\Scripts\\activate
+        cvt.venv.freeze       ← هاور: pip freeze > requirements.txt
+    """
+
+    @property
+    def create(self):
+        """python -m venv venv  |  با اسم متفاوت: python -m venv tqdm_venv  |  ساخت محیط مجازی جدید"""
+        return 'python -m venv venv'
+
+    @property
+    def cd_project(self):
+        """cd "E:\\python\\INTPCode\\5_Month_Computer_Vision_Roadmap"  |  رفتن به ریشه پروژه قبل از ساخت venv"""
+        return 'cd "E:\\python\\INTPCode\\5_Month_Computer_Vision_Roadmap"'
+
+    @property
+    def activate(self):
+        """venv\\Scripts\\activate  |  مک/لینوکس: source venv/bin/activate  |  فعال‌سازی محیط مجازی"""
+        return 'venv\\Scripts\\activate'
+
+    @property
+    def deactivate(self):
+        """deactivate  |  یا بستن ترمینال  |  غیرفعال‌سازی محیط مجازی"""
+        return 'deactivate'
+
+    @property
+    def install(self):
+        """pip install -r requirements.txt  |  نصب همه کتابخونه‌ها از فایل قفل"""
+        return 'pip install -r requirements.txt'
+
+    @property
+    def install_single(self):
+        """pip install نام_کتابخانه  |  مثال: pip install tqdm  |  نصب یک کتابخانه خاص"""
+        return 'pip install نام_کتابخانه'
+
+    @property
+    def install_cv(self):
+        """pip install opencv-python numpy matplotlib pillow pandas scikit-image scikit-learn jupyter  |  کتابخونه‌های ضروری Computer Vision"""
+        return 'pip install opencv-python numpy matplotlib pillow pandas scikit-image scikit-learn jupyter'
+
+    @property
+    def freeze(self):
+        """pip freeze > requirements.txt  |  ذخیره نسخه‌های دقیق همه کتابخونه‌ها در فایل requirements.txt"""
+        return 'pip freeze > requirements.txt'
+
+    @property
+    def list_packages(self):
+        """pip list  |  نمایش تمام کتابخونه‌های نصب‌شده در محیط فعال"""
+        return 'pip list'
+
+    @property
+    def outdated(self):
+        """pip list --outdated  |  نمایش کتابخونه‌هایی که نسخه جدیدتر دارند"""
+        return 'pip list --outdated'
+
+    @property
+    def upgrade(self):
+        """pip install --upgrade نام_کتابخانه  |  مثال: pip install --upgrade numpy  |  آپدیت یک کتابخانه خاص"""
+        return 'pip install --upgrade numpy'
+
+    @property
+    def uninstall(self):
+        """pip uninstall نام_کتابخانه  |  مثال: pip uninstall numpy  |  حذف یک کتابخانه"""
+        return 'pip uninstall numpy'
+
+    @property
+    def restore(self):
+        """pip install -r requirements.txt  |  برگشت به نسخه‌های قفل‌شده در requirements.txt"""
+        return 'pip install -r requirements.txt'
+
+    @property
+    def check(self):
+        """pip -V  |  یا: python -c "import sys; print(sys.prefix)"  |  تست سلامت: آیا محیط مجازی فعال است؟"""
+        return 'pip -V'
+
+    @property
+    def delete_env(self):
+        """rmdir /s venv  |  حذف کامل پوشه محیط مجازی (ابتدا deactivate کن)"""
+        return 'rmdir /s venv'
+
+    @property
+    def rebuild(self):
+        """python -m venv venv  |  ساخت دوباره محیط مجازی بعد از حذف"""
+        return 'python -m venv venv'
+
+    @property
+    def requirements_sample(self):
+        """opencv-python==4.12.0  |  نمونه محتوای فایل requirements.txt با نسخه دقیق"""
+        return 'opencv-python==4.12.0'
+
+    @property
+    def pip_meaning(self):
+        """pip = Package Installer for Python  |  مدیر بسته‌های پایتون"""
+        return 'pip = Package Installer for Python'
+
+    @property
+    def venv_meaning(self):
+        """venv = Virtual Environment  |  محیط مجازی: پوشه‌ای با کپی سبک از پایتون و pip"""
+        return 'venv = Virtual Environment'
+
+
+# ==============================================
 # CVTools Class: Image display with zoom & rotation
 # ==============================================
 
 
 class CVTools:
+
+    def __init__(self):
+        self.venv = VenvCheatSheet()
 
     # ------------------------------------------
     # Display image with keyboard zoom

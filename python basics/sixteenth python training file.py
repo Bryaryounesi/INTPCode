@@ -12,7 +12,7 @@ print("=== Introduction to APIs ===")
 # مثال ساده برای درک مفهوم API
 print("API مانند پیشخدمت در رستوران عمل می‌کند:")
 print("- مشتری (برنامه ما) سفارش می‌دهد")
-print("- پیشخدمت (API) سفارش را به آشپزخانه (سرور) می‌برد") 
+print("- پیشخدمت (API) سفارش را به آشپزخانه (سرور) می‌برد")
 print("- آشپزخانه غذا را آماده می‌کند")
 print("- پیشخدمت غذا را به مشتری برمی‌گرداند")
 print("-------------------------")
@@ -80,7 +80,7 @@ response = requests.get(test_url)
 
 print("Response Analysis Methods:")
 print(f"1. response.json(): {response.json()}")
-print(f"2. response.text: {response.text[:100]}...")  # نمایش 100 کاراکتر اول
+# print(f"2. response.text: {response.text[:100]}...")  # نمایش 100 کاراکتر اول
 print(f"3. response.status_code: {response.status_code}")
 print(f"4. response.headers: {dict(response.headers)}")
 print(f"5. response.ok: {response.ok}")
@@ -125,7 +125,7 @@ print(f"With json - Content-Type: {response_json.request.headers.get('Content-Ty
 
 # با data (ما باید خودمان تبدیل کنیم)
 import json
-response_data = requests.post(url_post, data=json.dumps(data_to_send), 
+response_data = requests.post(url_post, data=json.dumps(data_to_send),
                              headers={'Content-Type': 'application/json'})
 print(f"With data - Content-Type: {response_data.request.headers.get('Content-Type')}")
 
@@ -303,7 +303,7 @@ update_data = {
 }
 
 update_response = requests.patch(
-    f"https://jsonplaceholder.typicode.com/posts/{created_post['id']}", 
+    f"https://jsonplaceholder.typicode.com/posts/{created_post['id']}",
     json=update_data
 )
 if update_response.status_code == 200:
@@ -328,27 +328,27 @@ print("=== User Management System ===")
 class UserManager:
     def __init__(self, base_url):
         self.base_url = base_url
-    
+
     def get_all_users(self):
         """دریافت تمام کاربران"""
         response = requests.get(f"{self.base_url}/users")
         return response.json() if response.ok else []
-    
+
     def get_user(self, user_id):
         """دریافت کاربر خاص"""
         response = requests.get(f"{self.base_url}/users/{user_id}")
         return response.json() if response.ok else None
-    
+
     def create_user(self, user_data):
         """ایجاد کاربر جدید"""
         response = requests.post(f"{self.base_url}/users", json=user_data)
         return response.json() if response.status_code == 201 else None
-    
+
     def update_user(self, user_id, update_data):
         """به‌روزرسانی کاربر"""
         response = requests.patch(f"{self.base_url}/users/{user_id}", json=update_data)
         return response.json() if response.ok else None
-    
+
     def delete_user(self, user_id):
         """حذف کاربر"""
         response = requests.delete(f"{self.base_url}/users/{user_id}")
@@ -378,11 +378,11 @@ print("=== Advanced Tips ===")
 print("Using Session for multiple requests:")
 with requests.Session() as session:
     session.headers.update({'User-Agent': 'MyApp/1.0'})
-    
+
     # چند درخواست با همان session
     response1 = session.get("https://jsonplaceholder.typicode.com/users/1")
     response2 = session.get("https://jsonplaceholder.typicode.com/users/2")
-    
+
     print(f"Session request 1: {response1.status_code}")
     print(f"Session request 2: {response2.status_code}")
 
@@ -392,7 +392,7 @@ print("-------------------------")
 print("Setting timeout for requests:")
 try:
     response_timeout = requests.get(
-        "https://jsonplaceholder.typicode.com/users", 
+        "https://jsonplaceholder.typicode.com/users",
         timeout=(3.05, 10)  # (connect timeout, read timeout)
     )
     print(f"Request with timeout: {response_timeout.status_code}")

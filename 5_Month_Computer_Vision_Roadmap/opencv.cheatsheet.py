@@ -8,7 +8,7 @@ import cv2
 from pathlib import Path
 p = print
 
-folder = Path(r"E:\...\Data\input")
+folder = Path(r"E:\\...\\Data\\input")
 pathes = [str(i) for i in folder.glob("*.jpg")]
 
 for i in pathes:
@@ -23,7 +23,7 @@ for i in pathes:
     h, w = img.shape[:2]
     roi = img[h // 4 : 3 * h // 4, w // 4 : 3 * w // 4]
 
-    num = i.split("\\")[-1].split(".")[0]
+    num = i.split("\\\\")[-1].split(".")[0]
     # cv2.imwrite(f"fliped_{num}.jpg",fliped)
     # cv2.imwrite(f"resized_{num}.jpg", resized)
 
@@ -34,7 +34,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-path = r"E:\...\Data\deers.jpg"
+path = r"E:\\...\\Data\\deers.jpg"
 
 ==============================================================================
 ✅ ۱. خواندن تصویر — cv2.imread()
@@ -146,18 +146,18 @@ img: تصویر مورد نظر برای ذخیره
 cv2.imwrite("gray_image.jpg", img_gray)
 
 مثال با مسیر کامل:
-cv2.imwrite(r"E:\...\Output\lamborghini.jpg", img)
+cv2.imwrite(r"E:\\...\\Output\\lamborghini.jpg", img)
 
 ساخت مسیر خروجی امن با pathlib:
 from pathlib import Path
 
-output = Path(r"E:\...\Output")
+output = Path(r"E:\\...\\Output")
 output.mkdir(parents=True, exist_ok=True)  # اگر پوشه نبود، می‌سازد
 cv2.imwrite(output / f"resized_{name}.jpg", resized)
 
 نکته: Path باید شکسته شود (پرانتز و اینتر):
 output = Path(
-    r"E:\...\Output"
+    r"E:\\...\\Output"
 )
 
 ==============================================================================
@@ -599,11 +599,11 @@ from pathlib import Path
 p = print
 
 # برای یک تصویر تکی:
-path = r"E:\...\Data\input\cow.jpg"
+path = r"E:\\...\\Data\\input\\cow.jpg"
 image = cv2.imread(path)
 
 # برای تصاویر زیاد (منطقی‌تر):
-folder = Path(r"E:\...\Data\input")
+folder = Path(r"E:\\...\\Data\\input")
 pathes = [str(i) for i in folder.glob("*.jpg")]
 
 for i in pathes:
@@ -613,7 +613,7 @@ for i in pathes:
     cv2.imwrite(output / f"processed_{name}.jpg", img)
 
 # کد معادل استخراج نام (بدون pathlib):
-# name = i.split("\\")[-1].split(".")[0]
+# name = i.split("\\\\")[-1].split(".")[0]
 
 --------------------------------------------------
 بررسی آمادگی تصاویر
@@ -685,7 +685,7 @@ cv2.imshow("extra blur (9,9)", extra_blur)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-output = Path(r"E:\...\Output")
+output = Path(r"E:\\...\\Output")
 output.mkdir(parents=True, exist_ok=True)
 cv2.imwrite(str(output / "man_small_blur.jpg"), small_blur)
 cv2.imwrite(str(output / "man_medium_blur.jpg"), medium_blur)
@@ -715,7 +715,7 @@ for k in ksizes:
     gaussian = cv2.GaussianBlur(img, (k, k), 0)
     median = cv2.medianBlur(img, k)
 
-    output = Path(r"E:\...\Output")
+    output = Path(r"E:\\...\\Output")
     output.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(output / f"chaplin_gaussian_{k}.jpg"), gaussian)
     cv2.imwrite(str(output / f"chaplin_median_{k}.jpg"), median)
@@ -751,7 +751,7 @@ tresh_list = [50, 127, 200]
 for t in tresh_list:
     ret, th = cv2.threshold(grey, t, 255, cv2.THRESH_BINARY)
 
-    output = Path(r"E:\...\Output")
+    output = Path(r"E:\\...\\Output")
     output.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(output / f"huawei_thresh_{t}.jpg"), th)
 
@@ -796,7 +796,7 @@ adaptive_thresh = cv2.adaptiveThreshold(
     3    # C
 )
 
-output = Path(r"E:\...\Output")
+output = Path(r"E:\\...\\Output")
 output.mkdir(parents=True, exist_ok=True)
 cv2.imwrite(str(output / "simple_threshold_panther.jpg"), simple_thresh)
 cv2.imwrite(str(output / "adaptive_threshold_panther.jpg"), adaptive_thresh)
@@ -823,7 +823,7 @@ threshold2: حد بالا (maxVal) — برای هیسترزیس
 قانون طلایی: همیشه قبل از Canny بلور کن!
 
 مثال:
-folder = Path(r"E:\...\Data")
+folder = Path(r"E:\\...\\Data")
 paths = [str(i) for i in folder.glob("*.jpg")]
 
 thresholds = [(50, 150), (80, 200), (80, 240)]
@@ -890,7 +890,7 @@ img >> gray >> blur
 ✅ ۷. پایپلاین کامل — Mini Project با پایپلاین اصلاح‌شده
 # ============================================================
 
-folder = Path(r"E:\...\Data")
+folder = Path(r"E:\\...\\Data")
 paths = [str(i) for i in folder.glob("*.jpg")]
 
 for i in paths:
@@ -920,7 +920,7 @@ for i in paths:
             edge = cv2.Canny(blurred, minval, maxval)
 
             # ۵. ذخیره خروجی‌ها
-            output = Path(r"E:\...\Output")
+            output = Path(r"E:\\...\\Output")
             output.mkdir(parents=True, exist_ok=True)
 
             name = Path(i).stem

@@ -9,3 +9,13 @@
 *.pyc
 *.pyo
 *.pyd
+
+# IDE
+.vscode/
+.idea/
+
+# venv
+venv/
+**/venv/
+**/.venv/
+**/env/
