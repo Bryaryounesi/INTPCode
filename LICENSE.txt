@@ -1,11 +1,45 @@
-MIT License (Educational Use)
-
+Custom Source-Available License (based on BUSL-1.1 style)
 Copyright (c) 2025 Bryar Younesi
 
-This project contains educational code examples inspired by or adapted from public programming tutorials, including examples from Mimo.
+1. Definitions
+- "Software" means all code, documentation, and files in this repository.
+- "Licensor" means Bryar Younesi.
+- "Commercial Use" means any use of the Software (in whole or in part, modified or unmodified) within a product, service, or process that directly or indirectly generates revenue, capital, or commercial benefit for the person or entity using it - including but not limited to sale, SaaS offerings, advertising-supported use, consulting, or internal use within a for-profit company.
+- "AI Training Use" means use of the Software as data for training, fine-tuning, or evaluating machine learning models, regardless of whether the resulting model is used commercially or not.
+- "Revenue Threshold" means gross annual revenue of USD 300,000 for the using entity (referring to that entity's total revenue, not only revenue attributable to this Software).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to use, copy, modify, merge, publish, distribute, and/or sublicense the Software for educational or personal learning purposes.
+2. Free and Unconditional Grants
+a) Learning, research, personal, and non-commercial use: permitted and free of charge, with no conditions.
+b) AI Training Use: permitted and free of charge in all cases, for any entity whether for-profit or non-profit, with no notification or payment required.
+c) Commercial Use by entities with annual revenue below the Revenue Threshold: permitted and free of charge.
 
-The Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from the use of this Software.
+3. Condition for Commercial Use Above the Threshold
+Any entity that engages in Commercial Use and whose annual revenue exceeds the Revenue Threshold must, within 30 days of crossing that threshold:
+   - Contact the Licensor at bryaryounesi@gmail.com, and
+   - Negotiate and agree upon a separate commercial license agreement (which may include royalties, a lump-sum payment, or other mutually agreed terms).
 
-Commercial use of this project’s contents may require permission from the original tutorial authors.
+4. Enforcement
+Failure to comply with Section 3 constitutes a breach of this License. In such case:
+   - The license granted to that entity is automatically and retroactively terminated, effective from the date that entity's Commercial Use began.
+   - That entity is deemed to have been infringing copyright from the date its use began, and the Licensor retains the right to pursue legal remedies and claim damages (including profits derived from unauthorized use).
+   - This right of termination is solely for the Licensor's benefit. No past action or inaction by the Licensor shall be construed as a waiver of this right (No Waiver).
+
+5. Automatic Conversion to Open Source (Change Date)
+As of 3 years after the release date of each version, that specific version of the Software automatically becomes licensed under the MIT License, and Sections 3 and 4 no longer apply to that version.
+
+6. No Warranty
+The Software is provided "as is," without warranty of any kind. The Licensor shall not be liable for any damages arising from use of the Software.
+
+7. Notice Retention
+Any redistribution of the Software (modified or unmodified) must include this full license text.
+
+8. Governing Law and Dispute Resolution
+This License shall be governed by and construed in accordance with the substantive laws of the State of California, USA, without regard to its conflict-of-laws principles, for purposes of interpreting the terms of this License.
+
+Any dispute, controversy, or claim arising out of or relating to this License, including its formation, interpretation, breach, or termination, shall be finally resolved by binding arbitration administered by the World Intellectual Property Organization (WIPO) Arbitration and Mediation Center, in accordance with the WIPO Arbitration Rules in effect at the time of the arbitration.
+
+- The arbitration shall be conducted by a sole arbitrator.
+- The place of arbitration shall be Geneva, Switzerland, unless the parties agree otherwise in writing.
+- The language of the arbitration shall be English.
+- The arbitral award shall be final and binding on both parties and may be enforced in any court of competent jurisdiction, including under the New York Convention on the Recognition and Enforcement of Foreign Arbitral Awards (1958).
+- Nothing in this Section shall prevent the Licensor from seeking injunctive or equitable relief in any court of competent jurisdiction to prevent ongoing or imminent infringement, pending the outcome of arbitration.
