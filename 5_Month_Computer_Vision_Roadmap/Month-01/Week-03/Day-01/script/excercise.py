@@ -3,7 +3,7 @@
 # Day-01
 
 # 1-یک تصویر دلخواه دانلود کن
-path= r"e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-01\Data\deers.jpg"
+path= r"e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-01\Data\25.png"
 # لینک بالا، مسیر تصویر منتخب ماست
 
 # 2-آن را با OpenCV بخوان

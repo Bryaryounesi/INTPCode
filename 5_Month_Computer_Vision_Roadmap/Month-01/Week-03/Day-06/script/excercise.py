@@ -6,7 +6,7 @@
 import cv2
 import matplotlib.pyplot as plt
 p = print
-path = r'e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-06\Data\the fox.jpg'
+path = r'e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-06\Data\14.jpg'
 img = cv2.imread(path)
 rgb_img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 
@@ -46,7 +46,7 @@ p("---------------------------------")
 axes[2].imshow(vertiacal_fliped)
 axes[2].set_title("vertiacal_fliped")
 axes[2].axis("off")
-# fig.savefig(fname="pictures comparision.png",dpi=300,bbox_inches ="tight")
+fig.savefig(fname="pictures comparision.png",dpi=300,bbox_inches ="tight")
 
 # نکته مهم : این تمرین با متپلات لیب انجام شده و
 # بیشتر بر روی نمایش دادن تصاویر تمرکز کرده است.

@@ -95,7 +95,7 @@ p("=== Subquery with IN - Employees in Marketing or Sales ===")
 p("SQL:", duckdb.sql("SELECT * FROM df_employees WHERE department_id IN (SELECT department_id FROM df_departments WHERE department_name = 'Marketing' OR department_name = 'Sales')").df())
 p("-----------------------------------")
 marketing_sales_depts = df_departments[
-    (df_departments['department_name'] == 'Marketing') | 
+    (df_departments['department_name'] == 'Marketing') |
     (df_departments['department_name'] == 'Sales')
 ]['department_id']
 employees_marketing_sales = df_employees[df_employees['department_id'].isin(marketing_sales_depts)]

@@ -423,6 +423,7 @@ def getPerspectiveTransform(src: Any, dst: Any) -> Any:
     📌 برمی‌گردونه: ماتریس تبدیل ۳×۳
     """
     ...
+
 # ============================================================
 # کلاس SIFT
 # ============================================================
@@ -461,7 +462,9 @@ class SIFT:
         """
         ...
 
-    def compute(self, image: Any, keypoints: Any, descriptors: Any = ...) -> Tuple[Any, Any]:
+    def compute(
+        self, image: Any, keypoints: Any, descriptors: Any = ...
+    ) -> Tuple[Any, Any]:
         """
         📌 فرمول رایج:
         keypoints, descriptors = sift.compute(img, keypoints)
@@ -476,17 +479,16 @@ class SIFT:
         """
         ...
 
-
 # ============================================================
 # کلاس KeyPoint
 # ============================================================
 class KeyPoint:
-    pt: Tuple[float, float]    # مختصات نقطه (x, y)
-    size: float                # اندازه نقطه
-    angle: float               # زاویه نقطه
-    response: float            # قدرت پاسخ
-    octave: int                # اکتاو
-    class_id: int              # شناسه کلاس
+    pt: Tuple[float, float]  # مختصات نقطه (x, y)
+    size: float  # اندازه نقطه
+    angle: float  # زاویه نقطه
+    response: float  # قدرت پاسخ
+    octave: int  # اکتاو
+    class_id: int  # شناسه کلاس
 
 def warpPerspective(src: Any, M: Any, dsize: Tuple[int, int]) -> Any:
     """
@@ -538,6 +540,30 @@ def morphologyEx(src: Any, op: int, kernel: Any, iterations: int = ...) -> Any:
     📌 فرمول رایج:
     cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel) — Opening (حذف نویز)
     cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel) — Closing (پر کردن حفره)
+    cv2.morphologyEx(gray, cv2.MORPH_TOPHAT, kernel) — Top-Hat (حذف بافت سطحی)
+    cv2.morphologyEx(gray, cv2.MORPH_BLACKHAT, kernel) — Black-Hat
+
+    📌 پارامترها:
+    - src: تصویر ورودی (باینری یا خاکستری)
+    - op: نوع عملیات
+        cv2.MORPH_OPEN: Erode سپس Dilate — حذف نویز سفید
+        cv2.MORPH_CLOSE: Dilate سپس Erode — پر کردن حفره‌های سیاه
+        cv2.MORPH_GRADIENT: Dilate - Erode — لبه‌ها
+        cv2.MORPH_TOPHAT: src - Opening — حذف بافت سطحی و جدا کردن شی از زمینه
+        cv2.MORPH_BLACKHAT: Closing - src — پیدا کردن حفره‌های تیره
+    - kernel: کرنل ساختاری — از getStructuringElement
+    - iterations (اختیاری): تعداد تکرار
+
+    📌 برمی‌گردونه: تصویر مورفولوژی‌شده
+
+    📌 کاربرد ویژه Top-Hat برای تله تونال (نشت پس‌زمینه سفید به اشیاء بافت‌دار):
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (15,15))
+    tophat = cv2.morphologyEx(gray, cv2.MORPH_TOPHAT, kernel)
+    _, binary = cv2.threshold(tophat, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE,
+                              cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25,25)))
+    # حالا کانتور کاملاً بسته است
+    contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     """
     ...
 
@@ -578,6 +604,19 @@ def bitwise_and(src1: Any, src2: Any, mask: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     cv2.bitwise_and(img1, img2, mask=None) — AND بیتی
+
+    📌 کاربرد ویژه در Mask (جداسازی دقیق شیء):
+    mask = np.zeros(gray.shape, dtype=np.uint8)
+    cv2.drawContours(mask, [biggest], -1, 255, -1)
+    masked = cv2.bitwise_and(img, img, mask=mask)
+    # نتیجه: تصویر کامل + فقط شیء داخل کانتور، بقیه سیاه
+
+    📌 پارامترها:
+    - src1: تصویر اول
+    - src2: تصویر دوم
+    - mask: ماسک تک‌کاناله — فقط پیکسل‌های سفید ماسک از تصویر باقی می‌مانند
+
+    📌 برمی‌گردونه: تصویر ترکیب‌شده
     """
     ...
 
@@ -647,10 +686,46 @@ def equalizeHist(src: Any) -> Any:
 # ============================================================
 # ۱۷. کانتور و اشکال
 # ============================================================
-def findContours(image: Any, mode: int, method: int) -> Tuple[Any, Any]:
+def findContours(ad_th: Any, mode: int, method: int) -> Tuple[Any, Any]:
     """
     📌 فرمول رایج:
     contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # -----------------------------
+    مراحل بعدی:
+    cv2.drawContours(img,contours,contourldx,color,tickness)
+    رایج: cv2.drawContours(img, contours, -1, (0, 255, 0), 2)
+    # ------------
+    cv2.contourArea()
+    cv2.arcLenth(contour,closed)
+
+    📌 پارامترها:
+    - ad_th: تصویر باینری ورودی (سیاه/سفید یا همان ترشهولد شده).
+    کورنر، فقط روی تصویر باینری (سیاه/سفید) درست کار می‌کند.
+    پس همیشه تصویر ورودی نیاز به گری و بعد ترشهولد دارد
+
+    - mode:
+    نحوه بازیابی کانتورها (پیش‌فرض ندارد؛ باید صریح مشخص شود)
+        cv2.RETR_EXTERNAL: فقط کانتورهای بیرونی
+
+        cv2.RETR_LIST: همه کانتورها بدون سلسله‌مراتب
+
+        cv2.RETR_TREE: همه کانتورها با روابط تو در تو
+
+        cv2.RETR_CCOMP: همه کانتورها در دو سطح
+
+    - method: نحوه ذخیره نقاط کانتور
+        cv2.CHAIN_APPROX_SIMPLE:
+        فقط نقاط ضروری ذخیره می‌شود (حافظه کمتر) ⭐پرکاربردترین⭐
+
+        cv2.CHAIN_APPROX_NONE:
+        تمام نقاط مرزی ذخیره می‌شود
+
+    - contours:
+    لیستی از آرایه‌های نامپی؛ هر آرایه مختصات نقاط یک کانتور است
+    - hierarchy:
+    آرایه نامپی شامل اطلاعات تو در تو بودن کانتورها (والد/فرزند). برای هر کانتور ۴ عدد:
+    [Next, Previous, First_Child, Parent] (-1 یعنی وجود ندارد).
+     فقط در RETR_TREE و RETR_CCOMP کاربرد دارد.
     """
     ...
 
@@ -660,32 +735,80 @@ def drawContours(
     contourIdx: int,
     color: Tuple[int, int, int],
     thickness: int,
-) -> Any:
+) -> None:
     """
     📌 فرمول رایج:
     cv2.drawContours(img, contours, -1, (0, 255, 0), 2)
+    cv2.drawContours(mask, [biggest], -1, 255, -1)  # برای ساخت ماسک
+
+    📌 ساخت ماسک (Mask) با drawContours:
+    mask = np.zeros(gray.shape, dtype=np.uint8)  # بوم سیاه هم‌اندازه تصویر خاکستری
+    cv2.drawContours(mask, [biggest], -1, 255, -1)  # کشیدن کانتور سفید توپر روی ماسک
+    # حالا mask یک تصویر سیاه است که فقط داخل بزرگ‌ترین کانتور سفید (255) است
+
+    📌 پارامترها:
+    - image: تصویری که کانتور روی آن رسم می‌شود (باید رنگی/BGR باشد تا رنگ دیده شود). ⚠️ کانتور روی تصویر باینری رسم نمی‌شود چون تک‌کاناله است و رنگ در آن دیده نمی‌شود.
+    - contours: همان خروجی findContours. برای ماسک، فقط یک کانتور خاص: [biggest]
+    - contourIdx: اندیس کانتوری که می‌خواهی رسم شود. -1 یعنی همه کانتورها رسم شوند.
+    - color: رنگ خط به‌صورت (B, G, R) — مثال رایج: (0, 255, 0) یعنی سبز. برای ماسک: 255 (سفید)
+    - thickness: ضخامت خط بر حسب پیکسل. مقدار رایج: 2. -1 یعنی توپر (FILLED).
+
+    📌 خروجی: None — تابع مقدار برنمی‌گرداند؛ تصویر ورودی مستقیماً تغییر می‌کند (In-place). پس نیازی به ذخیره در متغیر جدید نیست.
+
+    ✅ Best Practice: همیشه قبل از رسم کانتور، یک کپی از تصویر اصلی بگیر (img.copy())، چون drawContours تصویر ورودی را مستقیماً تغییر می‌دهد.
     """
     ...
 
 def boundingRect(contour: Any) -> Tuple[int, int, int, int]:
     """
     📌 فرمول رایج:
-    x, y, w, h = cv2.boundingRect(contour) — مستطیل محصورکننده
+    x, y, w, h = cv2.boundingRect(biggest)  # فقط یک کانتور (بزرگ‌ترین) می‌گیرد
+    cv2.rectangle(boxes, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    roi = img[y:y+h, x:x+w]  # برش ROI
+
+    📌 پارامترها:
+    - contour: یک کانتور واحد — معمولاً بزرگ‌ترین کانتور: biggest
+
+    📌 برمی‌گردونه: (x, y, w, h)
+    - x, y: گوشه بالا-چپ مستطیل
+    - w: عرض مستطیل
+    - h: ارتفاع مستطیل
+
+    📌 انتخاب بزرگ‌ترین کانتور قبل از boundingRect:
+    biggest = max(contours, key=cv2.contourArea)
+    x, y, w, h = cv2.boundingRect(biggest)
     """
     ...
 
 def contourArea(contour: Any) -> float:
     """
     📌 فرمول رایج:
-    area = cv2.contourArea(contour) — مساحت کانتور
+    area = cv2.contourArea(contour)
+    —  مساحت داخل یک کانتور (عدد Float)
+
+    📌 برای محاسبه مساحت همه کانتورها:
+    areas = [cv2.contourArea(c) for c in contours]
+
+    📌 انتخاب بزرگ‌ترین کانتور:
+    biggest = max(contours, key=cv2.contourArea)
     """
     ...
 
 def arcLength(curve: Any, closed: bool) -> float:
     """
     📌 فرمول رایج:
-    perimeter = cv2.arcLength(contour, True) — محیط کانتور
+    perimeter = cv2.arcLength(contour, True) — محیط یک کانتور
+
+    📌 پارامترها:
+    - curve(contour): کانتور ورودی
+
+    - closed: آیا شکل بسته است یا باز.
+    مقدار رایج: True (چون معمولاً اشیاء بسته‌اند)
+
+    📌 برای محاسبه محیط همه کانتورها:
+    perimeters = [cv2.arcLength(c, True) for c in contours]
     """
+
     ...
 
 def approxPolyDP(curve: Any, epsilon: float, closed: bool) -> Any:
@@ -737,7 +860,16 @@ def rectangle(
 ) -> Any:
     """
     📌 فرمول رایج:
-    cv2.rectangle(img, (0, 0), (100, 100), (0, 255, 0), 2) — ضخامت -1 = توپر
+    boxes = img.copy()
+    cv2.rectangle(boxes, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    # ضخامت -1 = توپر
+
+    📌 پارامترها:
+    - img: تصویر
+    - pt1: گوشه بالا-چپ — (x, y)
+    - pt2: گوشه پایین-راست — (x + w, y + h)
+    - color: رنگ (B, G, R)
+    - thickness: ضخامت — -1 = توپر
     """
     ...
 
@@ -819,7 +951,7 @@ def polylines(
 # این متدها روی آرایه‌های NumPy (از جمله تصاویر OpenCV) کار می‌کنند:
 # img.shape      → ابعاد تصویر: (height, width, channels)
 # img.dtype      → نوع داده: np.uint8
-# img.copy()     → کپی تصویر
+# img.copy()     → کپی تصویر (مستقل از اصلی)
 # img.astype()   → تبدیل نوع
 # img.ravel()    → تبدیل به آرایه ۱ بعدی
 # img.flatten()  → مسطح کردن
@@ -832,6 +964,16 @@ def getStructuringElement(shape: int, ksize: Tuple[int, int]) -> Any:
     """
     📌 فرمول رایج:
     cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5)) — ساخت کرنل
+    cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25)) — کرنل بیضوی
+
+    📌 پارامترها:
+    - shape: شکل کرنل
+        cv2.MORPH_RECT: مستطیل
+        cv2.MORPH_CROSS: صلیب
+        cv2.MORPH_ELLIPSE: بیضی
+    - ksize: اندازه کرنل (width, height)
+
+    📌 برمی‌گردونه: کرنل ساختاری
     """
     ...
 

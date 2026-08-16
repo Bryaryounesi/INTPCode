@@ -41,9 +41,9 @@ for i in pathes:
     # کد ایمنی در برابر نبود احتمالی پوشه خروجی
     # --------------------------------
     # خواندن تصویر:
-    # cv2.imwrite(output / f"resized_{name}.jpg",resized)
-    # cv2.imwrite(output / f"roi_{name}.jpg", roi)
-    # cv2.imwrite(output / f"rotated_{name}.jpg", rotated)
+    cv2.imwrite(output / f"resized_{name}.jpg",resized)
+    cv2.imwrite(output / f"roi_{name}.jpg", roi)
+    cv2.imwrite(output / f"rotated_{name}.jpg", rotated)
 
 # تمام عملیات ها و ذخیره آنها درون یک حلقه انجام شد تا از تکرار بیهوده کد جلوگیری شود
 # ---------------------------------------

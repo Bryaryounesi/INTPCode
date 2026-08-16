@@ -26,8 +26,13 @@ def zeros(shape: Any, dtype: Any = ...) -> Any:
     📌 فرمول رایج:
     np.zeros(n)              ← بردار n خانه‌ای
     np.zeros((m, n))         ← ماتریس m×n
-
-    📌 پارامترها:
+    # -------------------------------------
+    📌 کاربرد ویژه در Mask (جداسازی دقیق شیء):
+        mask = np.zeros(gray.shape, dtype=np.uint8)
+        cv2.drawContours(mask, [biggest], -1, 255, -1)
+        masked = cv2.bitwise_and(img, img, mask=mask)
+    # -------------------------------------
+        📌 پارامترها:
     - shape: عدد (بردار) یا تاپل (ماتریس)
     - dtype (اختیاری): پیش‌فرض float64
     """

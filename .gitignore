@@ -19,3 +19,7 @@ venv/
 **/venv/
 **/.venv/
 **/env/
+
+# Datasets
+dataset/
+Dataset/

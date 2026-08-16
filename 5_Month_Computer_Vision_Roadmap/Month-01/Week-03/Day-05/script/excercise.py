@@ -6,9 +6,9 @@
 
 import cv2
 import matplotlib.pyplot as plt
-import numpy as np 
+import numpy as np
 p= print
-path = r'e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-05\Data\Pintaflores Festival 2012 Beauty.jpg'
+path = r'e:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-03\Day-05\Data\40.jpg'
 
 # ابتدا نمایش تصویر اولیه با متپلاتلیب
 img = cv2.imread(path)
@@ -27,7 +27,7 @@ theta = np.radians(angle)
 new_w = int(h*np.sin(theta) + w*np.cos(theta))
 new_h = int(h*np.cos(theta) + w*np.sin(theta))
 
-# اصلاح مرکز چرخش تصویر 
+# اصلاح مرکز چرخش تصویر
 M[0,2] += (new_w - w) //2
 M[1,2 ] += (new_h - h) //2
 
@@ -43,4 +43,4 @@ cv2.imshow("my image",rotated)
 cv2.waitKey(0)
 
 # 2-نتیجه را ذخیره و بررسی کن
-# cv2.imwrite("Rotated img.jpg",rotated)
+cv2.imwrite("Rotated img.jpg",rotated)

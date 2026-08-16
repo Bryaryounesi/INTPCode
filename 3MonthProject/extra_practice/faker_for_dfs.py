@@ -18,7 +18,7 @@ p("-------------new dfs pattern-------------------")
 # from faker import Faker
 # import random
 
-# 1- creat new seed 
+# 1- creat new seed
 # X = عددی دلخواه به ایکس بدهید
 # random.seed(X)
 # Faker.seed(X)
@@ -26,11 +26,11 @@ p("-------------new dfs pattern-------------------")
 # 2 - creat new fake object
 # fakeX = Faker()
 
-# 3- copy above list and chang it 
-# dataX =[] 
+# 3- copy above list and chang it
+# dataX =[]
 
 # 4- creat new dataframe
-# dfX = pd.DataFrame(dataX)  
+# dfX = pd.DataFrame(dataX)
 # p(dfX)
 
 # 5- add new remainig colomns
