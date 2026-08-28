@@ -24,7 +24,7 @@ print("-------------------------")
 # 2. SyntaxError - Unclosed parenthesis
 print("2. SyntaxError - Unclosed parenthesis:")
 try:
-    exec('print("Hello"')
+    print("Hello"
 except SyntaxError as e:
     print(f"   Error: {e}")
 
@@ -596,5 +596,4 @@ print("3. Use try-except to handle errors")
 print("4. Use else for code that should run when no error occurs")
 print("5. Use finally for code that should always run")
 print("6. You can create custom exceptions")
-
 print("End of errors and exceptions training")

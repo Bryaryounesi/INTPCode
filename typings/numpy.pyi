@@ -1,5 +1,27 @@
-from typing import Any, Tuple, List
+from typing import Any, Tuple, List, Optional, Union
 import numpy as np
+
+# ============================================================
+# Data Types (نوع داده‌ها)
+# ============================================================
+uint8: Any  # 8-bit unsigned integer (0 to 255) - پرکاربردترین برای تصاویر
+uint16: Any  # 16-bit unsigned integer (0 to 65535)
+uint32: Any  # 32-bit unsigned integer
+uint64: Any  # 64-bit unsigned integer
+int8: Any  # 8-bit signed integer (-128 to 127)
+int16: Any  # 16-bit signed integer (-32768 to 32767)
+int32: Any  # 32-bit signed integer
+int64: Any  # 64-bit signed integer
+float16: Any  # 16-bit floating point
+float32: Any  # 32-bit floating point - رایج برای SIFT descriptors
+float64: Any  # 64-bit floating point - پیش‌فرض NumPy
+float128: Any  # 128-bit floating point
+complex64: Any  # 64-bit complex number
+complex128: Any  # 128-bit complex number
+bool_: Any  # Boolean type
+str_: Any  # String type
+bytes_: Any  # Bytes type
+object_: Any  # Object type
 
 # ============================================================
 # ۱. ساخت آرایه
@@ -8,10 +30,12 @@ def array(data: Any, dtype: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     a = np.array(data)
+    a = np.array(data, dtype=np.uint8)
+    a = np.array(data, dtype=np.float32)
 
     📌 پارامترها:
     - data: لیست (بردار) یا لیستی از لیست‌ها (ماتریس)
-    - dtype (اختیاری): int, float — پیش‌فرض: خودکار
+    - dtype (اختیاری): np.uint8, np.float32, np.int32 — پیش‌فرض: خودکار
 
     📌 نکته:
     a.tolist() ← تبدیل آرایه به لیست
@@ -26,15 +50,16 @@ def zeros(shape: Any, dtype: Any = ...) -> Any:
     📌 فرمول رایج:
     np.zeros(n)              ← بردار n خانه‌ای
     np.zeros((m, n))         ← ماتریس m×n
+    np.zeros((m, n), dtype=np.uint8)  ← ماتریس با نوع داده مشخص
     # -------------------------------------
     📌 کاربرد ویژه در Mask (جداسازی دقیق شیء):
         mask = np.zeros(gray.shape, dtype=np.uint8)
         cv2.drawContours(mask, [biggest], -1, 255, -1)
         masked = cv2.bitwise_and(img, img, mask=mask)
     # -------------------------------------
-        📌 پارامترها:
+    📌 پارامترها:
     - shape: عدد (بردار) یا تاپل (ماتریس)
-    - dtype (اختیاری): پیش‌فرض float64
+    - dtype (اختیاری): np.uint8, np.float32 — پیش‌فرض float64
     """
     ...
 
@@ -42,6 +67,7 @@ def ones(shape: Any, dtype: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     np.ones(n) / np.ones((m, n))
+    np.ones((m, n), dtype=np.int32)
     """
     ...
 
@@ -49,6 +75,7 @@ def full(shape: Any, fill_value: Any, dtype: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     np.full((m, n), value)
+    np.full((m, n), 255, dtype=np.uint8)
     """
     ...
 
@@ -61,10 +88,11 @@ def eye(N: int, M: int = ..., k: int = ..., dtype: Any = ...) -> Any:
     📌 پارامترها:
     - N: تعداد ردیف
     - M (اختیاری): تعداد ستون — پیش‌فرض = N
+    - dtype (اختیاری): np.float64, np.int32
     """
     ...
 
-def arange(start: Any, stop: Any = ..., step: Any = ...) -> Any:
+def arange(start: Any, stop: Any = ..., step: Any = ..., dtype: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     np.arange(n)                       ← 0 تا n-1
@@ -74,7 +102,7 @@ def arange(start: Any, stop: Any = ..., step: Any = ...) -> Any:
     """
     ...
 
-def linspace(start: Any, stop: Any, num: int = ...) -> Any:
+def linspace(start: Any, stop: Any, num: int = ..., dtype: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     np.linspace(start, stop, num)
@@ -83,6 +111,7 @@ def linspace(start: Any, stop: Any, num: int = ...) -> Any:
     - start: شروع بازه
     - stop: پایان بازه
     - num: تعداد نقاط — پیش‌فرض 50
+    - dtype (اختیاری): نوع داده خروجی
 
     📌 نکته: برای ماتریس، حاصلضرب m×n باید = num باشد
     """
@@ -400,6 +429,30 @@ def concatenate(arrays: Any, axis: int = ...) -> Any:
     """
     ...
 
+def vstack(tup: Any) -> Any:
+    """
+    📌 فرمول رایج:
+    np.vstack((a1, a2))    ← چسباندن عمودی (ردیف‌ها)
+
+    📌 پارامترها:
+    - tup: تاپل یا لیست آرایه‌ها — باید تعداد ستون یکسان داشته باشند
+
+    📌 نکته: معادل np.concatenate((a1, a2), axis=0) برای ماتریس‌ها
+    """
+    ...
+
+def hstack(tup: Any) -> Any:
+    """
+    📌 فرمول رایج:
+    np.hstack((a1, a2))    ← چسباندن افقی (ستون‌ها)
+
+    📌 پارامترها:
+    - tup: تاپل یا لیست آرایه‌ها — باید تعداد سطر یکسان داشته باشند
+
+    📌 نکته: معادل np.concatenate((a1, a2), axis=1) برای ماتریس‌ها
+    """
+    ...
+
 def split(ary: Any, indices_or_sections: Any, axis: int = ...) -> List[Any]:
     """
     📌 فرمول رایج:
@@ -432,11 +485,17 @@ def rand(*args: Any) -> Any:
     """
     ...
 
-def randint(low: int, high: int = ..., size: Any = ...) -> Any:
+def randint(low: int, high: int = ..., size: Any = ..., dtype: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     np.random.randint(min, max, size=(m, n))    ← ماتریس تصادفی در رنج
     np.random.randint(min, max, size=n)         ← بردار تصادفی
+
+    📌 پارامترها:
+    - low: کمترین عدد (شامل)
+    - high: بیشترین عدد (غیر شامل)
+    - size: تعداد / ابعاد
+    - dtype (اختیاری): np.int32, np.int64
     """
     ...
 
@@ -497,7 +556,8 @@ def seed(seed_value: int) -> None:
 def astype(a: Any, dtype: Any) -> Any:
     """
     📌 فرمول رایج:
-    arr.astype(int)    ← تبدیل نوع داده
+    arr.astype(np.uint8)    ← تبدیل نوع داده
+    arr.astype(np.float32)
     """
     ...
 

@@ -1,242 +1,124 @@
-# 🎨 OpenCV Cheatsheet
 '''
----------------------------------
-مثال اولیه برای پردازش یکجای تصاویر
-(آشنایی با ساختار حلقه و عملیات‌ها)
-
-import cv2
-from pathlib import Path
-p = print
-
-folder = Path(r"E:\\...\\Data\\input")
-pathes = [str(i) for i in folder.glob("*.jpg")]
-
-for i in pathes:
-    img = cv2.imread(i)
-    if img is None:
-        p(f"error in reading: {i}")
-        continue
-
-    flipped = cv2.flip(img, 1)
-    resized = cv2.resize(img, dsize=None, fx=0.6, fy=0.6)
-    rotated = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
-    h, w = img.shape[:2]
-    roi = img[h // 4 : 3 * h // 4, w // 4 : 3 * w // 4]
-
-    num = i.split("\\\\")[-1].split(".")[0]
-    # cv2.imwrite(f"fliped_{num}.jpg",fliped)
-    # cv2.imwrite(f"resized_{num}.jpg", resized)
-
-----------------------------------------------------------------
-ادامه آموزش (با تفکیک مراحل و جزئیات هر مرحله):
+# ============================================================
+# 📖 OpenCV CheatSheet — فرمول‌محور و موضوعی
+# ============================================================
+این چیت‌شیت شامل تمام مباحث پردازش تصویر با OpenCV است:
+خواندن و ذخیره تصویر، تغییرات هندسی، فیلترها، آستانه‌گذاری،
+لبه و کانتور، مورفولوژی، بهبود کنتراست، و ابزارهای کمکی.
 
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
+from itertools import product, combinations, permutations, chain
 
-path = r"E:\\...\\Data\\deers.jpg"
+p = print
 
-==============================================================================
-✅ ۱. خواندن تصویر — cv2.imread()
-==============================================================================
-شکل رایج:
-img = cv2.imread(path)
-img_color = cv2.imread(path, cv2.IMREAD_COLOR)
-img_gray = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+# ============================================================
+# ۱. خواندن، تبدیل رنگ و ذخیره تصویر
+# ============================================================
 
-پارامترها:
-path: مسیر فایل تصویری.
-flag: نحوه خواندن تصویر. پیش‌فرض: cv2.IMREAD_COLOR (رنگی BGR).
+خواندن تصویر:
+img = cv2.imread(path)                                      # رنگی BGR (پیش‌فرض)
+img_gray = cv2.imread(path, cv2.IMREAD_GRAYSCALE)           # خاکستری
+img_unchanged = cv2.imread(path, cv2.IMREAD_UNCHANGED)      # با کانال آلفا
 
-مقادیر flag:
+فلگ‌های پرکاربرد:
 cv2.IMREAD_COLOR           → رنگی BGR (پیش‌فرض)
 cv2.IMREAD_COLOR_RGB       → رنگی RGB
 cv2.IMREAD_GRAYSCALE       → خاکستری
-cv2.IMREAD_UNCHANGED       → با کانال آلفا
-cv2.IMREAD_REDUCED_COLOR_2 → نصف ابعاد اصلی
+cv2.IMREAD_UNCHANGED       → با آلفا
+cv2.IMREAD_REDUCED_COLOR_2 → نصف ابعاد
 
-نکته مهم: اگر می‌خواهیم تصویر را با OpenCV ذخیره کنیم، بهتر است با فلگ پیش‌فرض
-(cv2.IMREAD_COLOR) بخوانیم. چون در مرحله ذخیره به صورت RGB ذخیره می‌شود.
-اما اگر با cv2.IMREAD_COLOR_RGB بخوانیم، موقع ذخیره به صورت BGR ذخیره می‌شود!
-
-بررسی موفقیت خواندن (ضروری برای پردازش دسته‌ای):
+بررسی خطا (ضروری برای پردازش دسته‌ای):
 if img is None:
-    print("خطا: تصویر خوانده نشد!")
-    continue  # رد شدن از تصویر مشکل‌دار
+    print("خطا در خواندن تصویر")
+    continue
 
-مثال حل‌شده — حلقه با بررسی خطا:
-for i in pathes:
-    img = cv2.imread(i)
-    if img is None:
-        p(f"error in reading: {i}")
-        continue
-    rotated = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    cv2.imwrite(output / f"rotated_{name}.jpg", rotated)
-
-==============================================================================
-✅ ۲. نمایش تصویر با OpenCV — cv2.imshow()
-==============================================================================
-شکل رایج:
-cv2.imshow(winname, img)
-
-winname: نام پنجره (رشته)
-img: آرایه تصویری
-
-کنترل پنجره:
-cv2.waitKey(0)           → صبر تا زدن کلید
-cv2.waitKey(2000)        → نمایش ۲ ثانیه
-cv2.destroyAllWindows()  → بستن همه پنجره‌ها
-
-تنظیم اندازه پنجره برای رفع زوم‌شدگی:
-cv2.namedWindow("win", cv2.WINDOW_NORMAL)
-cv2.resizeWindow("win", width, height)
-
-مثال نمایش یک تصویر:
-cv2.imshow("My Image", img_color)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
-مثال نمایش چند تصویر:
-cv2.imshow("small blur", small_blur)
-cv2.imshow("medium blur", medium_blur)
-cv2.imshow("extra blur", extra_blur)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
-==================================================================
-✅ ۳. تبدیل رنگ تصویر — cv2.cvtColor()
-==================================================================
-شکل رایج:
-converted_img = cv2.cvtColor(img, code)
-
-پارامترها:
-img: تصویر ورودی
-code: کد تبدیل رنگ
+تبدیل رنگ:
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)      # برای نمایش با Matplotlib
+bgr_from_gray = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
 
 کدهای پرکاربرد:
-cv2.COLOR_BGR2GRAY  → رنگی به خاکستری
-cv2.COLOR_BGR2RGB   → BGR به RGB (برای نمایش با Matplotlib)
-cv2.COLOR_GRAY2BGR  → خاکستری به رنگی (۳ کاناله)
+cv2.COLOR_BGR2GRAY   → رنگی به خاکستری
+cv2.COLOR_BGR2RGB    → BGR به RGB (برای Matplotlib)
+cv2.COLOR_GRAY2BGR   → خاکستری به رنگی (۳ کاناله)
 
-مثال:
-img = cv2.imread(path)
-img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+چه زمانی با فلگ متفاوت بخوانیم و کی cvtColor کنیم؟
+فایل محلی روی SSD سریع → خواندن با فلگ متفاوت (حذف سربار CPU)
+Raspberry Pi / SD Card کند → یک بار خواندن + cvtColor
+استریم دوربین / ویدئو → cvtColor اجباری (فقط یک فریم داریم)
+تصویر از قبل در حافظه → cvtColor اجباری (imread معنی ندارد)
+فایل روی شبکه (NAS/Cloud) → یک بار خواندن + cvtColor
+پردازش بلادرنگ → یک بار خواندن + cvtColor
+پردازش دسته‌ای روی SSD → خواندن با فلگ متفاوت
 
-سوال مهم: چه زمانی تصویر را با فلگ متفاوت بخوانیم و کی تبدیل کنیم؟
-
-۱. فایل محلی روی SSD سریع: خواندن با فلگ متفاوت (حذف سربار تبدیل CPU)
-۲. Raspberry Pi / SD Card کند: یک بار خواندن + cvtColor (خواندن از RAM سریع‌تر است)
-۳. استریم دوربین / ویدئو: cvtColor اجباری (فقط یک فریم داریم)
-۴. تصویر از قبل در حافظه: cvtColor اجباری (imread معنی ندارد)
-۵. فایل روی شبکه (NAS/Cloud): یک بار خواندن + cvtColor
-۶. پردازش بلادرنگ (Real-time): یک بار خواندن + cvtColor
-۷. پردازش دسته‌ای روی SSD: خواندن با فلگ متفاوت (استفاده از کش سیستم‌عامل)
-
-==================================================================
-✅ ۴. ذخیره تصویر — cv2.imwrite()
-==================================================================
-شکل رایج:
-cv2.imwrite(filename, img)
-
-filename: مسیر و نام فایل با پسوند (می‌تواند فقط اسم فایل باشد یا مسیر کامل)
-img: تصویر مورد نظر برای ذخیره
-
-مثال ساده:
-cv2.imwrite("gray_image.jpg", img_gray)
-
-مثال با مسیر کامل:
-cv2.imwrite(r"E:\\...\\Output\\lamborghini.jpg", img)
+ذخیره تصویر:
+cv2.imwrite("output.jpg", img)
+cv2.imwrite(str(output_dir / f"name_{suffix}.jpg"), img)
 
 ساخت مسیر خروجی امن با pathlib:
-from pathlib import Path
-
 output = Path(r"E:\\...\\Output")
-output.mkdir(parents=True, exist_ok=True)  # اگر پوشه نبود، می‌سازد
-cv2.imwrite(output / f"resized_{name}.jpg", resized)
+output.mkdir(parents=True, exist_ok=True)
+cv2.imwrite(str(output / f"resized_{name}.jpg"), resized)
 
-نکته: Path باید شکسته شود (پرانتز و اینتر):
-output = Path(
-    r"E:\\...\\Output"
-)
+قانون ذخیره‌سازی:
+فقط عکس خام (بدون نمودار/تیتر) → cv2.imwrite()
+هر چیزی که نمودار، هیستوگرام، یا چند subplot دارد → plt.savefig()
+کلاژ عکس برای پردازش مجدد → np.hstack/np.vstack + cv2.imwrite()
 
-==============================================================================
-✅ ۵. تغییر اندازه — cv2.resize()
-==============================================================================
-شکل رایج با ابعاد دقیق:
+# ============================================================
+# ۲. تغییرات هندسی
+# ============================================================
+
+تغییر اندازه با ابعاد دقیق:
 resized = cv2.resize(img, (width, height))
 
-شکل رایج با ضرایب مقیاس:
+تغییر اندازه با ضرایب مقیاس:
 resized = cv2.resize(img, dsize=None, fx=0.6, fy=0.6)
 
-پارامترها:
-dsize: تاپل ابعاد خروجی (width, height). اگر None باشد باید از fx و fy استفاده کرد.
-fx, fy: ضرایب مقیاس افقی و عمودی. مثال: fx=0.6 یعنی عرض ۶۰٪ اولیه.
-interpolation: روش درون‌یابی.
-    cv2.INTER_AREA    → بهترین برای کوچک‌سازی (پیشنهادی)
-    cv2.INTER_LINEAR  → پیش‌فرض
-    cv2.INTER_CUBIC   → بهترین برای بزرگ‌نمایی
-    cv2.INTER_NEAREST → سریع (برای ماسک و باینری)
+روش‌های درون‌یابی:
+cv2.INTER_AREA    → بهترین برای کوچک‌سازی (پیشنهادی)
+cv2.INTER_LINEAR  → پیش‌فرض
+cv2.INTER_CUBIC   → بهترین برای بزرگ‌نمایی
+cv2.INTER_NEAREST → سریع (برای ماسک و باینری)
 
-مثال — روش ساده (بدون حفظ نسبت):
-resized = cv2.resize(img_color, (400, 300))
-
-مثال — روش استاندارد (با حفظ نسبت):
+تغییر اندازه با حفظ نسبت:
 h, w = img.shape[:2]
 new_w = 400
 new_h = int((h * new_w) / w)
 resized = cv2.resize(img, (new_w, new_h))
 
-==============================================================================
-✅ ۶. برش تصویر — Crop / ROI
-==============================================================================
-ROI = Region of Interest = ناحیه مورد نظر
+برش (ROI):
+roi = img[y1:y2, x1:x2]              # برش مستطیلی
+roi = img[50:250, :]                 # فقط برش عمودی
+roi = img[:, 100:350]                # فقط برش افقی
 
-شکل رایج:
-roi = img[y1:y2, x1:x2]
-
-انواع برش:
-
-۱. برش ۵۰٪ مرکزی (مناسب برای پردازش دسته‌ای):
+برش ۵۰٪ مرکزی (مناسب برای پردازش دسته‌ای):
 h, w = img.shape[:2]
-roi = img[h // 4 : 3 * h // 4, w // 4 : 3 * w // 4]
-
-۲. برش دلخواه:
-roi = img[100:300, 200:450]   → برش مستطیلی
-roi = img[50:250, :]          → فقط برش عمودی
-roi = img[:, 100:350]         → فقط برش افقی
+roi = img[h//4 : 3*h//4, w//4 : 3*w//4]
 
 نکته برای یافتن مختصات: تصویر را در Paint ویندوز باز کنید و مختصات پیکسلی موس را بخوانید.
 
-مثال کامل:
-roi = img_color[42:366, 301:534]
-cv2.imshow("ROI", roi)
-
-==============================================================================
-✅ ۷. چرخش تصویر — Rotate
-==============================================================================
-
-الف) چرخش‌های ۹۰ درجه (ساده — مناسب پردازش دسته‌ای):
-سه حالت:
+چرخش‌های ۹۰ درجه (ساده):
 rotated = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
 rotated = cv2.rotate(img, cv2.ROTATE_180)
 rotated = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
-------------------------------------------------------------------------
-
-ب) چرخش با زاویه دلخواه (پیشرفته — ۴ مرحله):
+چرخش با زاویه دلخواه (۴ مرحله):
 
 مرحله ۱: ساخت ماتریس چرخش
 h, w = img.shape[:2]
 center = (w // 2, h // 2)
-angle = 30    # مثبت → پادساعتگرد
-scale = 1.0   # 1 = بدون تغییر اندازه
+angle = 30        # مثبت → پادساعتگرد
+scale = 1.0
 M = cv2.getRotationMatrix2D(center, angle, scale)
 
-# ساختار ماتریس M (همیشه ۲×۳):
-# [ cosθ   sinθ   tx ]
-# [ -sinθ  cosθ   ty ]
-# tx, ty: مولفه‌های انتقال (Translation vectors)
+ساختار ماتریس M (همیشه ۲×۳):
+[ cosθ   sinθ   tx ]
+[ -sinθ  cosθ   ty ]
+tx, ty: مولفه‌های انتقال
 
 مرحله ۲: محاسبه ابعاد جدید (جلوگیری از بریدگی گوشه‌ها)
 theta = np.radians(angle)
@@ -244,51 +126,46 @@ new_w = int(h * np.sin(theta) + w * np.cos(theta))
 new_h = int(h * np.cos(theta) + w * np.sin(theta))
 
 مرحله ۳: اصلاح مرکز ماتریس
-M[0, 2] += (new_w - w) // 2  # جابه‌جایی افقی
-M[1, 2] += (new_h - h) // 2  # جابه‌جایی عمودی
+M[0, 2] += (new_w - w) // 2
+M[1, 2] += (new_h - h) // 2
 
 مرحله ۴: اعمال چرخش
 rotated = cv2.warpAffine(img, M, (new_w, new_h))
 
-مثال کامل:
-img = cv2.imread(path)
-h, w = img.shape[:2]
-center = (w // 2, h // 2)
-angle = 30
-M = cv2.getRotationMatrix2D(center, angle, 1.0)
+وارونه‌سازی:
+flip_vertical = cv2.flip(img, 0)      # عمودی (دور محور x)
+flip_horizontal = cv2.flip(img, 1)    # افقی - آینه‌ای (دور محور y)
+flip_both = cv2.flip(img, -1)         # هر دو (معادل چرخش ۱۸۰°)
 
-theta = np.radians(angle)
-new_w = int(h * np.sin(theta) + w * np.cos(theta))
-new_h = int(h * np.cos(theta) + w * np.sin(theta))
+ماتریس‌های تبدیل:
 
-M[0, 2] += (new_w - w) // 2
-M[1, 2] += (new_h - h) // 2
+انتقال:
+M = np.float32([[1, 0, tx], [0, 1, ty]])
+translated = cv2.warpAffine(img, M, (w, h))
 
-rotated = cv2.warpAffine(img, M, (new_w, new_h))
+تغییر مقیاس:
+resized = cv2.resize(img, None, fx=sx, fy=sy)
 
-==============================================================================
-✅ ۸. وارونه‌سازی — cv2.flip()
-==============================================================================
-شکل رایج:
-flipped = cv2.flip(img, flipCode)
+برش (Shear):
+M = np.float32([[1, k, 0], [0, 1, 0]])
+sheared = cv2.warpAffine(img, M, (w, h))
 
-flipCode = 0  → عمودی (دور محور x)
-flipCode = 1  → افقی - آینه‌ای (دور محور y)
-flipCode = -1 → عمودی و افقی (معادل چرخش ۱۸۰°)
+آفین:
+M = cv2.getAffineTransform(pts1, pts2)
+warped = cv2.warpAffine(img, M, (w, h))
 
-مثال:
-flip_horizontal = cv2.flip(img, 1)
-flip_vertical = cv2.flip(img, 0)
-flip_both = cv2.flip(img, -1)
+پرسپکتیو:
+M = cv2.getPerspectiveTransform(pts1, pts2)
+warped = cv2.warpPerspective(img, M, (w, h))
 
-==============================================================================
-✅ ۹. قاعده کلی ابعاد در OpenCV
-==============================================================================
-روش حفظ کردن:
-img[row, col]  →  img[y, x]
-size = (width, height)  →  (x, y)
 
-قاعده:
+# ============================================================
+# ۳. قاعده ابعاد در OpenCV
+# ============================================================
+
+img[row, col] → img[y, x]
+size = (width, height) → (x, y)
+
 هر جا size می‌دهیم → اول = عرض (width)
   cv2.resize(img, (width, height))
   cv2.warpAffine(img, M, (width, height))
@@ -297,502 +174,140 @@ size = (width, height)  →  (x, y)
   img.shape → (height, width, channels)
   h, w = img.shape[:2]
 
-==============================================================================
-✅ ۱۰. ماتریس‌های تبدیل
-==============================================================================
 
-۱. ماتریس انتقال (Translation):
-M = np.float32([[1, 0, tx], [0, 1, ty]])
-translated = cv2.warpAffine(img, M, (w, h))
+# ============================================================
+# ۴. نمایش تصویر
+# ============================================================
 
-۲. ماتریس تغییر مقیاس (Scaling):
-resized = cv2.resize(img, None, fx=sx, fy=sy)
+نمایش با OpenCV:
+cv2.imshow("window_name", img)
+cv2.waitKey(0)               # صبر تا زدن کلید
+cv2.waitKey(2000)            # نمایش ۲ ثانیه
+cv2.destroyAllWindows()      # بستن همه پنجره‌ها
 
-۳. ماتریس چرخش (Rotation):
-M = cv2.getRotationMatrix2D(center, angle, scale)
-rotated = cv2.warpAffine(img, M, (new_w, new_h))
+تنظیم اندازه پنجره برای رفع زوم‌شدگی:
+cv2.namedWindow("win", cv2.WINDOW_NORMAL)
+cv2.resizeWindow("win", width, height)
 
-۴. ماتریس برش (Shear):
-M = np.float32([[1, k, 0], [0, 1, 0]])
-sheared = cv2.warpAffine(img, M, (w, h))
+نمایش با Matplotlib:
 
-۵. ماتریس آفین (Affine):
-M = cv2.getAffineTransform(pts1, pts2)
-warped = cv2.warpAffine(img, M, (w, h))
-
-۶. ماتریس پرسپکتیو (Perspective):
-M = cv2.getPerspectiveTransform(pts1, pts2)
-warped = cv2.warpPerspective(img, M, (w, h))
-
-====================================================
-📝 کاربرد Matplotlib در OpenCV
-====================================================
-# استفاده از Matplotlib برای نمایش و رسم نمودار
-
-img = cv2.imread("example.jpg")
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-edges = cv2.Canny(gray, 100, 200)
-img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
---------------------------------------------------
-۱. نمایش یک تصویر تکی
---------------------------------------------------
+نمایش یک تصویر:
 plt.figure(figsize=(8, 6))
-plt.imshow(img_rgb)
-plt.title("Original Image")
+plt.imshow(rgb, cmap="gray")     # برای خاکستری cmap="gray"
+plt.title("Title")
 plt.axis("off")
 plt.show()
 
-# ذخیره: خروجی عکس خام است → cv2.imwrite()
-cv2.imwrite("output_image.jpg", img)
-
---------------------------------------------------
-۲. نمایش تصویر خاکستری با نقشه رنگی مشخص
---------------------------------------------------
-plt.figure(figsize=(8, 6))
-plt.imshow(gray, cmap="gray")
-plt.title("Grayscale Image")
-plt.axis("off")
-plt.show()
-
-# ذخیره: خروجی عکس خاکستری است → cv2.imwrite()
-cv2.imwrite("output_gray.jpg", gray)
-
---------------------------------------------------
-۳. نمایش چند تصویر در کنار هم (Subplot)
---------------------------------------------------
+نمایش چند تصویر کنار هم (Subplot):
 fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-
-axes[0].imshow(img_rgb)
-axes[0].set_title("Original")
+axes[0].imshow(img1, cmap="gray")
+axes[0].set_title("Title 1")
 axes[0].axis("off")
-
-axes[1].imshow(gray, cmap="gray")
-axes[1].set_title("Grayscale")
+axes[1].imshow(img2, cmap="gray")
+axes[1].set_title("Title 2")
 axes[1].axis("off")
-
-axes[2].imshow(edges, cmap="gray")
-axes[2].set_title("Canny Edges")
+axes[2].imshow(img3, cmap="gray")
+axes[2].set_title("Title 3")
 axes[2].axis("off")
-
 plt.tight_layout()
 plt.show()
 
-# ذخیره گزارش (چون تیتر و چیدمان دارد): Matplotlib
-fig.savefig("multipix.png", dpi=300, bbox_inches="tight")
+ذخیره با Matplotlib (برای نمودار و گزارش):
+fig.savefig("output.png", dpi=300, bbox_inches="tight")
 
-# ذخیره برای پردازش مجدد (کلاژ): OpenCV
-collage = np.hstack((img, cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR),
-                     cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)))
-cv2.imwrite("collage_for_processing.png", collage)
+مقایسه افقی با OpenCV (سریع برای کلاژ):
+comparison = np.hstack([img1, img2, img3])
+cv2.imshow("Comparison", comparison)
 
---------------------------------------------------
-۴. نمایش و ذخیره‌سازی کلاژ (گزارشی)
---------------------------------------------------
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+مقایسه عمودی:
+comparison_v = np.vstack([img1, img2])
 
-ax1.imshow(img_rgb)
-ax1.set_title("Before")
-ax1.axis("off")
+نکته: برای hstack همه تصاویر باید هم ارتفاع باشند
+برای vstack همه تصاویر باید هم عرض باشند
+اگر نبودند، اول resize کنید.
 
-ax2.imshow(edges, cmap="gray")
-ax2.set_title("After Edge Detection")
-ax2.axis("off")
-
-plt.suptitle("Processing Result", fontsize=16)
-plt.tight_layout()
-plt.show()
-
-# ذخیره: حتماً Matplotlib (چون تیتر و سوپ‌تایتل دارد)
-plt.savefig("before_after.png", dpi=200, bbox_inches="tight")
-
---------------------------------------------------
-۵. رسم هیستوگرام تصویر خاکستری
---------------------------------------------------
-plt.figure(figsize=(10, 5))
-plt.hist(gray.ravel(), bins=256, range=[0, 256], color="black")
-plt.title("Grayscale Histogram")
-plt.xlabel("Pixel Intensity")
-plt.ylabel("Frequency")
-plt.grid(alpha=0.3)
-plt.show()
-
-# ذخیره: حتماً Matplotlib (خروجی نمودار است، نه عکس)
-plt.savefig("histogram_gray.png", dpi=150, bbox_inches="tight")
-
---------------------------------------------------
-۶. رسم هیستوگرام کانال‌های رنگی جداگانه
---------------------------------------------------
-colors = ("b", "g", "r")
-plt.figure(figsize=(10, 5))
-
-for i, col in enumerate(colors):
-    hist = cv2.calcHist([img], [i], None, [256], [0, 256])
-    plt.plot(hist, color=col, label=f"Channel {col.upper()}")
-
-plt.title("RGB Histogram")
-plt.xlabel("Pixel Intensity")
-plt.ylabel("Frequency")
-plt.legend()
-plt.grid(alpha=0.3)
-plt.show()
-
-# ذخیره: حتماً Matplotlib
-plt.savefig("histogram_rgb.png", dpi=150, bbox_inches="tight")
-
---------------------------------------------------
-۷. نمایش تصویر به همراه هیستوگرام در یک فیگور
---------------------------------------------------
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
-
-ax1.imshow(img_rgb)
-ax1.set_title("Image")
-ax1.axis("off")
-
-ax2.hist(gray.ravel(), bins=256, range=[0, 256], color="gray")
-ax2.set_title("Histogram")
-ax2.set_xlabel("Intensity")
-ax2.grid(alpha=0.3)
-
-plt.tight_layout()
-plt.show()
-
-# ذخیره: حتماً Matplotlib
-fig.savefig("image_with_histogram.png", dpi=150, bbox_inches="tight")
-
---------------------------------------------------
-۸. رسم پروفایل شدت نور روی یک خط (Line Profile)
---------------------------------------------------
-line_y = gray.shape[0] // 2
-intensity_profile = gray[line_y, :]
-
-plt.figure(figsize=(12, 4))
-plt.plot(intensity_profile, color="blue", linewidth=0.8)
-plt.title(f"Intensity Profile at y = {line_y}")
-plt.xlabel("X Position")
-plt.ylabel("Intensity")
-plt.grid(alpha=0.3)
-plt.show()
-
-# ذخیره: حتماً Matplotlib
-plt.savefig("line_profile.png", dpi=150, bbox_inches="tight")
-
---------------------------------------------------
-۹. نمایش ماتریس اعداد به صورت Heatmap
---------------------------------------------------
-feature_map = cv2.resize(gray, (50, 50))
-
-plt.figure(figsize=(8, 6))
-plt.imshow(feature_map, cmap="hot", interpolation="nearest")
-plt.colorbar(label="Intensity")
-plt.title("Feature Map / Heatmap")
-plt.axis("off")
-plt.show()
-
-# ذخیره گزارش (با colorbar): Matplotlib
-plt.savefig("heatmap.png", dpi=150, bbox_inches="tight")
-
-# ذخیره داده خام: OpenCV
-cv2.imwrite("feature_map_raw.png", feature_map)
-
---------------------------------------------------
-۱۰. نمایش مراحل مختلف یک پایپلاین پردازشی
---------------------------------------------------
-blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-_, thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY)
-dilated = cv2.dilate(thresh, None, iterations=1)
-
-fig, axes = plt.subplots(2, 2, figsize=(12, 10))
-axes = axes.ravel()
-
-titles = ["Original Gray", "Gaussian Blur", "Binary Threshold", "Dilated"]
-images = [gray, blurred, thresh, dilated]
-
-for i in range(4):
-    axes[i].imshow(images[i], cmap="gray")
-    axes[i].set_title(titles[i])
-    axes[i].axis("off")
-
-plt.suptitle("Image Processing Pipeline", fontsize=16)
-plt.tight_layout()
-plt.show()
-
-# ذخیره: Matplotlib (نمای کلی فرآیند)
-fig.savefig("pipeline_steps.png", dpi=150, bbox_inches="tight")
-
---------------------------------------------------
-خلاصه قوانین ذخیره‌سازی:
---------------------------------------------------
-- فقط عکس خام (بدون نمودار/تیتر) → cv2.imwrite()
-- هر چیزی که نمودار، هیستوگرام، یا چند subplot دارد → plt.savefig()
-- کلاژ عکس برای پردازش مجدد → با np.hstack بسازید و cv2.imwrite() کنید
-
-====================================================
-📝 الگوی کامل پروژه ترکیبی (نمونه اجرایی)
-====================================================
-
-def sample_project_pipeline(path):
-    # ۱. خواندن تصویر
-    img = cv2.imread(path)
-    if img is None:
-        print("تصویر یافت نشد!")
-        return
-
-    # ۲. تبدیل به RGB برای نمایش صحیح
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-    # ۳. تغییر اندازه با حفظ نسبت
-    h, w = img.shape[:2]
-    new_w = 400
-    new_h = int((h * new_w) / w)
-    img_resized = cv2.resize(img, (new_w, new_h))
-
-    # ۴. برش — یک‌چهارم مرکزی تصویر
-    h_r, w_r = img_resized.shape[:2]
-    roi = img_resized[h_r//4 : 3*h_r//4, w_r//4 : 3*w_r//4]
-
-    # ۵. چرخش ROI
-    angle = 30
-    h_c, w_c = roi.shape[:2]
-    center = (w_c // 2, h_c // 2)
-    M = cv2.getRotationMatrix2D(center, angle, 1.0)
-    theta = np.radians(angle)
-    new_w_rot = int(h_c * np.sin(theta) + w_c * np.cos(theta))
-    new_h_rot = int(h_c * np.cos(theta) + w_c * np.sin(theta))
-    M[0, 2] += (new_w_rot - w_c) // 2
-    M[1, 2] += (new_h_rot - h_c) // 2
-    rotated = cv2.warpAffine(roi, M, (new_w_rot, new_h_rot))
-
-    # ۶. Flip افقی
-    flipped = cv2.flip(rotated, 1)
-
-    # ۷. ذخیره تصویر نهایی
-    cv2.imwrite("final_output.jpg", flipped)
-
-    # ۸. نمایش مقایسه‌ای
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-    axes[0].imshow(img_rgb)
-    axes[0].set_title("Original")
-    axes[0].axis("off")
-
-    roi_rgb = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
-    axes[1].imshow(roi_rgb)
-    axes[1].set_title("Cropped")
-    axes[1].axis("off")
-
-    final_rgb = cv2.cvtColor(flipped, cv2.COLOR_BGR2RGB)
-    axes[2].imshow(final_rgb)
-    axes[2].set_title(f"Rotated {angle}° + Flipped")
-    axes[2].axis("off")
-
-    plt.tight_layout()
-    plt.savefig("comparison_output.png", dpi=150, bbox_inches="tight")
-    plt.show()
-
-# sample_project_pipeline("your_image_path.jpg")
-
-====================================================
-📝 راهنمای استفاده از pathlib
-====================================================
-import cv2
-from pathlib import Path
-p = print
-
-# برای یک تصویر تکی:
-path = r"E:\\...\\Data\\input\\cow.jpg"
-image = cv2.imread(path)
-
-# برای تصاویر زیاد (منطقی‌تر):
-folder = Path(r"E:\\...\\Data\\input")
-pathes = [str(i) for i in folder.glob("*.jpg")]
-
-for i in pathes:
-    img = cv2.imread(i)
-    name = Path(i).stem  # نام فایل بدون پسوند
-    # پردازش تصویر...
-    cv2.imwrite(output / f"processed_{name}.jpg", img)
-
-# کد معادل استخراج نام (بدون pathlib):
-# name = i.split("\\\\")[-1].split(".")[0]
-
---------------------------------------------------
-بررسی آمادگی تصاویر
---------------------------------------------------
-# ۱. آمادگی فنی (Image Processing Ready):
-# ✅ تصویر خوانده می‌شود
-# ✅ تغییر اندازه/برش/چرخش انجام می‌شود
-# ✅ ذخیره خروجی انجام می‌شود
-
-# ۲. آمادگی دیتاست برای مدل (Model Training Ready):
-# ✅ اندازه استاندارد
-# ✅ کانال‌های رنگ یکسان
-# ✅ نور و کیفیت قابل قبول
-# ✅ تنوع مناسب
-# ✅ کلاس‌های متعادل
-# ✅ حذف تصاویر خراب و تکراری
-
---------------------------------------------------
-غربالگری تصاویر با انحراف معیار (کنتراست):
---------------------------------------------------
-# اگر np.std(img) > 40 باشد → کنتراست خوب
-# این معیار می‌تواند ۷۰-۸۰٪ تصاویر نامناسب را فیلتر کند
-
-for i in pathes:
-    img = cv2.imread(i, 0)
-    if img is None:
-        continue
-    if np.std(img) > 60:
-        name = Path(i).stem
-        cv2.imshow(f"{name}_win", img)
-        cv2.waitKey(0)
 
 # ============================================================
-🎨 فیلترها، آستانه‌گذاری و تشخیص لبه — Week 04
+# ۵. فیلترها و کاهش نویز
 # ============================================================
 
-import cv2
-import numpy as np
-from pathlib import Path
-p = print
-
-# ============================================================
-✅ ۱. فیلتر Gaussian — کاهش نویز نرم
-# ============================================================
-
-شکل رایج:
-blurred = cv2.GaussianBlur(img, ksize, sigmaX)
+Gaussian Blur (کاهش نویز نرم):
+blurred = cv2.GaussianBlur(img, (5, 5), 0)
 
 پارامترها:
 img: تصویر ورودی (رنگی یا خاکستری)
 ksize: اندازه کرنل — تاپل (width, height) — هر دو باید فرد باشند
-       والیوهای رایج: (3,3) کم, (5,5) متوسط, (9,9) زیاد
-sigmaX: انحراف معیار افقی. اگر 0 بدهید، OpenCV خودش از روی ksize حساب می‌کند (پیشنهادی)
-sigmaY: انحراف معیار عمودی. پیش‌فرض 0 یعنی برابر با sigmaX (معمولاً تغییر نمی‌دهیم)
+       والیوهای رایج: (3,3) کم | (5,5) متوسط | (9,9) زیاد
+sigmaX: انحراف معیار افقی. اگر 0 بدهید، OpenCV خودش حساب می‌کند (پیشنهادی)
+sigmaY: پیش‌فرض 0 یعنی برابر با sigmaX
 
 حالت اول (پیشنهادی): ksize دارید, sigmaX=0
 حالت دوم: ksize=(0,0) می‌دهید, sigmaX را دستی تعیین می‌کنید
 
-مثال:
-img = cv2.imread(path)
-
-small_blur = cv2.GaussianBlur(img, (3, 3), 0)
-medium_blur = cv2.GaussianBlur(img, (5, 5), 0)
-extra_blur = cv2.GaussianBlur(img, (9, 9), 0)
-
-cv2.imshow("small blur (3,3)", small_blur)
-cv2.imshow("medium blur (5,5)", medium_blur)
-cv2.imshow("extra blur (9,9)", extra_blur)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
-output = Path(r"E:\\...\\Output")
-output.mkdir(parents=True, exist_ok=True)
-cv2.imwrite(str(output / "man_small_blur.jpg"), small_blur)
-cv2.imwrite(str(output / "man_medium_blur.jpg"), medium_blur)
-cv2.imwrite(str(output / "man_extra_blur.jpg"), extra_blur)
-
-# ============================================================
-✅ ۲. فیلتر Median — حذف نویز نمک-فلفل
-# ============================================================
-
-شکل رایج:
-median = cv2.medianBlur(img, ksize)
+Median Blur (حذف نویز نمک-فلفل):
+median = cv2.medianBlur(img, 5)
 
 پارامترها:
 img: تصویر ورودی (رنگی یا خاکستری)
 ksize: اندازه کرنل — یک عدد فرد (نه تاپل! برخلاف Gaussian)
-       والیوهای رایج: 3 (کم), 5 (متوسط، پیشنهادی), 9 (زیاد)
+       والیوهای رایج: 3 (کم) | 5 (متوسط، پیشنهادی) | 9 (زیاد)
 
-مقایسه با Gaussian:
+مقایسه Gaussian و Median:
 Gaussian = میانگین وزن‌دار پیکسل‌های همسایه → نویز پخش می‌شود → لبه‌ها محو
 Median   = میانه آماری پیکسل‌های همسایه → نویز حذف می‌شود → لبه‌ها تیز
+Median برای نویز نمک-فلفل بهترین است.
 
-مثال:
-img = cv2.imread(path)
-
-ksizes = [3, 5, 9]
-for k in ksizes:
-    gaussian = cv2.GaussianBlur(img, (k, k), 0)
-    median = cv2.medianBlur(img, k)
-
-    output = Path(r"E:\\...\\Output")
-    output.mkdir(parents=True, exist_ok=True)
-    cv2.imwrite(str(output / f"chaplin_gaussian_{k}.jpg"), gaussian)
-    cv2.imwrite(str(output / f"chaplin_median_{k}.jpg"), median)
 
 # ============================================================
-✅ ۳. Thresholding ساده — آستانه‌گذاری سراسری
-بلور کردن خفیف تصویر ( مثلا 3 در 3 گاویسین) قبل از ترشهولد ساده رایج است
+# ۶. آستانه‌گذاری (Thresholding)
+# ============================================================
 
-مشکل : سوختن (سیاه شدن)بخشی از تصویر
-============================================================
+Threshold ساده (آستانه‌گذاری سراسری):
+ret, th = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
 
-شکل رایج:
-ret, dst = cv2.threshold(grey, thresh, maxval, type)
-یا
-_ , dst = cv2.threshold(grey, thresh, maxval, type)
-اگر نیازی به رت نداشتیم
-# ------------------
 پارامترها:
-grey: تصویر ورودی — باید Grayscale باشد (تک کاناله)
+gray: تصویر ورودی — باید Grayscale باشد (تک کاناله)
 thresh: عدد آستانه (0 تا 255)
-        والیوهای رایج: 50 (روشن), 127 (متوسط، رایج‌ترین), 200 (تیره)
+        والیوهای رایج: 50 (روشن) | 127 (متوسط، رایج‌ترین) | 200 (تیره)
         ترش کم = تصویر سفیدتر | ترش زیاد = تصویر سیاه‌تر
 maxval: مقدار پیکسل‌های عبورکرده از آستانه — معمولاً 255
 
 type: نوع آستانه‌گذاری
-      cv2.THRESH_BINARY      → بالای آستانه = maxval, پایین = 0 (پیشفرض ذهنی)
+      cv2.THRESH_BINARY      → بالای آستانه = maxval, پایین = 0
       cv2.THRESH_BINARY_INV  → معکوس حالت بالا
       cv2.THRESH_TRUNC       → بالای آستانه = خود آستانه, پایین = بدون تغییر
       cv2.THRESH_TOZERO      → بالای آستانه = بدون تغییر, پایین = 0
 
 خروجی:
 ret → همان مقدار thresh استفاده‌شده
-th→ تصویر باینری شده(سیاه و سفید شده)
+th  → تصویر باینری شده
 
-مثال:
-img = cv2.imread(path)
-grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+نکته: تابع threshold یک تاپل برمی‌گرداند پس باید دو متغیر را مقداردهی کنید.
 
-tresh_list = [50, 127, 200]
-for t in tresh_list:
-    ret, th = cv2.threshold(grey, t, 255, cv2.THRESH_BINARY)
+Otsu Threshold (آستانه‌گذاری خودکار):
+blur = cv2.GaussianBlur(gray, (5, 5), 0)     # بلور قبل از اوتسو لازم است
+ret, thresh_otsu = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    output = Path(r"E:\\...\\Output")
-    output.mkdir(parents=True, exist_ok=True)
-    cv2.imwrite(str(output / f"huawei_thresh_{t}.jpg"), th)
-# -------------------------------------------------------------------
-Otsu Threshold (ترشهولد اوتسو)
-تقریبا همان روش آستانه گذاری ساده است ولی کار تشخیص آستانه را خودکار انجام میدهد.
----------------------------------------------------------
-برای تصاویر با کنتراست بالا،
-تصاویر دوقله ای ،
-نورپردازی نسبتا یکنواخت ،
+مناسب برای:
+تصاویر با کنتراست بالا
+تصاویر دوقله‌ای (هیستوگرام دو قله دارد)
+نورپردازی نسبتاً یکنواخت
 پس زمینه غیر شلوغ
 
-blur = cv2.GaussianBlur(grey,(5,5),0) قبل از اوتسو، بلور لازم است
-
-ret ,thresh_otsu = cv2.threshold(grey,0,255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-# ============================================================
-✅ ۴. Adaptive Thresholding — آستانه‌گذاری تطبیقی
-اغلب نیاز به بلور، قبل از ترشهولد آداپتیو نیست.
-# ============================================================
-
-شکل رایج:
-thresh_adapt = cv2.adaptiveThreshold(src, maxValue, adaptiveMethod, thresholdType, blockSize, C)
+Adaptive Threshold (آستانه‌گذاری تطبیقی):
+adaptive = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 21, 3)
 
 پارامترها (هر ۶ پارامتر اجباری هستند):
-src: تصویر ورودی — باید Grayscale باشد
+gray: تصویر ورودی — باید Grayscale باشد
 maxValue: مقدار پیکسل‌های سفید — معمولاً 255
 adaptiveMethod:
     cv2.ADAPTIVE_THRESH_MEAN_C     → میانگین ساده همسایه‌ها
     cv2.ADAPTIVE_THRESH_GAUSSIAN_C → میانگین وزن‌دار (بهتر، پیشنهادی)
 thresholdType: معمولاً cv2.THRESH_BINARY
 blockSize: اندازه ناحیه بررسی — یک عدد فرد
-           والیوهای رایج: 11 (جزئیات بیشتر), 21 (نرم‌تر، پیشنهادی برای متون)
+           والیوهای رایج: 11 (جزئیات بیشتر) | 21 (نرم‌تر، پیشنهادی برای متون)
 C: ثابت تصحیح — از میانگین محلی کم می‌شود
-   والیوهای رایج: 2 (پیشفرض ذهنی), 3 (معمولی), 7 (خطوط پیوسته‌تر)
+   والیوهای رایج: 2 (پیش‌فرض) | 3 (معمولی) | 7 (خطوط پیوسته‌تر)
    بزرگتر = تصویر تیره‌تر و خطوط پیوسته‌تر
 
 نکته — رفتار شبه‌کنی:
@@ -801,79 +316,627 @@ C: ثابت تصحیح — از میانگین محلی کم می‌شود
 در برخی تصاویر: adaptiveThreshold با C بالا و blockSize پایین
 عملکردی مشابه Canny پیدا می‌کند
 
-مثال:
-img = cv2.imread(path, 0)
+نکته — C منفی (راه‌حل تله تُنال برای شیء طرح‌دار با پس‌زمینه سفید):
+C را منفی بگیر: ۲- تا ۱۵- (آزمون و خطا کن)
+این کار آستانه را بالا می‌برد و مرزهای محوی که همرنگ پس‌زمینه می‌زدند را سفید می‌کند
+پارگی لبه بسته می‌شود
+blockSize را بالا ببر: ۲۱ به بالا (فقط اعداد فرد)
+پنجره بزرگ، جزئیات ریز و طرح‌های داخلی را نادیده می‌گیرد و فقط ساختار کلی شیء را می‌بیند
+نتیجه: مرز بیرونی بسته و یکپارچه، داخل شلوغ (پر از سوراخ و طرح)
 
-# آستانه‌گذاری ساده برای مقایسه
-_, th = cv2.threshold(img, 50, 255, cv2.THRESH_BINARY)
+معکوس‌سازی تصویر باینری:
+روش ۱: هنگام threshold
+_, th = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
 
-# آستانه‌گذاری تطبیقی
-thresh_adapt = cv2.adaptiveThreshold(
-    img, 255,
-    cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-    cv2.THRESH_BINARY,
-    21,  # blockSize
-    3    # C
-)
+روش ۲: روی باینری آماده
+inverted = cv2.bitwise_not(th)
 
-output = Path(r"E:\\...\\Output")
-output.mkdir(parents=True, exist_ok=True)
-cv2.imwrite(str(output / "_th_panther.jpg"), simple_thresh)
-cv2.imwrite(str(output / "thresh_adapt_panther.jpg"), adaptive_thresh)
+نکته مهم: عملیات مورفولوژی (Erosion, Dilation) فرض می‌کنند
+شیء سفید و پس‌زمینه سیاه است. اگر برعکس است، از THRESH_BINARY_INV استفاده کن.
+
+راه‌حل تله تُنال (نشت پس‌زمینه به درون اشیاء بافت‌دار):
+مشکل: تصاویر با پس‌زمینه سفید ولی شیء بافت‌دار → احتمال تله تُنال
+
+راه‌حل دستی:
+بالا بردن آستانه در threshold ساده تا کل شی سیاه شود
+منفی کردن پارامتر C در adaptive تا کل پس‌زمینه سیاه شود
+
+راه‌حل خودکار (پردازش دسته‌ای):
+kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 15))
+tophat = cv2.morphologyEx(gray, cv2.MORPH_TOPHAT, kernel)
+_, binary = cv2.threshold(tophat, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE,
+                          cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25)))
+contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
 
 # ============================================================
-✅ ۵. تشخیص لبه — Canny Edge Detection
+# ۷. تشخیص لبه (Canny Edge Detection)
 # ============================================================
 
-شکل رایج:
 edges = cv2.Canny(img, threshold1, threshold2)
 
 پارامترها:
 img: تصویر ورودی — ترجیحاً Grayscale
 threshold1: حد پایین (minVal) — برای هیسترزیس
 threshold2: حد بالا (maxVal) — برای هیسترزیس
-            نسبت پیشنهادی: 1:2 یا 1:3 (مثلاً 50:150, 80:200, 80:240)
-            بهترین مقادیر تجربی: (50,150) (80,200) (80,240)
+            نسبت پیشنهادی: 1:2 یا 1:3
+            مقادیر تجربی خوب: (50,150) | (80,200) | (80,240)
 
 منطق هیسترزیس Canny:
-- اگر گرادیان > threshold2 → قطعاً لبه
-- اگر گرادیان < threshold1 → قطعاً غیرلبه
-- اگر بین این دو → لبه است فقط اگر به یک لبه قطعی متصل باشد
+اگر گرادیان > threshold2 → قطعاً لبه
+اگر گرادیان < threshold1 → قطعاً غیرلبه
+اگر بین این دو → لبه است فقط اگر به لبه قطعی متصل باشد
 
 قانون طلایی: همیشه قبل از Canny بلور کن!
+blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+edges = cv2.Canny(blurred, 50, 150)
 
-مثال:
-folder = Path(r"E:\\...\\Data")
+
+# ============================================================
+# ۸. کانتور (Contour)
+# ============================================================
+
+پیدا کردن کانتور:
+contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+پارامترها:
+binary: تصویر باینری ورودی (خروجی Threshold)
+mode: نحوه بازیابی کانتورها
+    cv2.RETR_EXTERNAL → فقط کانتورهای بیرونی (پرکاربردترین)
+    cv2.RETR_LIST     → همه کانتورها بدون سلسله‌مراتب
+    cv2.RETR_TREE     → همه کانتورها با روابط تو در تو
+    cv2.RETR_CCOMP    → همه کانتورها با سلسله‌مراتب دو سطحی
+
+method: نحوه ذخیره نقاط
+    cv2.CHAIN_APPROX_SIMPLE → فقط نقاط ضروری (پرکاربردترین)
+    cv2.CHAIN_APPROX_NONE   → تمام نقاط مرزی
+
+خروجی:
+contours: لیستی از آرایه‌های نامپی
+hierarchy: آرایه نامپی که روابط تو در تو را نشان می‌دهد
+
+رسم کانتور:
+output = img.copy()     # حتماً کپی بگیر! نه output = img
+cv2.drawContours(output, contours, -1, (0, 255, 0), 3)
+
+پارامترها:
+output: تصویری که کانتور روی آن رسم می‌شود (باید رنگی/BGR باشد)
+contours: خروجی findContours
+contourIdx: اندیس کانتور | -1 یعنی همه کانتورها
+color: رنگ خط به‌صورت (B, G, R) | (0, 255, 0) سبز
+thickness: ضخامت خط | 2 یا 3 رایج
+
+نکته مهم: این تابع None برمی‌گرداند! مستقیماً روی تصویر تغییر ایجاد می‌کند.
+قبل از استفاده حتماً img.copy() بگیر.
+
+مساحت و محیط:
+area = cv2.contourArea(contour)                  # مساحت داخل کانتور
+perimeter = cv2.arcLength(contour, closed=True)  # محیط کانتور
+
+مساحت همه کانتورها:
+areas = [cv2.contourArea(c) for c in contours]
+
+انتخاب بزرگ‌ترین کانتور:
+biggest = max(contours, key=cv2.contourArea)
+
+مرتب‌سازی بر حسب مساحت (بزرگ به کوچک):
+sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)
+
+انتخاب ۱۵ کانتور بزرگ:
+greatest = sorted(contours, key=cv2.contourArea, reverse=True)[:15]
+
+Bounding Box (رسم کادر دور شیء):
+x, y, w, h = cv2.boundingRect(biggest)
+boxes = img.copy()
+cv2.rectangle(boxes, (x, y), (x + w, y + h), (0, 255, 0), 10)
+
+ROI از Bounding Box:
+roi = img[y : y + h, x : x + w]
+
+Mask (جداسازی دقیق شکل شیء):
+mask = np.zeros(gray.shape, dtype=np.uint8)    # یا np.zeros_like(gray)
+cv2.drawContours(mask, [biggest], -1, 255, -1)
+masked = cv2.bitwise_and(img, img, mask=mask)
+
+پارامترها:
+gray.shape: ابعاد تصویر خاکستری (تک کاناله)
+[biggest]: لیست یک عنصری از کانتور (حتماً لیست باشد)
+255: مقدار سفید برای داخل کانتور
+-1: ضخامت -1 یعنی پر کردن کامل داخل کانتور
+
+نکته: ماسک را حتماً تک‌کاناله (dtype=np.uint8) بساز.
+
+ترکیب bitwise_and:
+masked = cv2.bitwise_and(thresh_adapt, dilated, mask=mask)
+
+نکته: عملیات AND جابجایی‌پذیر است → ترتیب تصاویر مهم نیست
+پیکسل فقط وقتی سفید می‌ماند که در هر دو تصویر سفید باشد.
+
+قوانین طلایی کانتور:
+۱. همیشه قبل از drawContours یک img.copy() بگیر
+۲. ماسک حتماً تک‌کاناله (dtype=np.uint8) باشد
+۳. کانتور روی باینری (Threshold) زده می‌شود، نه روی Canny
+۴. RETR_EXTERNAL برای استخراج مرز بیرونی از تصویر باینری شلوغ
+
+
+# ============================================================
+# ۹. مورفولوژی (Morphology)
+# ============================================================
+
+مفهوم Structuring Element (کرنل، عنصر ساختاری):
+کرنل یک ماتریس کوچک (مثلاً 3×3 یا 5×5) با شکل مشخص است که روی تمام پیکسل‌های
+تصویر باینری حرکت می‌کند (Sliding Window). زیر هر پیکسل محاسبه ریاضی انجام می‌دهد
+و پیکسل‌ها را حذف یا اضافه می‌کند.
+محتوای کرنل فقط ۰ و ۱ دارد (برخلاف کرنل بلور که مقادیر اعشاری دارد).
+
+ساخت کرنل:
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+
+پارامترها:
+shape: نوع شکل عنصر ساختاری
+    cv2.MORPH_RECT     → مستطیل/مربع (همه مقادیر ۱)
+                         برای اشیاء با خطوط و لبه‌های صاف
+    cv2.MORPH_ELLIPSE  → بیضی/دایره‌ای
+                         برای اشیاء گرد و ارگانیک (سکه، سلول)
+                         برای اشیاء نامنظم یا چرخیده (برگ، لکه، سنگ)
+                         انتخاب پیش‌فرض و امن
+    cv2.MORPH_CROSS    → ضربدر (+)
+
+ksize: سایز کرنل به‌صورت تاپل (عرض، ارتفاع) مثل (5, 5)
+       اجباری است — مقدار پیش‌فرض ندارد
+       هرچه بزرگ‌تر → تأثیر عملیات قوی‌تر
+       همیشه عدد فرد (3، 5، 7، ...)
+       باید نسبت به اندازه نویز تنظیم شود، نه اندازه کل تصویر
+
+anchor: نقطه لنگر (مرکز) کرنل
+        پیش‌فرض (-1, -1) یعنی مرکز خودکار
+        تقریباً همیشه از پیش‌فرض استفاده می‌شود
+
+خروجی: آرایه نامپی uint8 با شکل ksize که فقط شامل ۰ و ۱ است
+
+نکات کلیدی کرنل:
+shape قرار نیست شبیه شکل شیء داخل تصویر باشد!
+کرنل فقط روش پیمایش و تصمیم‌گیری است، نه قالبی برای مطابقت با شکل شیء.
+کرنل خودش هیچ‌وقت نمی‌چرخد پس برای اشیاء چرخیده از ELLIPSE استفاده کن.
+MORPH_RECT عملاً همان np.ones است ولی استفاده از تابع رسمی OpenCV
+باعث سازگاری بهتر با بقیه توابع مورفولوژی می‌شود.
+میانبر np.ones فقط برای RECT جواب می‌دهد، برای ELLIPSE و CROSS
+چاره‌ای جز استفاده از getStructuringElement نداری.
+انتخاب shape و ksize فرآیندی تجربی (آزمون و خطا) است، نه فرمول ثابت.
+# -------------------------------------------------------------------------
+Erosion (فرسایش):
+eroded = cv2.erode(binary/gray, kernel, 1/2/3)
+
+پارامترها:
+src: تصویر ورودی — باینری یا گری‌اسکیل (شیء سفید، پس‌زمینه سیاه)
+kernel: ماتریس کرنل ساخته شده با getStructuringElement
+iterations: تعداد دفعات تکرار عملیات
+            پیش‌فرض: 1 | رایج: 1 تا 3
+            بیشتر = فرسایش شدیدتر
+
+ایده ساده: کرنل روی تصویر حرکت می‌کند و چک می‌کند آیا تمام پیکسل‌های زیر
+کرنل سفید (۱) هستند یا نه. اگر حتی یک پیکسل سیاه (۰) باشد، پیکسل مرکزی
+هم سیاه می‌شود. نتیجه: لبه‌های اشیاء سفید کوچک می‌شوند.
+
+کاربرد:
+حذف نویزهای ریز سفید (نقطه‌های کوچک اضافی)
+نازک کردن اشیاء
+جدا کردن دو شیء که به هم چسبیده‌اند
+# --------------------------------------------------------------------------
+Dilation (گسترش):
+dilated = cv2.dilate(binary/gray, kernel, 1/2/3)
+
+پارامترها: مشابه erode
+
+ایده ساده: کرنل روی تصویر حرکت می‌کند و چک می‌کند آیا حداقل یکی از پیکسل‌های
+زیر کرنل سفید (۱) هست یا نه. اگر حتی یک پیکسل سفید باشد، پیکسل مرکزی هم
+سفید می‌شود. نتیجه: لبه‌های اشیاء سفید بزرگ می‌شوند.
+
+کاربرد:
+پر کردن سوراخ‌های کوچک داخل شیء
+وصل کردن قطعاتی از شیء که به‌خاطر نویز از هم جدا شده‌اند
+بزرگ کردن ناحیه یک شیء بعد از Erosion
+# ----------------------------------------------------------------------------
+Opening:
+opened = cv2.morphologyEx(binary/gray, cv2.MORPH_OPEN, kernel)
+
+تعریف: Erosion سپس Dilation
+
+چرا این ترتیب؟ ابتدا Erosion نویزهای ریز سفید را پاک می‌کند (چون کوچک‌تر
+از کرنل هستند و کامل حذف می‌شوند)، سپس Dilation شیء اصلی را به اندازه اولیه
+برمی‌گرداند بدون اینکه نویز حذف‌شده برگردد.
+
+کاربرد: پاک‌سازی نویزهای ریز سفید بدون کوچک شدن دائمی شیء اصلی
+# ------------------------------------------------------------------------
+Closing:
+closed = cv2.morphologyEx(binary/gray, cv2.MORPH_CLOSE, kernel)
+
+تعریف: Dilation سپس Erosion
+
+چرا این ترتیب؟ ابتدا Dilation سوراخ‌های کوچک داخل شیء را پر می‌کند یا قطعات
+نزدیک را وصل می‌کند، سپس Erosion شیء را به اندازه اولیه برمی‌گرداند بدون اینکه
+سوراخ‌ها دوباره باز شوند.
+
+کاربرد: پر کردن سوراخ‌های کوچک یا وصل کردن قطعات جدا از هم بدون بزرگ شدن دائمی
+
+Top Hat:
+tophat = cv2.morphologyEx(gray, cv2.MORPH_TOPHAT, kernel)
+
+کاربرد: حذف بافت‌های سطحی و جدا کردن شی از زمینه سفید
+
+خلاصه تأثیرات:
+Erosion: اشیاء سفید باریک‌تر و کوچک‌تر می‌شوند
+         نقاط ریز سفید (نویز) کاملاً حذف می‌شوند
+         با افزایش iteration، اشیاء کوچک کاملاً ناپدید می‌شوند
+
+Dilation: اشیاء سفید ضخیم‌تر و بزرگ‌تر می‌شوند
+          حفره‌های سیاه داخل اشیاء پر می‌شوند
+          اشیاء نزدیک به هم به یکدیگر می‌چسبند
+
+تأثیر Kernel Size:
+کرنل بزرگتر = تغییرات سریع‌تر و شدیدتر
+کرنل 7x7 با 3 iteration تقریباً ساختار اصلی را از بین می‌برد
+
+تأثیر شکل کرنل:
+RECT: تغییرات یکنواخت در همه جهات
+CROSS: تغییرات بیشتر در جهت‌های عمودی و افقی
+ELLIPSE: تغییرات نرم‌تر و طبیعی‌تر
+
+چه زمانی تکی و چه زمانی ترکیبی؟
+فقط کوچیک کردن شیء (جدا کردن دو شیء چسبیده) → Erosion تنها
+فقط بزرگ کردن شیء (پررنگ‌تر کردن ناحیه نازک) → Dilation تنها
+حذف نویز بدون تغییر اندازه شیء → Opening
+پر کردن سوراخ بدون تغییر اندازه شیء → Closing
+# ----------------------------------------------------------
+بهترین روش مورفولوژی (پایپلاین کامل):
+
+مرحله ۱: پیش‌پردازش
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+thresh_adapt = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                      cv2.THRESH_BINARY_INV, 21, 3)
+
+مرحله ۲: Opening خفیف برای حذف نویز ریز
+kernel_soft = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+opened = cv2.morphologyEx(thresh_adapt, cv2.MORPH_OPEN, kernel_soft)
+
+مرحله ۳: Dilate تهاجمی برای ترمیم حاشیه و بستن سوراخ‌ها
+kernel_aggressive = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7))
+dilated = cv2.dilate(opened, kernel_aggressive)
+
+مرحله ۴: یافتن کانتور اصلی از تصویر بهبود یافته
+contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+biggest = max(contours, key=cv2.contourArea)
+
+مرحله ۵: ساخت ماسک
+mask = np.zeros_like(thresh_adapt)
+cv2.drawContours(mask, [biggest], -1, 255, -1)
+
+مرحله ۶: اعمال ماسک — ترکیب هوشمندانه
+masked = cv2.bitwise_and(thresh_adapt, dilated, mask=mask)
+
+مزیت: نویز بیرون از کانتور کاملاً حذف می‌شود
+نویز داخل شی با AND حذف می‌شود
+الگوهای واقعی داخل شی حفظ می‌شوند
+حاشیه ترمیم شده و سوراخ‌ها بسته شده‌اند
+
+
+# ============================================================
+# ۱۰. بهبود کنتراست
+# ============================================================
+
+مفهوم Histogram:
+هیستوگرام تصویر یعنی نمودار توزیع فرکانس مقادیر روشنایی پیکسل‌ها از ۰ تا ۲۵۵.
+محور افقی: مقدار روشنایی
+محور عمودی: تعداد پیکسل‌ها
+
+Histogram Equalization (یکسان‌سازی سراسری):
+equalized = cv2.equalizeHist(gray)
+
+پارامترها:
+gray: تصویر ورودی — حتماً Grayscale و uint8
+      این تابع روی تصویر رنگی (BGR سه‌کاناله) مستقیماً کار نمی‌کند
+
+خروجی: تصویر جدید با همان ابعاد و نوع
+
+مفهوم: گسترش دادن توزیع روشنایی به‌طوری که مقادیر در کل بازه ۰ تا ۲۵۵ پخش شوند
+نه اینکه فقط در یک بازه باریک (مثلاً ۱۰۰ تا ۱۵۰) متمرکز باشند.
+
+کاربردها:
+تصاویر پزشکی (X-ray, MRI, CT scan) — جزئیات مخفی نمایان می‌شوند
+پیش‌پردازش برای الگوریتم‌های بینایی ماشین (تشخیص لبه، OCR، تشخیص چهره)
+تصاویر ماهواره‌ای و هوایی
+تصاویر علمی و تحقیقاتی (میکروسکوپی، نجومی)
+
+نامناسب برای:
+عکس‌های طبیعی و هنری (پرتره، منظره)
+تصاویری که قرار است انسان ببیند و لذت ببرد
+هرجا که «زیبایی» مهم است، نه «استخراج اطلاعات»
+تصاویر با پس‌زمینه سفید (بخشی از پس‌زمینه را خراب می‌کند)
+
+CLAHE (Contrast Limited Adaptive Histogram Equalization):
+clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+clahe_img = clahe.apply(gray)
+
+پارامترها:
+clipLimit: سقف محدودسازی کنتراست
+           پیش‌فرض: 40 (خیلی زیاد است!)
+           مقدار رایج: 2 تا 4
+           بزرگ‌تر = کنتراست بیشتر ولی نویز بیشتر
+
+tileGridSize: اندازه گرید بلوک‌بندی تصویر
+              پیش‌فرض: (8, 8) = ۶۴ بلوک
+              مقدار رایج: (8, 8)
+
+خروجی: این تابع یک شیء CLAHE برمی‌گرداند (نه تصویر)
+سپس باید متد apply() صدا زده شود.
+
+تفاوت equalizeHist و CLAHE:
+equalizeHist → سراسری (Global) | یک بار روی کل تصویر
+CLAHE → موضعی (Local) | تصویر به بلوک‌های کوچک تقسیم، هر بلوک جدا equalize،
+        نرم‌سازی بین بلوک‌ها
+
+چه زمانی CLAHE؟
+نور نامتقارن (بخشی روشن، بخشی تاریک)
+عکس‌های طبیعی که هم زیبایی مهم است و هم استخراج جزئیات
+تصاویر با نویز در نواحی یکنواخت (clipLimit از تشدید نویز جلوگیری می‌کند)
+
+نمایش هیستوگرام:
+
+هیستوگرام تصویر خاکستری:
+plt.hist(gray.ravel(), bins=256, range=[0, 256], color="black")
+plt.title("Grayscale Histogram")
+plt.xlabel("Pixel Intensity")
+plt.ylabel("Frequency")
+plt.show()
+
+هیستوگرام کانال‌های رنگی جداگانه:
+colors = ("b", "g", "r")
+for i, col in enumerate(colors):
+    hist = cv2.calcHist([img], [i], None, [256], [0, 256])
+    plt.plot(hist, color=col, label=f"Channel {col.upper()}")
+plt.legend()
+plt.show()
+
+مقایسه تصویر + هیستوگرام (۲×۲):
+fig, axes = plt.subplots(2, 2, constrained_layout=True)
+axes[0, 0].imshow(gray, cmap="gray")
+axes[0, 0].set_title("Original")
+axes[0, 1].hist(gray.ravel(), bins=256, range=(0, 255))
+axes[0, 1].set_title("Original Histogram")
+axes[1, 0].imshow(equalized, cmap="gray")
+axes[1, 0].set_title("Equalized")
+axes[1, 1].hist(equalized.ravel(), bins=256, range=(0, 255))
+axes[1, 1].set_title("Equalized Histogram")
+plt.show()
+
+مقایسه سه حالته (Original vs Global vs CLAHE):
+fig, axes = plt.subplots(1, 3, constrained_layout=True)
+axes[0].imshow(gray, cmap="gray")
+axes[0].set_title("Original")
+axes[1].imshow(equalized, cmap="gray")
+axes[1].set_title("Global Equalize")
+axes[2].imshow(clahe_img, cmap="gray")
+axes[2].set_title("CLAHE")
+plt.show()
+
+
+# ============================================================
+# ۱۱. نمایش پروفایل شدت نور و Heatmap
+# ============================================================
+
+Line Profile (پروفایل شدت نور روی یک خط):
+line_y = gray.shape[0] // 2
+intensity_profile = gray[line_y, :]
+
+plt.plot(intensity_profile, color="blue", linewidth=0.8)
+plt.title(f"Intensity Profile at y = {line_y}")
+plt.xlabel("X Position")
+plt.ylabel("Intensity")
+plt.show()
+
+Heatmap (نمایش ماتریس اعداد):
+feature_map = cv2.resize(gray, (50, 50))
+
+plt.imshow(feature_map, cmap="hot", interpolation="nearest")
+plt.colorbar(label="Intensity")
+plt.title("Feature Map / Heatmap")
+plt.axis("off")
+plt.show()
+
+
+# ============================================================
+# ۱۲. itertools برای تست پارامترها
+# ============================================================
+
+ایمپورت:
+from itertools import product, permutations, combinations, chain
+
+product — ضرب دکارتی (مهم‌ترین تابع برای CV):
+جایگزین حلقه‌های تودرتو
+
+مثال پایه با ۲ لیست:
+colors = ['red', 'blue']
+sizes = ['S', 'M', 'L']
+for color, size in product(colors, sizes):
+    print(color, size)
+
+مثال با ۳ لیست:
+for j, k, d in product(list1, list2, list3):
+    print(j, k, d)
+
+با پارامتر repeat:
+for combo in product([1, 2], repeat=3):
+    print(combo)
+
+با لیست‌های پویا:
+lists = [[1, 2], ['a', 'b'], [True, False]]
+for combo in product(*lists):     # * یعنی باز کردن لیست
+    print(combo)
+
+مثال کاربردی در پردازش تصویر:
+thresholds = [100, 150, 200]
+kernel_sizes = [3, 5, 7]
+shapes = [cv2.MORPH_RECT, cv2.MORPH_ELLIPSE, cv2.MORPH_CROSS]
+iterations = [1, 2, 3]
+
+for thresh, ksize, shape, itr in product(thresholds, kernel_sizes, shapes, iterations):
+    kernel = cv2.getStructuringElement(shape, (ksize, ksize))
+    _, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
+    result = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=itr)
+
+permutations — جایگشت (ترتیب مهم است):
+for perm in permutations(['A', 'B', 'C'], 2):
+    print(perm)
+خروجی: ('A','B') ('A','C') ('B','A') ('B','C') ('C','A') ('C','B')
+
+combinations — ترکیب (ترتیب مهم نیست):
+for comb in combinations(['A', 'B', 'C'], 2):
+    print(comb)
+خروجی: ('A','B') ('A','C') ('B','C')
+
+chain — اتصال چند لیست:
+for item in chain(list1, list2, list3):
+    print(item)
+
+نکات itertools:
+کتابخانه استاندارد است — نیازی به نصب ندارد
+توابع lazy هستند — مقادیر را یکی‌یکی تولید می‌کنند (حافظه کارآمد)
+خروجی iterator است — برای لیست از list() استفاده کن
+product با بیش از ۲ لیست کار می‌کند
+
+چه زمانی product و چه زمانی لوپ تودرتو؟
+از product استفاده کن وقتی:
+فقط ترکیب ساده می‌خواهی
+تعداد لیست‌ها زیاد است (بیش از ۳)
+کد خواناتر می‌خواهی
+تعداد لیست‌ها پویا است
+
+از لوپ تودرتو استفاده کن وقتی:
+تعداد لیست‌ها کم است (۲ یا ۳)
+منطق پیچیده بین لوپ‌ها داری
+در هر سطح پردازش خاصی انجام می‌دهی
+
+
+# ============================================================
+# ۱۳. pathlib برای مدیریت مسیرها
+# ============================================================
+
+import cv2
+from pathlib import Path
+
+برای یک تصویر تکی:
+path = r"E:\\...\\Data\\input\\cow.jpg"
+image = cv2.imread(path)
+
+برای تصاویر زیاد:
+folder = Path(r"E:\\...\\Data\\input")
+output = Path(r"E:\\...\\Output")
+output.mkdir(parents=True, exist_ok=True)    # ساخت پوشه اگر نبود
+
 paths = [str(i) for i in folder.glob("*.jpg")]
 
-thresholds = [(50, 150), (80, 200), (80, 240)]
+for i in paths:
+    img = cv2.imread(i)
+    if img is None:
+        continue
+    name = Path(i).stem      # نام فایل بدون پسوند
+    # پردازش...
+    cv2.imwrite(str(output / f"processed_{name}.jpg"), img)
 
+معادل بدون pathlib:
+name = i.split("\\\\")[-1].split(".")[0]
+
+
+# ============================================================
+# ۱۴. الگوی حلقه دوم (Nested Loop) و نام‌گذاری خروجی
+# ============================================================
+
+علامت نیاز به حلقه دوم:
+وقتی برای یک ورودی، عملیات مشابه را با پارامترهای مختلف تکرار می‌کنی
+وقتی داری کد را کپی-پیست می‌کنی و فقط ۱-۲ مقدار عوض می‌شود
+
+قانون کوتاه:
+حلقه اول = روی چیزی که از بیرون میاد (folder)
+حلقه دوم = روی چیزی که خودت داخل کد تعریف می‌کنی
+
+ساخت مجموعه حلقه دوم — ۴ قدم ثابت:
+قدم ۱: چی ثابته بین تکرارها؟ → بیرون حلقه دوم بمونه
+قدم ۲: چی متغیره بین تکرارها؟ → بره داخل یک لیست از تاپل
+قدم ۳: هر المنت تاپلی باید همه چیز لازم برای یک اجرای کامل رو داشته باشه
+قدم ۴: اسم متغیرهای موقت حلقه دوم باید معنادار باشه
+
+الگوی همیشگی:
+collection_2nd_loop = [
+    (نام۱, داده۱, پارامتر۱),
+    (نام۲, داده۲, پارامتر۲),
+]
+for name, data, param in collection_2nd_loop:
+    # پردازش...
+
+مثال واقعی:
+binaries = [
+    ("Ad_th", ad_th, (0, 255, 0)),
+    ("th", th, (0, 0, 255)),
+    ("edge", edge, (0, 255, 0))
+]
+for thresh_type, binary_img, color in binaries:
+    contours, _ = cv2.findContours(binary_img, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+    # پردازش...
+
+قانون نام‌گذاری خروجی:
+هر فایل خروجی باید نام یکتا داشته باشد.
+ترکیب: «چی بود» + «چه کاری روش شد»
+مثال: f"{name}_{thresh_type}_contours.jpg"
+
+چه زمانی تودرتو لازم است:
+وقتی حلقه دوم به داده‌ای نیاز دارد که فقط داخل یک تکرار خاص از حلقه اول ساخته می‌شود
+
+چه زمانی تودرتو لازم نیست:
+وقتی دو حلقه روی داده‌های مستقل کار می‌کنند
+
+قانون تشخیص سریع:
+نیاز به متغیر همان تکرار حلقه اول → تودرتو
+نیاز فقط به خروجی نهایی حلقه اول → پشت‌سرهم و مجزا
+
+
+# ============================================================
+# ۱۵. غربالگری تصاویر
+# ============================================================
+
+غربالگری با انحراف معیار (کنتراست):
 for i in paths:
     img = cv2.imread(i, 0)
     if img is None:
         continue
-    if np.std(img) > 50:  # غربالگری با کنتراست
-        for minval, maxval in thresholds:
-            # بدون بلور (نادرست)
-            edge_raw = cv2.Canny(img, minval, maxval)
-            # با بلور (صحیح)
-            blurred = cv2.GaussianBlur(img, (5, 5), 0)
-            edge_clean = cv2.Canny(blurred, minval, maxval)
+    if np.std(img) > 60:      # کنتراست خوب
+        # پردازش...
 
-            cv2.imshow(f"{minval}_{maxval}_raw", edge_raw)
-            cv2.imshow(f"{minval}_{maxval}_clean", edge_clean)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+np.std(img) > 40 → کنتراست خوب | فیلتر ۷۰-۸۰٪ تصاویر نامناسب
+
+آمادگی فنی (Image Processing Ready):
+✅ تصویر خوانده می‌شود
+✅ تغییر اندازه/برش/چرخش انجام می‌شود
+✅ ذخیره خروجی انجام می‌شود
+
+آمادگی دیتاست برای مدل (Model Training Ready):
+✅ اندازه استاندارد
+✅ کانال‌های رنگ یکسان
+✅ نور و کیفیت قابل قبول
+✅ تنوع مناسب
+✅ کلاس‌های متعادل
+✅ حذف تصاویر خراب و تکراری
+
 
 # ============================================================
-✅ ۶. پایپلاین‌ها — قوانین و الگوها
+# ۱۶. قوانین پایپلاین‌ها
 # ============================================================
 
 تعریف پایپلاین:
 زنجیره‌ای از مراحل متوالی که خروجی هر مرحله = ورودی مرحله بعد
 
 قانون اول — ترتیب Gray و Blur:
-همیشه Gray را قبل از Blur انجام بده (پردازش Blur روی ۱ کانال سریع‌تر از ۳ کانال است)
+همیشه Gray را قبل از Blur انجام بده (پردازش Blur روی ۱ کانال سریع‌تر است)
 ✅ img >> gray >> blur
 ❌ img >> blur >> gray
 
@@ -882,210 +945,170 @@ for i in paths:
 هدف Canny = تشخیص لبه و ویژگی (Edge Detection)
 این دو هدف متفاوت دارند — در یک مسیر خطی قرار نمی‌گیرند
 
-قانون سوم — Canny را روی Threshold نزن:
+قانون سوم — Canny روی Threshold نزن:
 ❌ blur >> threshold >> Canny
 Threshold نویز تضعیف‌شده توسط Blur را دوباره تشدید می‌کند
 
-قانون چهارم — Threshold را روی Canny نزن:
+قانون چهارم — Threshold روی Canny نزن:
 ❌ blur >> Canny >> threshold
 Canny خودش نوعی Threshold داخلی دارد (هیسترزیس)
 
 نتیجه — دو مسیر موازی از یک ریشه:
-پایپلاین اصلی (مشترک):
 img >> gray >> blur
                   >> branch a) threshold >> save    (بخش‌بندی)
                   >> branch b) Canny >> save        (تشخیص لبه)
 
 پایپلاین‌های استاندارد:
+
 پایپلاین ۱: تشخیص لبه (تصاویر طبیعی)
     img >> gray >> GaussianBlur(5,5) >> Canny(50,150)
 
 پایپلاین ۲: نویز نمک-فلفل
     img >> gray >> MedianBlur(5) >> Canny(50,150)
 
-پایپلاین ۳: بخش‌بندی (Segmentation)
-    img >> gray >> GaussianBlur(5,5) >> threshold(127) / adaptiveThreshold(...)
+پایپلاین ۳: بخش‌بندی
+    img >> gray >> GaussianBlur(5,5) >> threshold/adaptiveThreshold
+
+پایپلاین ۴: استخراج شیء
+    img >> gray >> threshold >> contour >> [BoundingBox | Mask | Crop]
+
+پایپلاین ۵: پیش‌پردازش کامل
+    img >> gray >> CLAHE >> Opening >> Closing
+
 
 # ============================================================
-✅ ۷. پایپلاین کامل — Mini Project با پایپلاین اصلاح‌شده
+# ۱۷. چیت‌شیت انتخاب روش مناسب
 # ============================================================
 
-folder = Path(r"E:\\...\\Data")
-paths = [str(i) for i in folder.glob("*.jpg")]
+کی Global Threshold را رد کنم؟
+نور غیریکنواخت یا سایه (عکس موبایلی از کتاب)
+شیء طرح‌دار یا چندتُن (مکعب روبیک، گاو سیاه و سفید)
+چند شیء با روشنایی‌های متفاوت
+تله تُنال: بخشی از شیء همرنگ پس‌زمینه باشد
 
-for i in paths:
-    # ۱. خواندن تصویر به صورت خاکستری
-    img = cv2.imread(i, 0)
-    if img is None:
-        p(f"error reading: {i}")
-        continue
+کی Adaptive Threshold را رد کنم؟
+پس‌زمینه بافت‌دار و شلوغ (چمن، فرش، پارچه)
+نویز شدید نمک و فلفل
+اشیاء با اندازه‌های خیلی متفاوت
 
-    if np.std(img) > 50:
-        # ۲. بلور کردن
-        blurred = cv2.GaussianBlur(img, (5, 5), 0)
+کی Canny را رد کنم؟
+تصویر زیادی بلور شده → لبه‌ها گنگ و تکه‌تکه
+پس‌زمینه بافت‌دار → هزاران لبه کاذب
+بافت داخلی غالب روی شیء (مو، پر، پولک) → طرح کلی گم می‌شود
+نویز شدید → نقاط ریز همه جا
+مرزهای محو → کانتور پاره
 
-        # ۳. انشعاب a — آستانه‌گذاری (بخش‌بندی)
-        _, simple_th = cv2.threshold(blurred, 100, 255, cv2.THRESH_BINARY)
-        adaptive_th = cv2.adaptiveThreshold(
-            blurred, 255,
-            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-            cv2.THRESH_BINARY,
-            11,  # blockSize
-            7    # C — خطوط پیوسته‌تر
-        )
+کی Contour را رد کنم؟
+لبه‌های پاره و ناپیوسته (اولویت با پیوستگی است)
+نویز ریز در پس‌زمینه (هر نقطه یک کانتور آشغال)
+اشیاء چسبیده به هم (بزرگ‌ترین تله برای شمارش)
+شیء چسبیده به لبه تصویر (مساحت و محیط اشتباه)
 
-        # ۴. انشعاب b — تشخیص لبه (روی blur، نه روی threshold!)
-        thresholds = [(50, 150), (80, 200), (80, 240)]
-        for minval, maxval in thresholds:
-            edge = cv2.Canny(blurred, minval, maxval)
+رد مشترک برای هر چهار روش:
+پس‌زمینه شلوغ و بافت‌دار
+همپوشانی شدید تُن و بافت بین شیء و پس‌زمینه
 
-            # ۵. ذخیره خروجی‌ها
-            output = Path(r"E:\\...\\Output")
-            output.mkdir(parents=True, exist_ok=True)
+باورهای غلط:
+کانتور روی کَنی زده نمی‌شود. کانتور روی خروجی ترشولد (باینری) زده می‌شود.
+ترشولد ساده همیشه نقطه شروع نیست. برای تله تُنال، آداپتیو با C منفی معجزه می‌کند.
+لبه ایده‌آل، لبه پیوسته است، نه لبه ۱ پیکسلی. پیوستگی را فدای نازکی نکن.
+RETR_EXTERNAL دوست توست. فقط مرز بیرونی باید بسته باشد.
 
-            name = Path(i).stem
-            cv2.imwrite(str(output / f"{name}_simple_threshold.jpg"), simple_th)
-            cv2.imwrite(str(output / f"{name}_adaptive_threshold.jpg"), adaptive_th)
-            cv2.imwrite(str(output / f"{name}_{minval}_{maxval}_canny.jpg"), edge)
-
-# ============================================================
-📌 خلاصه نهایی مفاهیم
-# ============================================================
-
-Gaussian Blur:
-    فرمول: cv2.GaussianBlur(img, ksize, sigmaX)
-    ksize = (فرد, فرد) | sigmaX=0 یعنی خودکار
-    کاربرد: کاهش نویز عمومی، پیش‌پردازش قبل از Canny
-
-Median Blur:
-    فرمول: cv2.medianBlur(img, ksize)
-    ksize = عدد فرد (نه تاپل)
-    کاربرد: نویز نمک-فلفل
-
-Simple Threshold:
-    فرمول: ret, dst = cv2.threshold(src, thresh, maxval, type)
-    src = Grayscale | thresh = 0 تا 255 | maxval = معمولاً 255
-    کاربرد: تصاویر با نور یکنواخت
-
-Adaptive Threshold:
-    فرمول: dst = cv2.adaptiveThreshold(src, maxValue, method, type, blockSize, C)
-    هر ۶ پارامتر اجباری | blockSize = عدد فرد | C = ثابت تصحیح
-    کاربرد: تصاویر با نور غیریکنواخت (سایه‌دار)
-
-Canny Edge:
-    فرمول: edges = cv2.Canny(img, threshold1, threshold2)
-    نسبت threshold1:threshold2 = 1:2 یا 1:3
-    بهترین مقادیر تجربی: (50,150) (80,200) (80,240)
-    قانون طلایی: همیشه قبل از Canny بلور کن
-
-قوانین پایپلاین:
-    ۱. Gray قبل از Blur (بهینه‌تر)
-    ۲. Threshold و Canny هدف متفاوت دارند — در یک مسیر خطی نیستند
-    ۳. Canny روی Threshold نزن (نویز تشدید می‌شود)
-    ۴. Threshold روی Canny نزن (بی‌تأثیر است)
-    الگوی صحیح: img >> gray >> blur >> [انشعاب a: threshold] [انشعاب b: Canny]
-
-# --------------------------------------------------------------------
-💠 چیت‌شیت جامع برای غربالگری چشمی تصاویر برای ترشهولد، کنی و ترسیم کانتور 💠
---------------------------------------------------------------------
-# انتخاب تصاویر
-# انتخاب درست تصاویر برای ترشهولد، کنی و کانتور
-
-یک توضیح قبل از شروع چیت‌شیت:
-اغلب تصاویر من پس زمینه سفید ولی شی طرح دار دارند
-مشکل این تصاویر تله تنال است یعنی تصویر از پش زمینه جدا میشود ولی حاشیه طی کامل نیست و در برخی نقاط ، پس زمینه وارد شی شده
-(تصاویری توپر برای تشخیص کانتور نهایی داریم)
-# --------------
-راه حل : سیاه کردن کامل شی با بالا بردن آستانه در ترشهولد ساده
-یا منفی کردن پارامتر سی و بالا بردن بلاک سایز در ترشهولد آداپتیو تا کل پس زمینه را سیاه کند و یک حاشیه سفید کامل دور شی بکشد
-(تصاویری با حاشیه کامل ولی از درون کثیف)
-باید در مرحله یافتن کانتور از پیتر اکسترنال استفاده کنیم تا تنها کانتور بیرونی شی را بسازد
-
-# ----------------------------------
-⏪ کی Global Threshold را رد کنم؟
-# انتخاب تصاویر برای ترشهولد ساده
-
-• نور غیریکنواخت یا سایه (عکس موبایلی از کتاب).
-یعنی اگر کمی بخشی از تصویر تاریک تر از بخش دیگر باشد، نامناسب
-• شیء طرح‌دار یا چندتُن (مکعب روبیک، گاو سیاه و سفید، مرغ نقش‌دار).
-اگر شی، چند تن بود مثلا یک مرغ چند رنگ میتونیم کامل سیاهش کنیم
-• چند شیء با روشنایی‌های متفاوت (بشقاب میوه).
-• تله تُنال: بخشی از شیء همرنگ پس‌زمینه باشد، ناپدید می‌شود.
-
-----------------------------------
-⏪ کی Adaptive Threshold را رد کنم؟
-# انتخاب تصاویر برای ترشهولد آداپتیو
-
-• پس‌زمینه بافت‌دار و شلوغ (چمن، فرش، پارچه).
-• نویز شدید نمک و فلفل.
-• اشیاء با اندازه‌های خیلی متفاوت (پنجره بزرگ، ریزها را می‌بلعد. پنجره کوچک، درشت‌ها را متلاشی می‌کند).
-
-----------------------------------
-⏪ کی Canny را رد کنم؟
-# انتخاب تصاویر برای کنی
-
-• تصویر زیادی بلور (Blur) شده، لبه‌ها گنگ و تکه‌تکه می‌شوند.
-• پس‌زمینه بافت‌دار (هزاران لبه کاذب بی‌استفاده).
-• بافت داخلی غالب روی شیء (مو، پر، پولک). طرح کلی گم می‌شود.
-• نویز شدید (نقاط ریز همه جا را فرامی‌گیرند).
-• تله لبه گمشده: کَنی در مرزهای محو سکوت می‌کند، کانتور پاره می‌شود.
-
-----------------------------------
-⏪ کی Contour را رد کنم؟
-# انتخاب تصاویر برای کانتور
-
-• لبه‌های پاره و ناپیوسته (اولویت با پیوستگی است، حتی اگر ضخیم‌تر شود).
-• نویز ریز در پس‌زمینه (هر نقطه یک کانتور آشغال می‌سازد).
-• اشیاء چسبیده به هم (بزرگ‌ترین تله برای شمارش).
-• شیء چسبیده به لبه تصویر (مساحت و محیط اشتباه محاسبه می‌شود).
-
-----------------------------------
-
-🌟 راه‌حل طلایی برای استخراج فقط مرز بیرونی از تصویر باینری شلوغ:
-
-وقتی تصویر باینری‌ات مرز بیرونی بسته دارد ولی داخلش پر از سوراخ و طرح است:
-
-• از findContours با پارامتر RETR_EXTERNAL استفاده کن.
-• این دستور فقط و فقط بیرونی‌ترین مرز اشیاء سفید را برمی‌گرداند و تمام سوراخ‌ها و طرح‌های داخلی را نادیده می‌گیرد. انگار فقط یه طناب دور کمر شیء می‌کشد.
-• خط کد: contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-• اگر باز هم پارگی‌های ریز در مرز بود، قبل از کانتور یه مورفولوژی بستن با کرنل کوچک (۳x۳ یا ۵x۵) بزن.
-
-----------------------------------
-
-🚫 رد مشترک برای هر چهار روش:
-
-• پس‌زمینه شلوغ و بافت‌دار.
-• همپوشانی شدید تُن و بافت بین شیء و پس‌زمینه.
-
-----------------------------------
-
-⚠️ باورهای غلط را دور بریز:
-
-• کانتور روی کَنی زده نمی‌شود. کانتور روی خروجی ترشولد (باینری) زده می‌شود.
-• ترشولد ساده همیشه نقطه شروع نیست. برای نور یکنواخت خوب است، ولی برای تله تُنال، آداپتیو با C منفی معجزه می‌کند.
-• لبه ایده‌آل، لبه پیوسته است، نه لبه ۱ پیکسلی. پیوستگی را فدای نازکی نکن.
-• RETR_EXTERNAL دوست توست. لازم نیست داخل شیء تمیز باشد. فقط مرز بیرونی باید بسته باشد.
-
-----------------------------------
-
-❓ شش سوال سریع قبل از انتخاب روش:
-
+شش سوال سریع قبل از انتخاب روش:
 ۱. شیء تک‌تُن است؟ اگر نه و پس‌زمینه ساده است ← آداپتیو با C منفی.
 ۲. پس‌زمینه ساده است؟ اگر نه ← همه روش‌ها آرتیفکت می‌دهند.
 ۳. چند شیء با اندازه‌های مختلف داری؟ اگر زیاد است ← فاجعه.
 ۴. لبه‌ها با چشم غیرمسلح هم شارپ‌اند؟ اگر نه ← کَنی کور است.
 ۵. طرح کلی می‌خواهی یا بافت داخلی؟ اگر طرح کلی ← کاری به داخل شیء نداشته باش.
-۶. تصویر باینری مرز بیرونی بسته دارد؟ اگر بله ← RETR_EXTERNAL و تمام. اگر نه ← بستن مورفولوژی قبل از کانتور.
+۶. تصویر باینری مرز بیرونی بسته دارد؟ اگر بله ← RETR_EXTERNAL و تمام.
+   اگر نه ← بستن مورفولوژی قبل از کانتور.
 
-----------------------------------
+شرایط ایده‌آل:
+Global: یک شیء تک‌تُن، پس‌زمینه یکدست، نور یکنواخت.
+Adaptive استاندارد: یک شیء تک‌تُن، پس‌زمینه صاف، نور غیریکنواخت.
+Adaptive با C منفی: یک شیء طرح‌دار، پس‌زمینه ساده و یکدست، تله تُنال در مرز.
+Canny: لبه‌های شارپ، پس‌زمینه صاف، هدف خود لبه‌هاست.
+Contour: تصویر باینری با مرز بیرونی بسته. داخل می‌تواند شلوغ باشد.
 
-✅ شرایط ایده‌آل (خلاصه):
 
-• Global: یک شیء تک‌تُن، پس‌زمینه یکدست، نور یکنواخت.
-• Adaptive استاندارد: یک شیء تک‌تُن، پس‌زمینه صاف، نور غیریکنواخت.
-• Adaptive با C منفی (راه‌حل تو): یک شیء طرح‌دار، پس‌زمینه ساده و یکدست، تله تُنال در مرز. بلاک‌سایز بالا، C منفی. خروجی: مرز بسته، داخل شلوغ.
-• Canny: لبه‌های شارپ، پس‌زمینه صاف، هدف خود لبه‌هاست.
-• Contour: تصویر باینری با مرز بیرونی بسته. داخل می‌تواند هر چقدر می‌خواهد شلوغ باشد. RETR_EXTERNAL همه را نادیده می‌گیرد.
+# ============================================================
+# ۱۸. Virtual Environment (venv)
+# ============================================================
 
-----------------------------------
+تعریف:
+محیط مجازی یک پوشه ساده است که داخل پوشه پروژه ساخته می‌شود و یک کپی سبک
+از پایتون و pip دارد. هر کتابخانه‌ای که نصب کنی، فقط داخل همین پوشه می‌رود.
+
+مراحل ساخت:
+cd "E:\\python\\Project_Folder"        # رفتن به پوشه پروژه
+python -m venv venv                   # ساخت محیط مجازی
+venv\\Scripts\\activate                 # فعال‌سازی (ویندوز)
+source venv/bin/activate              # فعال‌سازی (مک/لینوکس)
+deactivate                            # غیرفعال‌سازی
+
+نصب کتابخانه:
+pip install opencv-python
+pip install opencv-python numpy matplotlib
+pip install -r requirements.txt       # نصب از فایل قفل
+
+ذخیره و قفل نسخه‌ها:
+pip freeze > requirements.txt
+
+چک و آپدیت:
+pip list                              # دیدن کتابخانه‌های نصب شده
+pip list --outdated                   # دیدن کتابخانه‌های قدیمی
+pip install --upgrade numpy           # آپدیت یک کتابخانه
+
+تست سلامت محیط:
+pip -V                                # دیدن مسیر pip
+python -c "import sys; print(sys.prefix)"  # چک مسیر پایتون
+اگر مسیر venv اومد → فعاله
+اگر Program Files یا AppData اومد → فعال نیست
+
+قوانین طلایی venv:
+همیشه requirements.txt داشته باش
+پروژه کار می‌کند = آپدیت نکن
+قبل آپدیت، requirements.txt را کپی کن
+پوشه venv/ را توی gitignore بذار
+اسم پوشه بدون فاصله باشد
+فعال‌سازی فقط برای همان یک ترمینال است
+
+
+# ============================================================
+# ۱۹. Git و GitHub
+# ============================================================
+
+دستورات اصلی:
+git init                              # ساخت Repository جدید
+git status                            # بررسی وضعیت
+git add .                             # آماده کردن تمام تغییرات
+git commit -m "پیام توضیحی"           # ثبت تغییرات
+git remote add origin URL             # اتصال به ریپوی آنلاین
+git push -u origin main               # ارسال به گیت‌هاب (اولین بار)
+git push                              # ارسال (دفعات بعد)
+git clone URL                         # کپی کامل یک ریپو
+git pull origin main                  # دریافت آخرین تغییرات
+
+نکته مهم:
+قبل از شروع کار روزانه روی پروژه تیمی، اول پول بزن.
+
+
+# ============================================================
+# ۲۰. ساختار استاندارد پروژه
+# ============================================================
+
+ساختار حرفه‌ای:
+Object_Extraction/
+├── data/              ← داده‌های ورودی
+│   └── image.jpg
+├── src/               ← کدهای اصلی
+│   └── extraction.py
+├── outputs/           ← خروجی‌های پروژه
+│   └── result.jpg
+├── requirements.txt   ← وابستگی‌ها
+├── main.py            ← فایل اصلی اجرا
+└── venv/              ← محیط مجازی
+
+جریان کلی:
+data (ورودی‌ها) → src (پردازش) → outputs (نتایج)
 '''

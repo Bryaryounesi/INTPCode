@@ -268,7 +268,7 @@ p(listo)
 new_list=[]
 data_points = [99, 99, 99, 99, 99]
 for data in data_points:
-    i+=1
+    i += 1
     new_list.append(i)
 print(new_list)
 # روش دوم: ساخت لیست با لیست کامپرهنشنِ لیست قبلی
