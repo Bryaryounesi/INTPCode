@@ -6,7 +6,7 @@
 # 1) یک تصویر بخوان، با فیلتر گاوسین در سه حالت کرنل
 # (کرنل کوچک، متوسط، بزرگ)
 import cv2
-from cvtools import cvt
+# from cvtools import cvt
 p = print
 path = r"E:\python\INTPCode\5_Month_Computer_Vision_Roadmap\Month-01\Week-04\Day-01\Data\The man.png"
 img = cv2.imread(path)

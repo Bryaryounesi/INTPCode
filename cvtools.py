@@ -9,14 +9,13 @@ Goal: Focus on core computer vision concepts without getting bogged down in boil
 Current Features:
 • cvt.imshow()   → Display image with keyboard zoom (+ - q n)
 • cvt.rotate()   → Rotate image without cropping corners (auto 4-step)
-• cv2.imwrite()  → Auto-save image to the calling script's directory (patched)
 • cvt.resize()   → Resize by providing only one dimension
 • cvt.search_path() → Search for files or folders in the entire project and insert their paths as hashtagged comments
-• cvt.auto_comp() → Auto-complete code from all project files
-• cvt.rename_data() → Rename all images in a folder with sequential numbers
+• cvt.rename_data() → Rename all images in a folder with sequential numbers or alphabetical names
 • cvt.scan_data() → Scan and separate bad images (corrupt, small, bad ratio, duplicate, noisy, low contrast)
 • cvt.slider()   → Interactive slider window for threshold, edge detection, and blur
 • cvt.venv.*     → Interactive Virtual Environment Cheat Sheet (hover for commands)
+• cvt.find_level() → Find the processing level (Config, Preprocess, Analyze, Visualize, Main) of OpenCV functions
 
 Usage:
 import cv2
@@ -35,10 +34,9 @@ cvt.search_path("pandas_cheatsheet.py")
 cvt.search_path("my_image")
 cvt.search_path(["utils.py", "data/", "models"])
 # ------------------
-cvt.auto_comp("key_word")
-# ------------------
 cvt.rename_data("dataset/train/")
 cvt.rename_data("dataset/train/", prefix="cat_", start=100)
+cvt.rename_data("dataset/train/", mode='alpha', prefix="img_")
 # ------------------
 cvt.scan_data("dataset/")
 cvt.scan_data("dataset/", contrast=30)
@@ -51,6 +49,11 @@ cvt.slider("win", img, edge='canny')
 cvt.slider("win", img, blur='gaussian', edge='canny')
 cvt.slider("win", img, thresh='simple', blur='median')
 cvt.slider("win", img, thresh='simple', contour=True)
+# ------------------
+# Find level of OpenCV functions:
+cvt.find_level('drawContours')
+cvt.find_level(['CLAHE', 'threshold', 'SIFT'])
+cvt.find_level(['draw', 'contour', 'hough'])
 # ------------------
 # Virtual Environment Cheat Sheet:
 cvt.venv.create       # hover: python -m venv venv
@@ -80,24 +83,8 @@ import numpy as np
 import re
 import shutil
 import hashlib
-
-# ==============================================
-# Patch cv2.imwrite to save in the correct directory
-# ==============================================
-
-_original_imwrite = cv2.imwrite
-
-
-def _new_imwrite(filename, img, *args, **kwargs):
-    if not os.path.isabs(filename):
-        caller_frame = inspect.stack()[1]
-        caller_file = caller_frame.filename
-        script_dir = os.path.dirname(os.path.abspath(caller_file))
-        filename = os.path.join(script_dir, filename)
-    return _original_imwrite(filename, img, *args, **kwargs)
-
-
-cv2.imwrite = _new_imwrite
+import string
+import pandas as pd
 
 
 # ==============================================
@@ -213,6 +200,86 @@ class CVTools:
     def __init__(self):
         self.venv = VenvCheatSheet()
         self._last_data_dir = None
+        self._level_df = self._create_level_dataframe()
+
+    # ------------------------------------------
+    # _create_level_dataframe (private)
+    # ------------------------------------------
+    def _create_level_dataframe(self):
+        """ساخت دیتافریم سطح‌بندی توابع OpenCV"""
+        data = {
+            'Config': [
+                'folder', 'outputs', 'paths', 'th_area', 'kernel',
+                'Path', 'mkdir', 'glob', 'stem'
+            ],
+            'Preprocess': [
+                'imread', 'cvtColor', 'threshold', 'adaptiveThreshold', 'createCLAHE',
+                'GaussianBlur', 'medianBlur', 'bilateralFilter', 'erode', 'dilate',
+                'morphologyEx', 'getStructuringElement', 'Canny', 'Sobel', 'Laplacian',
+                'resize', 'rotate', 'flip', 'warpAffine', 'getRotationMatrix2D',
+                'getAffineTransform', 'getPerspectiveTransform', 'warpPerspective',
+                'MORPH_OPEN', 'MORPH_CLOSE', 'MORPH_TOPHAT', 'COLOR_BGR2GRAY',
+                'COLOR_BGR2RGB', 'COLOR_GRAY2BGR', 'INTER_AREA', 'INTER_LINEAR',
+                'INTER_CUBIC', 'INTER_NEAREST', 'bitwise_not', 'np.std'
+            ],
+            'Analyze': [
+                'findContours', 'contourArea', 'arcLength', 'moments', 'boundingRect',
+                'minAreaRect', 'minEnclosingCircle', 'fitEllipse', 'approxPolyDP',
+                'convexHull', 'isContourConvex', 'matchTemplate', 'HoughLines',
+                'HoughLinesP', 'HoughCircles', 'goodFeaturesToTrack', 'cornerHarris',
+                'calcHist', 'equalizeHist', 'watershed', 'minMaxLoc',
+                'THRESH_BINARY', 'THRESH_BINARY_INV', 'THRESH_TRUNC', 'THRESH_TOZERO',
+                'THRESH_OTSU', 'ADAPTIVE_THRESH_MEAN_C', 'ADAPTIVE_THRESH_GAUSSIAN_C',
+                'RETR_EXTERNAL', 'RETR_LIST', 'RETR_TREE', 'RETR_CCOMP',
+                'CHAIN_APPROX_SIMPLE', 'CHAIN_APPROX_NONE'
+            ],
+            'Visualize': [
+                'drawContours', 'rectangle', 'circle', 'line', 'ellipse',
+                'polylines', 'putText', 'hist', 'drawKeypoints', 'imshow',
+                'waitKey', 'destroyAllWindows', 'namedWindow', 'resizeWindow',
+                'imwrite', 'plt.figure', 'plt.imshow', 'plt.title', 'plt.axis',
+                'plt.show', 'plt.subplots', 'plt.tight_layout', 'plt.legend',
+                'plt.plot', 'plt.colorbar', 'fig.savefig', 'np.hstack', 'np.vstack',
+                'bitwise_and', 'np.zeros', 'np.zeros_like'
+            ],
+            'Main': [
+                'preprocess', 'find_objects', 'draw_result', 'for', 'if',
+                'product', 'permutations', 'combinations', 'chain'
+            ]
+        }
+
+        # تبدیل به دیتافریم
+        return pd.DataFrame(dict([(k, pd.Series(v)) for k, v in data.items()]))
+
+    # ------------------------------------------
+    # find_level
+    # ------------------------------------------
+    def find_level(self, func_name):
+        """
+        پیدا کردن سطح پردازشی یک تابع OpenCV
+
+        Parameters:
+        - func_name: str - نام تابع مورد جستجو
+
+        Returns:
+        - لیست نتایج یا 'Not Found'
+
+        Example:
+        cvt.find_level('drawContours')
+        cvt.find_level('CLAHE')
+        cvt.find_level('threshold')
+        """
+        results = []
+        for col in self._level_df.columns:
+            matches = self._level_df[col][
+                self._level_df[col].str.contains(func_name, case=False, na=False)
+            ]
+            if not matches.empty:
+                results.append(f"{col}: {list(matches)}")
+
+        if results:
+            return results
+        return 'Not Found'
 
     # ------------------------------------------
     # imshow
@@ -294,20 +361,23 @@ class CVTools:
     # ------------------------------------------
     # rename_data
     # ------------------------------------------
-    def rename_data(self, folder_path, prefix="", start=1, extensions=None):
+    def rename_data(self, folder_path, prefix="", start=1, mode='numeric', extensions=None):
         """
-        Rename all images in a folder with sequential numbers
+        Rename all images in a folder with sequential numbers or alphabetical names
 
         Parameters:
         - folder_path: Path to the folder containing images
-        - prefix: Prefix before the number (default: empty)
-        - start: Starting number (default: 1)
+        - prefix: Prefix before the number/letter (default: empty)
+        - start: Starting number for numeric mode (default: 1)
+        - mode: 'numeric' for numbers (1, 2, 3...) or 'alpha' for letters (a, b, c...)
         - extensions: List of allowed extensions (default: jpg, jpeg, png, bmp, tiff)
 
         Example:
-        cvt.rename_data("images/")           # 1.jpg, 2.jpg, 3.jpg
-        cvt.rename_data("images/", "img_")   # img_1.jpg, img_2.jpg
-        cvt.rename_data("images/", start=0)  # 0.jpg, 1.jpg, 2.jpg
+        cvt.rename_data("images/")                    # 1.jpg, 2.jpg, 3.jpg
+        cvt.rename_data("images/", "img_")            # img_1.jpg, img_2.jpg
+        cvt.rename_data("images/", start=0)           # 0.jpg, 1.jpg, 2.jpg
+        cvt.rename_data("images/", mode='alpha')      # a.jpg, b.jpg, c.jpg
+        cvt.rename_data("images/", "img_", mode='alpha')  # img_a.jpg, img_b.jpg
         """
         if extensions is None:
             extensions = [".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif"]
@@ -327,14 +397,41 @@ class CVTools:
 
         image_files.sort()
 
+        if mode == 'numeric':
+            # نام‌گذاری عددی
+            names = [f"{prefix}{i}" for i in range(start, start + len(image_files))]
+        elif mode == 'alpha':
+            # نام‌گذاری الفبایی (a, b, c, ..., z, aa, ab, ...)
+            names = []
+            for i in range(len(image_files)):
+                # تبدیل عدد به حروف الفبا (مثل Excel columns)
+                n = i
+                alpha_name = ""
+                while n >= 0:
+                    alpha_name = string.ascii_lowercase[n % 26] + alpha_name
+                    n = n // 26 - 1
+                names.append(f"{prefix}{alpha_name}")
+        else:
+            print(f"Error: mode '{mode}' not supported. Use 'numeric' or 'alpha'")
+            return 0
+
         renamed_count = 0
-        for i, old_path in enumerate(image_files, start=start):
+        for i, old_path in enumerate(image_files):
             ext = os.path.splitext(old_path)[1]
-            new_name = f"{prefix}{i}{ext}"
+            new_name = f"{names[i]}{ext}"
             new_path = os.path.join(folder_path, new_name)
 
+            # اگر فایل مقصد وجود دارد و با فایل مبدا یکی نیست
             if os.path.exists(new_path) and old_path != new_path:
-                continue
+                # پیدا کردن نام جایگزین
+                counter = 1
+                while os.path.exists(new_path):
+                    if mode == 'numeric':
+                        new_name = f"{names[i]}_{counter}{ext}"
+                    else:
+                        new_name = f"{names[i]}_{counter}{ext}"
+                    new_path = os.path.join(folder_path, new_name)
+                    counter += 1
 
             try:
                 os.rename(old_path, new_path)
@@ -779,205 +876,6 @@ class CVTools:
             print(f"\nResults appended to: {caller_file}")
         except Exception as e:
             print(f"Error writing to file '{caller_file}': {e}")
-
-    # ------------------------------------------
-    # auto_comp
-    # ------------------------------------------
-    def auto_comp(self, keyword):
-        caller_frame = inspect.stack()[1]
-        caller_file = caller_frame.filename
-        project_root = _self_dir.parent.resolve()
-        module_file = os.path.abspath(__file__)
-
-        search_files = []
-        for root, dirs, files in os.walk(project_root):
-            dirs[:] = [
-                d
-                for d in dirs
-                if not d.startswith(".")
-                and d not in ["__pycache__", "venv", "env", "node_modules"]
-            ]
-            for file_name in files:
-                if file_name.endswith(".py"):
-                    file_path = os.path.join(root, file_name)
-                    if os.path.abspath(file_path) != module_file:
-                        search_files.append(file_path)
-
-        if not search_files:
-            print("No Python files found in project.")
-            return
-
-        keyword_lower = keyword.lower()
-        all_code_blocks = []
-
-        for file_path in search_files:
-            try:
-                with open(file_path, "r", encoding="utf-8") as f:
-                    content = f.read()
-                code_lines = self._extract_code_from_docstrings(content)
-                regular_lines = self._extract_regular_code_lines(content)
-                code_lines.extend(regular_lines)
-                matching_indices = [
-                    i
-                    for i, line in enumerate(code_lines)
-                    if keyword_lower in line.lower()
-                ]
-                if matching_indices:
-                    blocks = self._group_consecutive_lines(code_lines, matching_indices)
-                    for block in blocks:
-                        all_code_blocks.append({"lines": block, "file": file_path})
-            except Exception as e:
-                print(f"Warning: Could not read file '{file_path}': {e}")
-
-        unique_blocks = []
-        seen_blocks = set()
-        for block in all_code_blocks:
-            block_key = "\n".join(block["lines"])
-            if block_key not in seen_blocks:
-                seen_blocks.add(block_key)
-                unique_blocks.append(block)
-
-        hashtag_lines = [
-            "# ----------------------------------------",
-            f"# Auto-complete results for: '{keyword}'",
-            "# ----------------------------------------",
-        ]
-        if unique_blocks:
-            current_file = None
-            for block in unique_blocks:
-                if block["file"] != current_file:
-                    if current_file is not None:
-                        hashtag_lines.append("#")
-                    file_name = os.path.basename(block["file"])
-                    hashtag_lines.append(f"# From: {file_name}")
-                    current_file = block["file"]
-                for line in block["lines"]:
-                    hashtag_lines.append(f"# {line}")
-                hashtag_lines.append("#")
-            hashtag_lines.append("# ----------------------------------------")
-            hashtag_lines.append(f"# Found {len(unique_blocks)} code block(s)")
-        else:
-            hashtag_lines.append(f"# No code snippets found for '{keyword}'")
-        hashtag_lines.append("# ----------------------------------------")
-
-        try:
-            with open(caller_file, "a", encoding="utf-8") as f:
-                f.write("\n".join(hashtag_lines) + "\n")
-            if unique_blocks:
-                print(
-                    f"Auto-complete for '{keyword}' -> Found {len(unique_blocks)} block(s):"
-                )
-                for block in unique_blocks[:2]:
-                    print(f"  {block['lines'][0][:80]}")
-            else:
-                print(f"Auto-complete for '{keyword}' -> No results found")
-            print(f"Results appended to: {caller_file}")
-        except Exception as e:
-            print(f"Error writing to file '{caller_file}': {e}")
-
-    def _extract_code_from_docstrings(self, content):
-        code_lines = []
-        triple_pattern = re.compile(r'("""|\'\'\')(.*?)\1', re.DOTALL)
-        for match in triple_pattern.finditer(content):
-            doc_content = match.group(2)
-            lines = doc_content.split("\n")
-            for line in lines:
-                stripped = line.strip()
-                if not stripped or stripped.startswith("#"):
-                    continue
-                if self._looks_like_code(stripped):
-                    if "#" in stripped:
-                        code_part = stripped.split("#")[0].rstrip()
-                        if code_part:
-                            code_lines.append(code_part)
-                    else:
-                        code_lines.append(stripped)
-        return code_lines
-
-    def _extract_regular_code_lines(self, content):
-        code_lines = []
-        no_docstrings = re.sub(r'("""|\'\'\')(.*?)\1', "", content, flags=re.DOTALL)
-        lines = no_docstrings.split("\n")
-        for line in lines:
-            stripped = line.strip()
-            if not stripped or stripped.startswith("#"):
-                continue
-            if self._looks_like_code(stripped):
-                if "#" in stripped:
-                    code_part = stripped.split("#")[0].rstrip()
-                    if code_part:
-                        code_lines.append(code_part)
-                else:
-                    code_lines.append(stripped)
-        return code_lines
-
-    def _looks_like_code(self, line):
-        code_indicators = [
-            "=",
-            "(",
-            ")",
-            "[",
-            "]",
-            "{",
-            "}",
-            ":",
-            ".",
-            ",",
-            "import ",
-            "from ",
-            "def ",
-            "class ",
-            "return ",
-            "plt.",
-            "cv2.",
-            "np.",
-            "pd.",
-            "tf.",
-            "torch.",
-            "axs",
-            "fig",
-            "ax.",
-            "print(",
-            "len(",
-            "range(",
-            "+",
-            "-",
-            "*",
-            "/",
-            "==",
-            "!=",
-            "<",
-            ">",
-            "True",
-            "False",
-            "None",
-            "self",
-            "lambda",
-        ]
-        if len(line) > 100 and not any(
-            ind in line for ind in ["=", "(", ".", "import"]
-        ):
-            return False
-        for indicator in code_indicators:
-            if indicator in line:
-                return True
-        if len(line) < 30 and " " not in line:
-            return True
-        return False
-
-    def _group_consecutive_lines(self, all_lines, matching_indices):
-        if not matching_indices:
-            return []
-        blocks = []
-        current_block = [all_lines[matching_indices[0]]]
-        for i in range(1, len(matching_indices)):
-            if matching_indices[i] == matching_indices[i - 1] + 1:
-                current_block.append(all_lines[matching_indices[i]])
-            else:
-                blocks.append(current_block)
-                current_block = [all_lines[matching_indices[i]]]
-        blocks.append(current_block)
-        return blocks
 
 
 cvt = CVTools()

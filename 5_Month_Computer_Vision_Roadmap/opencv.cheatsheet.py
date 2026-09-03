@@ -211,10 +211,10 @@ axes[2].set_title("Title 3")
 axes[2].axis("off")
 plt.tight_layout()
 plt.show()
-
+# -------------------------------
 ذخیره با Matplotlib (برای نمودار و گزارش):
 fig.savefig("output.png", dpi=300, bbox_inches="tight")
-
+# -------------------------
 مقایسه افقی با OpenCV (سریع برای کلاژ):
 comparison = np.hstack([img1, img2, img3])
 cv2.imshow("Comparison", comparison)
@@ -226,7 +226,18 @@ comparison_v = np.vstack([img1, img2])
 برای vstack همه تصاویر باید هم عرض باشند
 اگر نبودند، اول resize کنید.
 
+لزوم یکسان بودن کانال های رنگی در تصاویر مورد مقایسه در
+hstack و vstack
 
+نکته مهم: در دو تابع اچ ستک و وی ستک، تمامی تصاویر مورد مقایسه باید تعداد کانال رنگی یکسانی داشته باشند یعنی مثلا نمیتوان یک تصویر باینری را با یک تصویر رنگی مقایسه کرد
+مثال
+comparison = np.vstack([img,masked])
+cvt.imshow("win",comparison)  ارور میده
+
+راه حل : سه کاناله کردن تصویر باینریِ ماسک
+masked_bgr = cv2.cvtColor(masked,cv2.COLORGRAY2BGR)
+comparison = np.vstack([img,masked_bgr])
+cvt.imshow("win",comparison)
 # ============================================================
 # ۵. فیلترها و کاهش نویز
 # ============================================================
@@ -414,6 +425,9 @@ thickness: ضخامت خط | 2 یا 3 رایج
 area = cv2.contourArea(contour)                  # مساحت داخل کانتور
 perimeter = cv2.arcLength(contour, closed=True)  # محیط کانتور
 
+لیست محیط همه کانتورهای بسته با لیست کامپرهنشن:
+perimeters = [cv2.arcLength(c,True) for c in contours]
+# --------------------------
 مساحت همه کانتورها:
 areas = [cv2.contourArea(c) for c in contours]
 
@@ -1111,4 +1125,24 @@ Object_Extraction/
 
 جریان کلی:
 data (ورودی‌ها) → src (پردازش) → outputs (نتایج)
+# -------------------------------------------
+.....جداسازی کانتور های بزرگ از بقیه برای تشخیص اشیا  .......
+# غربالگری کانتور ها
+
+روش اول : جداسازی بزرگترین کانتور
+bigest = max(contours, key = cv2.contourArea)
+فقط بزرگترین کانتور (و نه الزاما کانتوری بسته) جدا میشود
+
+روش دوم : جداسازی تعداد مشخصی کانتور بزرگ
+bigests_5 = sorted(contours ,key =  cv2.contourArea,reverse = True)[:5]
+تعدادی از بزرگترین کانتورها و نه الزاما بسته ها جدا میشن
+
+روش سوم : جداسازی تعداد نامشخص از بزرگ ترین کانتورهای بسته با آستانه مساحت
+min_areas = 50000
+    large_closed_contours = [
+    c for c in contours
+    if len(c) >= 3
+    and cv2.contourArea(c) > min_areas
+    and cv2.arcLength(c, True) > 0]
+
 '''

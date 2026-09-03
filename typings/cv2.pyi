@@ -2,10 +2,21 @@ from typing import Any, Tuple, Optional
 import numpy as np
 
 # ============================================================
+# 🏷️ سطح‌بندی موضوعی توابع (مطابق با cvt.find_level):
+# [Config] = تنظیمات | [Preprocess] = پیش‌پردازش | [Analyze] = تحلیل
+# [Visualize] = نمایش/رسم | [Main] = اصلی
+# ============================================================
+
+# ============================================================
 # ۱. خواندن تصویر
 # ============================================================
 def imread(filename: str, flags: int = ...) -> Any:
     """
+    🏷️ [I/O]
+    def read_img(path):
+        img = cv2.imread(path)
+        return img
+
     📌 فرمول رایج:
     img = cv2.imread(path)
     img_gray = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
@@ -33,70 +44,86 @@ def imread(filename: str, flags: int = ...) -> Any:
 # ============================================================
 def imshow(winname: str, img: Any) -> None:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.imshow("Window Name", img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
     📌 پارامترها:
-    - winname: نام پنجره (رشته دلخواه)
-    - img: آرایه تصویری
+    - winname: نام پنجره (رشته دلخواه) — رایج: "win", "Result", "Output"
+    - img: آرایه تصویری — رایج: img, gray, th, boxes, edges
     """
     ...
 
 def waitKey(delay: int = ...) -> int:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.waitKey(0)
 
     📌 پارامترها:
     - delay: میلی‌ثانیه صبر — 0 یعنی تا زدن یک کلید | 2000 یعنی ۲ ثانیه
+        رایج: 0 (برای نمایش ثابت), 1 (برای حلقه ویدئو)
 
-    📌 برمی‌گردونه: کد ASCII کلید فشرده شده
+    📌 برمی‌گردونه: کد ASCII کلید فشرده شده — رایج: ord('q'), ord('s'), 27 (ESC)
     """
     ...
 
 def destroyAllWindows() -> None:
-    """📌 فرمول رایج: cv2.destroyAllWindows() — بستن همه پنجره‌ها"""
+    """🏷️ [Visualize] — فرمول رایج: cv2.destroyAllWindows() — بستن همه پنجره‌ها"""
     ...
 
 def destroyWindow(winname: str) -> None:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.destroyWindow("win") — بستن یک پنجره خاص
+
+    📌 پارامترها:
+    - winname: نام پنجره — رایج: "win", "Result"
     """
     ...
 
 def namedWindow(winname: str, flags: int = ...) -> None:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.namedWindow("win", cv2.WINDOW_NORMAL)
 
     📌 پارامترها:
-    - winname: نام پنجره
+    - winname: نام پنجره — رایج: "win", "Output"
     - flags: cv2.WINDOW_NORMAL (قابل تغییر اندازه) | cv2.WINDOW_AUTOSIZE (پیش‌فرض)
     """
     ...
 
 def resizeWindow(winname: str, width: int, height: int) -> None:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.resizeWindow("win", 800, 600)
 
     📌 پارامترها:
-    - winname: نام پنجره
-    - width: عرض به پیکسل
-    - height: ارتفاع به پیکسل
+    - winname: نام پنجره — رایج: "win"
+    - width: عرض به پیکسل — رایج: 800, 1024, 1280
+    - height: ارتفاع به پیکسل — رایج: 600, 768, 720
     """
     ...
 
 def getWindowProperty(winname: str, prop_id: int) -> float:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.getWindowProperty("win", cv2.WND_PROP_VISIBLE)
 
     📌 پارامترها:
-    - winname: نام پنجره
+    - winname: نام پنجره — رایج: "win"
     - prop_id: شناسه ویژگی — cv2.WND_PROP_VISIBLE برای بررسی باز بودن پنجره
 
     📌 برمی‌گردونه: مقدار ویژگی (مثلاً 1.0 یعنی باز است)
@@ -110,17 +137,20 @@ def createTrackbar(
     trackbarName: str, windowName: str, value: int, count: int, onChange: Any = ...
 ) -> None:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.createTrackbar("Threshold", "Window", 0, 255, nothing)
     # یا بدون callback:
     cv2.createTrackbar("Threshold", "Window", 0, 255, lambda x: None)
 
     📌 پارامترها:
-    - trackbarName: نام نوار لغزنده
-    - windowName: نام پنجره‌ای که نوار در آن قرار می‌گیرد
-    - value: مقدار اولیه (پیش‌فرض)
-    - count: حداکثر مقدار (معمولاً 255 برای تصاویر)
+    - trackbarName: نام نوار لغزنده — رایج: "Threshold", "Value", "Kernel Size"
+    - windowName: نام پنجره‌ای که نوار در آن قرار می‌گیرد — رایج: "Window", "win"
+    - value: مقدار اولیه (پیش‌فرض) — رایج: 0, 127, 5
+    - count: حداکثر مقدار (معمولاً 255 برای تصاویر) — رایج: 255, 100, 50
     - onChange (اختیاری): تابع callback که با تغییر مقدار صدا زده می‌شود
+        رایج: lambda x: None یا تابع nothing
 
     📌 نکته: callback در OpenCV 4 اختیاری است، اما در برخی نسخه‌ها اجباری است
     """
@@ -128,12 +158,14 @@ def createTrackbar(
 
 def getTrackbarPos(trackbarName: str, windowName: str) -> int:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     value = cv2.getTrackbarPos("Threshold", "Window")
 
     📌 پارامترها:
-    - trackbarName: نام نوار لغزنده
-    - windowName: نام پنجره حاوی نوار
+    - trackbarName: نام نوار لغزنده — رایج: "Threshold", "Value"
+    - windowName: نام پنجره حاوی نوار — رایج: "Window", "win"
 
     📌 برمی‌گردونه: مقدار فعلی نوار لغزنده (عدد صحیح)
 
@@ -149,13 +181,15 @@ def getTrackbarPos(trackbarName: str, windowName: str) -> int:
 
 def setTrackbarPos(trackbarName: str, windowName: str, pos: int) -> None:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.setTrackbarPos("Threshold", "Window", 128)
 
     📌 پارامترها:
-    - trackbarName: نام نوار لغزنده
-    - windowName: نام پنجره حاوی نوار
-    - pos: مقدار جدید برای نوار
+    - trackbarName: نام نوار لغزنده — رایج: "Threshold"
+    - windowName: نام پنجره حاوی نوار — رایج: "Window"
+    - pos: مقدار جدید برای نوار — رایج: 0-255
 
     📌 کاربرد: تنظیم مقدار نوار از داخل برنامه
     """
@@ -166,18 +200,20 @@ def setTrackbarPos(trackbarName: str, windowName: str, pos: int) -> None:
 # ============================================================
 def cvtColor(src: Any, code: int) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     bgr_from_gray = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
 
     📌 پارامترها:
-    - src: تصویر ورودی — والیوی رایج: img
+    - src: تصویر ورودی — والیوی رایج: img (BGR), gray, hsv
     - code: کد تبدیل رنگ
-        cv2.COLOR_BGR2GRAY: رنگی BGR به خاکستری
+        cv2.COLOR_BGR2GRAY: رنگی BGR به خاکستری (رایج‌ترین)
         cv2.COLOR_BGR2RGB: BGR به RGB (برای نمایش با Matplotlib)
         cv2.COLOR_GRAY2BGR: خاکستری به رنگی ۳ کاناله
-        cv2.COLOR_BGR2HSV: BGR به HSV
+        cv2.COLOR_BGR2HSV: BGR به HSV (برای تشخیص رنگ)
         cv2.COLOR_HSV2BGR: HSV به BGR
         cv2.COLOR_RGB2BGR: RGB به BGR
 
@@ -199,13 +235,18 @@ def cvtColor(src: Any, code: int) -> Any:
 # ============================================================
 def imwrite(filename: str, img: Any) -> bool:
     """
+    🏷️ [I/O]
+    def save_img(path, img):
+        cv2.imwrite(str(path),img)
+
     📌 فرمول رایج:
     cv2.imwrite("output.jpg", img)
     cv2.imwrite(str(output_dir / f"name_{suffix}.jpg"), img)
 
     📌 پارامترها:
     - filename: مسیر و نام فایل با پسوند (مثلاً "result.jpg")
-    - img: تصویر مورد نظر برای ذخیره
+        رایج: "output.jpg", "result.png", str(path / "img.jpg")
+    - img: تصویر مورد نظر برای ذخیره — رایج: img, boxes, result, thresh
 
     📌 برمی‌گردونه: True اگر موفق بود
 
@@ -227,15 +268,20 @@ def resize(
     interpolation: int = ...,
 ) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     resized = cv2.resize(img, (400, 300))                    ← با ابعاد دقیق
     resized = cv2.resize(img, dsize=None, fx=0.6, fy=0.6)    ← با ضریب مقیاس
 
     📌 پارامترها:
-    - src: تصویر ورودی — والیوی رایج: img
+    - src: تصویر ورودی — والیوی رایج: img, gray, th
     - dsize: ابعاد خروجی (width, height) — اگر None، باید fx و fy را بدهی
+        رایج: (400, 300), (800, 600), (224, 224), None
     - fx (اختیاری): ضریب مقیاس افقی — 0.6 یعنی ۶۰٪ عرض اولیه
+        رایج: 0.5, 0.75, 1.0, 2.0
     - fy (اختیاری): ضریب مقیاس عمودی — 0.6 یعنی ۶۰٪ ارتفاع اولیه
+        رایج: 0.5, 0.75, 1.0, 2.0
     - interpolation (اختیاری): روش درون‌یابی — پیش‌فرض: cv2.INTER_LINEAR
         cv2.INTER_AREA: بهترین برای کوچک‌سازی (پیشنهادی)
         cv2.INTER_CUBIC: بهترین برای بزرگ‌نمایی
@@ -256,6 +302,8 @@ def resize(
 # ============================================================
 def rotate(src: Any, rotateCode: int) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     rotated = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
     rotated = cv2.rotate(img, cv2.ROTATE_180)
@@ -274,13 +322,18 @@ def rotate(src: Any, rotateCode: int) -> Any:
 
 def getRotationMatrix2D(center: Tuple[float, float], angle: float, scale: float) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     M = cv2.getRotationMatrix2D((w//2, h//2), 30, 1.0)
 
     📌 پارامترها:
     - center: مرکز چرخش (x, y) — معمولاً (w//2, h//2)
+        رایج: (w//2, h//2), (0, 0)
     - angle: زاویه به درجه — مثبت = پادساعتگرد
+        رایج: 30, 45, 90, -45
     - scale: ضریب مقیاس — 1.0 یعنی بدون تغییر اندازه
+        رایج: 1.0, 0.5, 1.5
 
     📌 برمی‌گردونه: ماتریس تبدیل ۲×۳ برای warpAffine
 
@@ -301,13 +354,16 @@ def getRotationMatrix2D(center: Tuple[float, float], angle: float, scale: float)
 
 def warpAffine(src: Any, M: Any, dsize: Tuple[int, int]) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     rotated = cv2.warpAffine(img, M, (new_w, new_h))
 
     📌 پارامترها:
     - src: تصویر ورودی — والیوی رایج: img
     - M: ماتریس تبدیل ۲×۳ (از getRotationMatrix2D)
-    - dsize: ابعاد خروجی (width, height)
+        رایج: M, matrix
+    - dsize: ابعاد خروجی (width, height) — رایج: (w, h), (new_w, new_h)
 
     📌 برمی‌گردونه: تصویر تبدیل‌شده
     """
@@ -318,6 +374,8 @@ def warpAffine(src: Any, M: Any, dsize: Tuple[int, int]) -> Any:
 # ============================================================
 def flip(src: Any, flipCode: int) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     flip_vertical = cv2.flip(img, 0)
     flip_horizontal = cv2.flip(img, 1)
@@ -341,15 +399,20 @@ def GaussianBlur(
     src: Any, ksize: Tuple[int, int], sigmaX: float, sigmaY: float = ...
 ) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     blurred = cv2.GaussianBlur(img, (5, 5), 0)
 
     📌 پارامترها:
-    - src: تصویر ورودی (رنگی یا خاکستری) — والیوی رایج: img
+    - src: تصویر ورودی (رنگی یا خاکستری) — والیوی رایج: img, gray
     - ksize: اندازه کرنل (width, height) — هر دو باید فرد باشند
         (3,3): کم | (5,5): متوسط (پیشنهادی) | (9,9): زیاد
+        رایج: (5, 5), (3, 3), (7, 7), (9, 9)
     - sigmaX: انحراف معیار افقی — 0 یعنی خودکار از ksize (پیشنهادی)
+        رایج: 0, 1.0, 1.5, 2.0
     - sigmaY (اختیاری): انحراف معیار عمودی — پیش‌فرض = sigmaX
+        رایج: 0, 1.0, 1.5
 
     📌 برمی‌گردونه: تصویر بلور شده
 
@@ -362,13 +425,16 @@ def GaussianBlur(
 # ============================================================
 def medianBlur(src: Any, ksize: int) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     median = cv2.medianBlur(img, 5)
 
     📌 پارامترها:
-    - src: تصویر ورودی — والیوی رایج: img
+    - src: تصویر ورودی — والیوی رایج: img, gray
     - ksize: اندازه کرنل — یک عدد فرد (نه تاپل!)
         3: کم | 5: متوسط (پیشنهادی) | 9: زیاد
+        رایج: 3, 5, 7, 9
 
     📌 برمی‌گردونه: تصویر بلور شده
 
@@ -386,20 +452,25 @@ def medianBlur(src: Any, ksize: int) -> Any:
 # ============================================================
 def threshold(src: Any, thresh: float, maxval: float, type: int) -> Tuple[float, Any]:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     ret, th = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
 
     📌 پارامترها:
-    - src: تصویر Grayscale — والیوی رایج: gray
+    - src: تصویر Grayscale — والیوی رایج: gray, blurred
     - thresh: عدد آستانه (0 تا 255) — کم = سفیدتر | زیاد = سیاه‌تر
         127: رایج‌ترین | 50: روشن | 200: تیره
+        رایج: 127, 100, 150, 200
     - maxval: مقدار پیکسل‌های عبورکرده — معمولاً 255
+        رایج: 255, 1
     - type: نوع آستانه‌گذاری
         cv2.THRESH_BINARY: بالای آستانه = maxval (پیشفرض ذهنی)
         cv2.THRESH_BINARY_INV: معکوس حالت بالا
         cv2.THRESH_TRUNC: بالای آستانه = خود آستانه
         cv2.THRESH_TOZERO: پایین آستانه = 0
         cv2.THRESH_TOZERO_INV: معکوس TOZERO
+        cv2.THRESH_BINARY + cv2.THRESH_OTSU: آستانه‌گذاری خودکار
 
     📌 برمی‌گردونه: (ret, th) — ret = thresh استفاده‌شده | th = تصویر باینری
 
@@ -424,21 +495,27 @@ def adaptiveThreshold(
     C: float,
 ) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     thresh_adapt = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 21, 3)
 
     📌 پارامترها (هر ۶ تا اجباری):
     - src: تصویر Grayscale — والیوی رایج: gray
     - maxValue: مقدار پیکسل‌های سفید — معمولاً 255
+        رایج: 255
     - adaptiveMethod:
         cv2.ADAPTIVE_THRESH_GAUSSIAN_C: میانگین وزن‌دار (پیشنهادی)
         cv2.ADAPTIVE_THRESH_MEAN_C: میانگین ساده
     - thresholdType: معمولاً cv2.THRESH_BINARY
+        رایج: cv2.THRESH_BINARY, cv2.THRESH_BINARY_INV
     - blockSize: اندازه ناحیه — عدد فرد
         11: جزئیات بیشتر | 21: نرم‌تر (پیشنهادی برای متون)
+        رایج: 11, 15, 21, 31, 51
     - C: ثابت تصحیح — از میانگین کم می‌شود
         2: پیش‌فرض | 3: معمولی | 7: خطوط پیوسته‌تر
         بزرگتر = تصویر تیره‌تر و پیوسته‌تر
+        رایج: 2, 3, 5, 7, 10
 
     📌 برمی‌گردونه: تصویر باینری تطبیقی
     📌 کاربرد: تصاویر با نور غیریکنواخت (سایه‌دار)
@@ -454,13 +531,17 @@ def adaptiveThreshold(
 # ============================================================
 def Canny(image: Any, threshold1: float, threshold2: float) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     edges = cv2.Canny(gray, 50, 150)
 
     📌 پارامترها:
-    - image: تصویر Grayscale — والیوی رایج: gray (حتماً قبلش بلور کن!)
+    - image: تصویر Grayscale — والیوی رایج: gray, blurred (حتماً قبلش بلور کن!)
     - threshold1: حد پایین هیسترزیس
+        رایج: 30, 50, 80, 100
     - threshold2: حد بالا هیسترزیس
+        رایج: 100, 150, 200, 240
     نسبت پیشنهادی 1:2 یا 1:3
     مقادیر تجربی خوب: (50,150) | (80,200) | (80,240)
 
@@ -490,6 +571,8 @@ def SIFT_create(
     sigma: float = ...,
 ) -> SIFT:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     sift = cv2.SIFT_create()
     keypoints, descriptor = sift.detectAndCompute(gray, None)
@@ -497,10 +580,15 @@ def SIFT_create(
 
     📌 پارامترهای اختیاری:
     - nfeatures: حداکثر تعداد نقاط — 0 = نامحدود (پیش‌فرض)
+        رایج: 0, 500, 1000
     - nOctaveLayers: تعداد لایه در هر اکتاو — پیش‌فرض 3
+        رایج: 3
     - contrastThreshold: آستانه حذف نقاط ضعیف — پیش‌فرض 0.04
+        رایج: 0.04, 0.02, 0.06
     - edgeThreshold: آستانه حذف نقاط لبه — پیش‌فرض 10
+        رایج: 10, 5, 15
     - sigma: سیگمای گاوسین اولیه — پیش‌فرض 1.6
+        رایج: 1.6, 1.2, 2.0
 
     📌 برمی‌گردونه: شیء SIFT با متدهای detectAndCompute, detect, compute
     """
@@ -514,15 +602,20 @@ def drawKeypoints(
     flags: int = ...,
 ) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     result = cv2.drawKeypoints(img, keypoints, None)
 
     📌 پارامترها:
     - image: تصویر منبع — والیوی رایج: img
-    - keypoints: لیست نقاط کلیدی
+    - keypoints: لیست نقاط کلیدی — از sift.detectAndCompute
     - outImage: تصویر مقصد — None یعنی تصویر جدید بساز
+        رایج: None, img.copy()
     - color (اختیاری): رنگ نقاط — پیش‌فرض: تصادفی
+        رایج: (0, 255, 0), (0, 0, 255)
     - flags (اختیاری): نحوه رسم — پیش‌فرض: فقط دایره مرکز
+        رایج: cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
 
     📌 برمی‌گردونه: تصویر با نقاط رسم‌شده
     """
@@ -533,12 +626,14 @@ def drawKeypoints(
 # ============================================================
 def getAffineTransform(src: Any, dst: Any) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     M = cv2.getAffineTransform(pts1, pts2)
     warped = cv2.warpAffine(img, M, (w, h))
 
     📌 پارامترها:
-    - src: ۳ نقطه مبدأ — والیوی رایج: pts1
+    - src: ۳ نقطه مبدأ — والیوی رایج: pts1, np.float32([[0,0],[w,0],[0,h]])
     - dst: ۳ نقطه مقصد — والیوی رایج: pts2
 
     📌 برمی‌گردونه: ماتریس تبدیل ۲×۳
@@ -547,12 +642,14 @@ def getAffineTransform(src: Any, dst: Any) -> Any:
 
 def getPerspectiveTransform(src: Any, dst: Any) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     M = cv2.getPerspectiveTransform(pts1, pts2)
     warped = cv2.warpPerspective(img, M, (w, h))
 
     📌 پارامترها:
-    - src: ۴ نقطه مبدأ — والیوی رایج: pts1
+    - src: ۴ نقطه مبدأ — والیوی رایج: pts1, np.float32([[0,0],[w,0],[0,h],[w,h]])
     - dst: ۴ نقطه مقصد — والیوی رایج: pts2
 
     📌 برمی‌گردونه: ماتریس تبدیل ۳×۳
@@ -561,13 +658,15 @@ def getPerspectiveTransform(src: Any, dst: Any) -> Any:
 
 def warpPerspective(src: Any, M: Any, dsize: Tuple[int, int]) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     warped = cv2.warpPerspective(img, M, (w, h))
 
     📌 پارامترها:
     - src: تصویر ورودی — والیوی رایج: img
-    - M: ماتریس ۳×۳
-    - dsize: ابعاد خروجی (width, height)
+    - M: ماتریس ۳×۳ — از getPerspectiveTransform
+    - dsize: ابعاد خروجی (width, height) — رایج: (w, h)
 
     📌 برمی‌گردونه: تصویر تبدیل‌شده
     """
@@ -581,13 +680,17 @@ class SIFT:
         self, image: Any, mask: Any, descriptors: Any = ...
     ) -> Tuple[Any, Any]:
         """
+        🏷️ [Analyze]
+
         📌 فرمول رایج:
         keypoints, descriptor = sift.detectAndCompute(gray, None)
 
         📌 پارامترها:
         - image: تصویر خاکستری — والیوی رایج: gray
         - mask: ناحیه جستجو — None یعنی کل تصویر
+            رایج: None
         - descriptors: نوشته نمی‌شود — پیش‌فرض None (خودش آرایه جدید می‌سازد)
+            رایج: None
 
         📌 برمی‌گردونه:
         - keypoints: لیست اشیاء KeyPoint
@@ -599,12 +702,15 @@ class SIFT:
 
     def detect(self, image: Any, mask: Any = ...) -> Any:
         """
+        🏷️ [Analyze]
+
         📌 فرمول رایج:
         keypoints = sift.detect(gray, None)
 
         📌 پارامترها:
         - image: تصویر خاکستری — والیوی رایج: gray
         - mask: ناحیه جستجو — None یعنی کل تصویر
+            رایج: None
 
         📌 برمی‌گردونه: لیست نقاط کلیدی (KeyPoint)
         """
@@ -614,6 +720,8 @@ class SIFT:
         self, image: Any, keypoints: Any, descriptors: Any = ...
     ) -> Tuple[Any, Any]:
         """
+        🏷️ [Analyze]
+
         📌 فرمول رایج:
         keypoints, descriptors = sift.compute(gray, keypoints)
 
@@ -621,6 +729,7 @@ class SIFT:
         - image: تصویر خاکستری — والیوی رایج: gray
         - keypoints: لیست نقاط کلیدی
         - descriptors: نوشته نمی‌شود — پیش‌فرض None
+            رایج: None
 
         📌 برمی‌گردونه: (keypoints, descriptors)
         """
@@ -642,6 +751,8 @@ class KeyPoint:
 # ============================================================
 def getStructuringElement(shape: int, ksize: Tuple[int, int]) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
 
@@ -652,6 +763,7 @@ def getStructuringElement(shape: int, ksize: Tuple[int, int]) -> Any:
         cv2.MORPH_CROSS: ضربدر (+)
     - ksize: سایز کرنل (عرض, ارتفاع) — اجباری، همیشه عدد فرد
         (3,3): کم | (5,5): متوسط | (7,7): زیاد
+        رایج: (3, 3), (5, 5), (7, 7), (9, 9)
         باید نسبت به اندازه نویز تنظیم شود، نه اندازه کل تصویر
 
     📌 برمی‌گردونه: آرایه NumPy uint8 با شکل ksize (فقط ۰ و ۱)
@@ -665,15 +777,19 @@ def getStructuringElement(shape: int, ksize: Tuple[int, int]) -> Any:
 
 def erode(src: Any, kernel: Any, iterations: int = ...) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     eroded = cv2.erode(th, kernel, 1)
 
     📌 پارامترها:
     - src: تصویر ورودی — باینری یا گری‌اسکیل (شیء سفید، پس‌زمینه سیاه)
-           والیوی رایج: th
+           والیوی رایج: th, gray, dilated
     - kernel: کرنل ساختاری — از getStructuringElement
+        رایج: kernel, np.ones((5,5), np.uint8)
     - iterations (اختیاری): تعداد تکرار — پیش‌فرض: 1 | رایج: 1 تا 3
         بیشتر = فرسایش شدیدتر
+        رایج: 1, 2, 3
         نیازی به نوشتن نام پارامتر نیست، فقط عدد را بنویس.
 
     📌 برمی‌گردونه: تصویر Eroded (نواحی سفید باریک شده)
@@ -687,12 +803,16 @@ def erode(src: Any, kernel: Any, iterations: int = ...) -> Any:
 
 def dilate(src: Any, kernel: Any, iterations: int = ...) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     dilated = cv2.dilate(th, kernel, 1)
 
     📌 پارامترها: مشابه erode
-    - src: والیوی رایج: th
+    - src: والیوی رایج: th, gray, eroded
+    - kernel: کرنل ساختاری — رایج: kernel
     - iterations: نیازی به نوشتن نام پارامتر نیست، فقط عدد را بنویس.
+        رایج: 1, 2, 3, 5
 
     📌 برمی‌گردونه: تصویر Dilated (نواحی سفید گسترش یافته)
 
@@ -705,6 +825,8 @@ def dilate(src: Any, kernel: Any, iterations: int = ...) -> Any:
 
 def morphologyEx(src: Any, op: int, kernel: Any, iterations: int = ...) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     opened = cv2.morphologyEx(th, cv2.MORPH_OPEN, kernel)     — Opening (حذف نویز)
     closed = cv2.morphologyEx(th, cv2.MORPH_CLOSE, kernel)    — Closing (پر کردن حفره)
@@ -719,7 +841,9 @@ def morphologyEx(src: Any, op: int, kernel: Any, iterations: int = ...) -> Any:
         cv2.MORPH_TOPHAT: src - Opening — حذف بافت سطحی
         cv2.MORPH_BLACKHAT: Closing - src — پیدا کردن حفره‌های تیره
     - kernel: کرنل ساختاری — از getStructuringElement
+        رایج: kernel
     - iterations (اختیاری): تعداد تکرار — پیش‌فرض: 1
+        رایج: 1, 2
 
     📌 برمی‌گردونه: تصویر مورفولوژی‌شده
 
@@ -736,6 +860,8 @@ def morphologyEx(src: Any, op: int, kernel: Any, iterations: int = ...) -> Any:
 # ============================================================
 def equalizeHist(src: Any) -> Any:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     equalized = cv2.equalizeHist(gray)
 
@@ -758,6 +884,8 @@ def equalizeHist(src: Any) -> Any:
 
 def createCLAHE(clipLimit: float = ..., tileGridSize: Tuple[int, int] = ...) -> CLAHE:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
     clahe_img = clahe.apply(gray)
@@ -766,13 +894,16 @@ def createCLAHE(clipLimit: float = ..., tileGridSize: Tuple[int, int] = ...) -> 
     - clipLimit: سقف محدودسازی کنتراست
         پیش‌فرض: 40 (خیلی زیاد!) | مقدار رایج: 2 تا 4
         بزرگ‌تر = کنتراست بیشتر ولی نویز بیشتر
-    - tileGridSize: اندازه گرید بلوک‌بندی        پیش‌فرض: (8, 8) = ۶۴ بلوک | مقدار رایج: (8, 8)
+        رایج: 2.0, 3.0, 4.0, 10.0
+    - tileGridSize: اندازه گرید بلوک‌بندی
+        پیش‌فرض: (8, 8) = ۶۴ بلوک | مقدار رایج: (8, 8)
+        رایج: (8, 8), (16, 16), (4, 4)
 
     📌 برمی‌گردونه: شیء CLAHE — باید متد apply() صدا زده شود
 
     📌 تفاوت:
-    equalizeHist → سراسری (Global)
-    CLAHE → موضعی (Local) — برای نور نامتقارن بهتر است
+    equalizeHist → سراسری (Global) — [Analyze]
+    CLAHE → موضعی (Local) — [Preprocess] — برای نور نامتقارن بهتر است
     """
     ...
 
@@ -782,6 +913,8 @@ def createCLAHE(clipLimit: float = ..., tileGridSize: Tuple[int, int] = ...) -> 
 class CLAHE:
     def apply(self, src: Any) -> Any:
         """
+        🏷️ [Preprocess]
+
         📌 فرمول رایج:
         clahe_img = clahe.apply(gray)
 
@@ -797,12 +930,14 @@ class CLAHE:
 # ============================================================
 def findContours(image: Any, mode: int, method: int) -> Tuple[Any, Any]:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     contours, hierarchy = cv2.findContours(th, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     📌 پارامترها:
     - image: تصویر باینری ورودی (خروجی Threshold)
-              والیوی رایج: th
+              والیوی رایج: th, thresh, binary, mask
     - mode: نحوه بازیابی کانتورها
         cv2.RETR_EXTERNAL: فقط کانتورهای بیرونی (پرکاربردترین)
         cv2.RETR_LIST: همه کانتورها بدون سلسله‌مراتب
@@ -830,6 +965,8 @@ def drawContours(
     thickness: int,
 ) -> None:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     output = img.copy()
     cv2.drawContours(output, contours, -1, (0, 255, 0), 3)
@@ -839,11 +976,14 @@ def drawContours(
     cv2.drawContours(mask, [biggest], -1, 255, -1)
 
     📌 پارامترها:
-    - image: تصویری که کانتور روی آن رسم می‌شود — والیوی رایج: output (کپی از img)
-    - contours: خروجی findContours
+    - image: تصویری که کانتور روی آن رسم می‌شود — والیوی رایج: output (کپی از img), mask
+    - contours: خروجی findContours — رایج: contours, [biggest], biggest_closed_contours
     - contourIdx: اندیس کانتور — -1 یعنی همه
+        رایج: -1, 0, 1
     - color: رنگ خط (B, G, R) — برای ماسک: 255
+        رایج: (0, 255, 0), (0, 0, 255), (255, 0, 0), 255
     - thickness: ضخامت خط — -1 یعنی توپر (FILLED)
+        رایج: 2, 3, 5, -1
 
     📌 خروجی: None — تصویر ورودی مستقیماً تغییر می‌کند (In-place)
     📌 نکته: حتماً قبل از رسم، img.copy() بگیر.
@@ -852,6 +992,8 @@ def drawContours(
 
 def boundingRect(contour: Any) -> Tuple[int, int, int, int]:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     x, y, w, h = cv2.boundingRect(biggest)
     cv2.rectangle(boxes, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -859,6 +1001,7 @@ def boundingRect(contour: Any) -> Tuple[int, int, int, int]:
 
     📌 پارامترها:
     - contour: یک کانتور واحد — معمولاً بزرگ‌ترین کانتور
+        رایج: biggest, contour, max(contours, key=cv2.contourArea)
 
     📌 برمی‌گردونه: (x, y, w, h)
     """
@@ -866,34 +1009,58 @@ def boundingRect(contour: Any) -> Tuple[int, int, int, int]:
 
 def contourArea(contour: Any) -> float:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     area = cv2.contourArea(contour)
 
     📌 انتخاب بزرگ‌ترین کانتور:
     biggest = max(contours, key=cv2.contourArea)
+
+    📌 پارامترها:
+    - contour: کانتور واحد — رایج: contour, c, biggest
     """
     ...
 
 def arcLength(curve: Any, closed: bool) -> float:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     perimeter = cv2.arcLength(contour, True)
+
+    📌 پارامترها:
+    - curve: کانتور — رایج: contour, c
+    - closed: آیا کانتور بسته است؟ — رایج: True
     """
     ...
 
 def approxPolyDP(curve: Any, epsilon: float, closed: bool) -> Any:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     approx = cv2.approxPolyDP(contour, 0.02 * perimeter, True)
+
+    📌 پارامترها:
+    - curve: کانتور — رایج: contour
+    - epsilon: حداکثر فاصله از کانتور اصلی
+        رایج: 0.02 * perimeter, 0.01 * perimeter, 0.05 * perimeter
+    - closed: آیا کانتور بسته است؟ — رایج: True
     """
     ...
 
 def moments(array: Any) -> dict:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     M = cv2.moments(contour)
     cx = int(M['m10'] / M['m00'])
     cy = int(M['m01'] / M['m00'])
+
+    📌 پارامترها:
+    - array: کانتور — رایج: contour, c
     """
     ...
 
@@ -905,10 +1072,27 @@ def putText(
     fontScale: float,
     color: Tuple[int, int, int],
     thickness: int,
+    lineType: int = ...,
+    bottomLeftOrigin: bool = ...,
 ) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.putText(img, "Hello", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+
+    📌 پارامترها:
+    - img: تصویری که متن روی آن رسم می‌شود — رایج: img, boxes, result
+    - text: متن مورد نظر برای نمایش — رایج: "Hello", f"Area: {area}", "Object"
+    - org: مختصات گوشه پایین-چپ متن (x, y) — رایج: (10, 50), (20, 30)
+    - fontFace: نوع فونت — رایج: cv2.FONT_HERSHEY_SIMPLEX
+    - fontScale: ضریب مقیاس فونت (1 = اندازه معمولی) — رایج: 0.5, 1.0, 2.0
+    - color: رنگ متن به فرمت BGR — رایج: (0, 0, 255), (0, 255, 0), (255, 255, 255)
+    - thickness: ضخامت خطوط متن (پیکسل) — رایج: 1, 2, 3
+    - lineType (اختیاری): نوع خط — پیش‌فرض: cv2.LINE_8 — رایج: cv2.LINE_AA
+    - bottomLeftOrigin (اختیاری): مبدأ مختصات — پیش‌فرض: False
+
+    📌 برمی‌گردونه: تصویر با متن رسم‌شده
     """
     ...
 
@@ -920,8 +1104,19 @@ def rectangle(
     thickness: int,
 ) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.rectangle(boxes, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+    📌 پارامترها:
+    - img: تصویر مقصد — رایج: boxes, img, output
+    - pt1: گوشه بالا-چپ (x, y) — رایج: (x, y), (0, 0)
+    - pt2: گوشه پایین-راست (x+w, y+h) — رایج: (x+w, y+h), (100, 100)
+    - color: رنگ مستطیل BGR — رایج: (0, 255, 0), (0, 0, 255)
+    - thickness: ضخامت خط — رایج: 2, 3, 5, -1 (توپر)
+
+    📌 برمی‌گردونه: تصویر با مستطیل رسم‌شده
     """
     ...
 
@@ -933,8 +1128,19 @@ def circle(
     thickness: int,
 ) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.circle(img, (50, 50), 30, (255, 0, 0), -1)
+
+    📌 پارامترها:
+    - img: تصویر مقصد — رایج: img, output
+    - center: مرکز دایره (x, y) — رایج: (cx, cy), (50, 50)
+    - radius: شعاع دایره — رایج: 30, 50, 100
+    - color: رنگ دایره BGR — رایج: (255, 0, 0), (0, 255, 0)
+    - thickness: ضخامت خط — رایج: 2, 3, -1 (توپر)
+
+    📌 برمی‌گردونه: تصویر با دایره رسم‌شده
     """
     ...
 
@@ -946,8 +1152,19 @@ def line(
     thickness: int,
 ) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.line(img, (0, 0), (100, 100), (0, 0, 255), 2)
+
+    📌 پارامترها:
+    - img: تصویر مقصد — رایج: img, output
+    - pt1: نقطه شروع (x, y) — رایج: (0, 0), (x1, y1)
+    - pt2: نقطه پایان (x, y) — رایج: (100, 100), (x2, y2)
+    - color: رنگ خط BGR — رایج: (0, 0, 255), (255, 0, 0)
+    - thickness: ضخامت خط — رایج: 2, 3, 5
+
+    📌 برمی‌گردونه: تصویر با خط رسم‌شده
     """
     ...
 
@@ -959,8 +1176,17 @@ def arrowedLine(
     thickness: int,
 ) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.arrowedLine(img, (0, 0), (100, 100), (255, 0, 0), 2)
+
+    📌 پارامترها:
+    - img: تصویر مقصد — رایج: img
+    - pt1: نقطه شروع — رایج: (0, 0)
+    - pt2: نقطه پایان — رایج: (100, 100)
+    - color: رنگ BGR — رایج: (255, 0, 0)
+    - thickness: ضخامت — رایج: 2, 3
     """
     ...
 
@@ -975,15 +1201,34 @@ def ellipse(
     thickness: int,
 ) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.ellipse(img, (100, 100), (50, 30), 45, 0, 360, (0, 255, 0), 2)
+
+    📌 پارامترها:
+    - img: تصویر مقصد — رایج: img
+    - center: مرکز بیضی — رایج: (100, 100), (cx, cy)
+    - axes: نیم‌محورها (عرض, ارتفاع) — رایج: (50, 30), (100, 50)
+    - angle: زاویه چرخش بیضی — رایج: 0, 45, 90
+    - startAngle: زاویه شروع — رایج: 0
+    - endAngle: زاویه پایان — رایج: 360
+    - color: رنگ BGR — رایج: (0, 255, 0)
+    - thickness: ضخامت — رایج: 2, -1
     """
     ...
 
 def fillPoly(img: Any, pts: Any, color: Tuple[int, int, int]) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.fillPoly(img, [pts], (255, 0, 0))
+
+    📌 پارامترها:
+    - img: تصویر مقصد — رایج: img, mask
+    - pts: نقاط چندضلعی — رایج: [pts], [contour]
+    - color: رنگ BGR — رایج: (255, 0, 0), 255
     """
     ...
 
@@ -991,8 +1236,17 @@ def polylines(
     img: Any, pts: Any, isClosed: bool, color: Tuple[int, int, int], thickness: int
 ) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     cv2.polylines(img, [pts], True, (0, 255, 0), 2)
+
+    📌 پارامترها:
+    - img: تصویر مقصد — رایج: img
+    - pts: نقاط چندضلعی — رایج: [pts], [contour]
+    - isClosed: بسته بودن شکل — رایج: True, False
+    - color: رنگ BGR — رایج: (0, 255, 0)
+    - thickness: ضخامت — رایج: 2, 3
     """
     ...
 
@@ -1001,6 +1255,8 @@ def polylines(
 # ============================================================
 def bitwise_and(src1: Any, src2: Any, mask: Any = ...) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     masked = cv2.bitwise_and(img, img, mask=mask)
 
@@ -1013,6 +1269,7 @@ def bitwise_and(src1: Any, src2: Any, mask: Any = ...) -> Any:
     - src1: تصویر اول — والیوی رایج: img
     - src2: تصویر دوم — والیوی رایج: img (وقتی ماسک داریم)
     - mask: ماسک تک‌کاناله — فقط پیکسل‌های سفید ماسک باقی می‌مانند
+        رایج: mask, None
 
     📌 برمی‌گردونه: تصویر ترکیب‌شده
     """
@@ -1020,71 +1277,140 @@ def bitwise_and(src1: Any, src2: Any, mask: Any = ...) -> Any:
 
 def bitwise_or(src1: Any, src2: Any, mask: Any = ...) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     result = cv2.bitwise_or(img1, img2) — OR بیتی
+
+    📌 پارامترها:
+    - src1: تصویر اول — رایج: img1
+    - src2: تصویر دوم — رایج: img2
+    - mask: ماسک — رایج: None, mask
     """
     ...
 
 def bitwise_not(src: Any, mask: Any = ...) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     inverted = cv2.bitwise_not(th) — NOT بیتی (معکوس)
+
+    📌 پارامترها:
+    - src: تصویر — رایج: th, img
+    - mask: ماسک — رایج: None
     """
     ...
 
 def bitwise_xor(src1: Any, src2: Any, mask: Any = ...) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     result = cv2.bitwise_xor(img1, img2) — XOR بیتی
+
+    📌 پارامترها:
+    - src1: تصویر اول — رایج: img1
+    - src2: تصویر دوم — رایج: img2
+    - mask: ماسک — رایج: None
     """
     ...
 
 def addWeighted(src1: Any, alpha: float, src2: Any, beta: float, gamma: float) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     blended = cv2.addWeighted(img1, 0.7, img2, 0.3, 0) — ترکیب دو تصویر با وزن
+
+    📌 پارامترها:
+    - src1: تصویر اول — رایج: img1, img
+    - alpha: وزن تصویر اول — رایج: 0.5, 0.7, 0.3
+    - src2: تصویر دوم — رایج: img2, overlay
+    - beta: وزن تصویر دوم — رایج: 0.5, 0.3, 0.7
+    - gamma: مقدار اضافه — رایج: 0
+
+    📌 برمی‌گردونه: تصویر ترکیبی
     """
     ...
 
 def add(src1: Any, src2: Any) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     result = cv2.add(img1, img2) — جمع دو تصویر
+
+    📌 پارامترها:
+    - src1: تصویر اول — رایج: img1
+    - src2: تصویر دوم — رایج: img2
     """
     ...
 
 def subtract(src1: Any, src2: Any) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     result = cv2.subtract(img1, img2) — تفریق دو تصویر
+
+    📌 پارامترها:
+    - src1: تصویر اول — رایج: img1
+    - src2: تصویر دوم — رایج: img2
     """
     ...
 
 def convertScaleAbs(src: Any, alpha: float = ..., beta: float = ...) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     result = cv2.convertScaleAbs(img, alpha=1.5, beta=0)
+
+    📌 پارامترها:
+    - src: تصویر — رایج: img
+    - alpha: ضریب مقیاس — رایج: 1.0, 1.5, 2.0
+    - beta: مقدار اضافه — رایج: 0, 50, 100
     """
     ...
 
 def normalize(src: Any, dst: Any, alpha: float, beta: float, norm_type: int) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     result = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX)
+
+    📌 پارامترها:
+    - src: تصویر ورودی — رایج: img, gray
+    - dst: تصویر خروجی — رایج: None
+    - alpha: حد پایین — رایج: 0
+    - beta: حد بالا — رایج: 255
+    - norm_type: نوع نرمال‌سازی — رایج: cv2.NORM_MINMAX
     """
     ...
 
 def split(m: Any) -> Tuple[Any, Any, Any]:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     b, g, r = cv2.split(img) — جدا کردن کانال‌های BGR
+
+    📌 پارامترها:
+    - m: تصویر رنگی — رایج: img, hsv
     """
     ...
 
 def merge(mv: Tuple[Any, Any, Any]) -> Any:
     """
+    🏷️ [Visualize]
+
     📌 فرمول رایج:
     merged = cv2.merge([b, g, r]) — ترکیب کانال‌ها
+
+    📌 پارامترها:
+    - mv: لیست کانال‌ها — رایج: [b, g, r], [h, s, v]
     """
     ...
 
@@ -1093,15 +1419,27 @@ def merge(mv: Tuple[Any, Any, Any]) -> Any:
 # ============================================================
 def inRange(src: Any, lowerb: Any, upperb: Any) -> Any:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     mask = cv2.inRange(hsv, lower_bound, upper_bound)
+
+    📌 پارامترها:
+    - src: تصویر — رایج: hsv, img
+    - lowerb: حد پایین — رایج: np.array([0, 50, 50])
+    - upperb: حد بالا — رایج: np.array([10, 255, 255])
     """
     ...
 
 def countNonZero(src: Any) -> int:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     count = cv2.countNonZero(th)
+
+    📌 پارامترها:
+    - src: تصویر باینری — رایج: th, mask
     """
     ...
 
@@ -1109,15 +1447,28 @@ def minMaxLoc(
     src: Any, mask: Any = ...
 ) -> Tuple[float, float, Tuple[int, int], Tuple[int, int]]:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     minVal, maxVal, minLoc, maxLoc = cv2.minMaxLoc(gray)
+
+    📌 پارامترها:
+    - src: تصویر — رایج: gray, result
+    - mask: ماسک — رایج: None
     """
     ...
 
 def matchTemplate(image: Any, templ: Any, method: int) -> Any:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     result = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
+
+    📌 پارامترها:
+    - image: تصویر اصلی — رایج: img, gray
+    - templ: الگو — رایج: template
+    - method: روش تطبیق — رایج: cv2.TM_CCOEFF_NORMED
     """
     ...
 
@@ -1125,22 +1476,39 @@ def copyMakeBorder(
     src: Any, top: int, bottom: int, left: int, right: int, borderType: int
 ) -> Any:
     """
+    🏷️ [Preprocess]
+
     📌 فرمول رایج:
     bordered = cv2.copyMakeBorder(img, 10, 10, 10, 10, cv2.BORDER_CONSTANT)
+
+    📌 پارامترها:
+    - src: تصویر — رایج: img
+    - top: حاشیه بالا — رایج: 10
+    - bottom: حاشیه پایین — رایج: 10
+    - left: حاشیه چپ — رایج: 10
+    - right: حاشیه راست — رایج: 10
+    - borderType: نوع حاشیه — رایج: cv2.BORDER_CONSTANT
     """
     ...
 
 def calcHist(images: Any, channels: Any, mask: Any, histSize: Any, ranges: Any) -> Any:
     """
+    🏷️ [Analyze]
+
     📌 فرمول رایج:
     hist = cv2.calcHist([img], [0], None, [256], [0, 256])
 
     📌 پارامترها:
     - images: لیست تصاویر — [img]
+        رایج: [img], [gray]
     - channels: اندیس کانال — [0] برای خاکستری, [0],[1],[2] برای BGR
+        رایج: [0]
     - mask: ماسک — None یعنی کل تصویر
+        رایج: None
     - histSize: تعداد bins — [256]
+        رایج: [256]
     - ranges: بازه مقادیر — [0, 256]
+        رایج: [0, 256]
 
     📌 برمی‌گردونه: آرایه هیستوگرام
     """
@@ -1150,107 +1518,107 @@ def calcHist(images: Any, channels: Any, mask: Any, histSize: Any, ranges: Any) 
 # ۲۰. ثابت‌ها و enumهای OpenCV
 # ============================================================
 
-# --- خواندن تصویر ---
-IMREAD_COLOR: int
-IMREAD_GRAYSCALE: int
-IMREAD_UNCHANGED: int
-IMREAD_COLOR_RGB: int
-IMREAD_REDUCED_COLOR_2: int
+# --- خواندن تصویر --- [Preprocess]
+IMREAD_COLOR: int  # = 1
+IMREAD_GRAYSCALE: int  # = 0
+IMREAD_UNCHANGED: int  # = -1
+IMREAD_COLOR_RGB: int  # = 4
+IMREAD_REDUCED_COLOR_2: int  # = 17
 
-# --- تبدیل رنگ ---
-COLOR_BGR2GRAY: int
-COLOR_BGR2RGB: int
-COLOR_GRAY2BGR: int
-COLOR_RGB2BGR: int
-COLOR_BGR2HSV: int
-COLOR_HSV2BGR: int
+# --- تبدیل رنگ --- [Preprocess]
+COLOR_BGR2GRAY: int  # = 6
+COLOR_BGR2RGB: int  # = 4
+COLOR_GRAY2BGR: int  # = 8
+COLOR_RGB2BGR: int  # = 2
+COLOR_BGR2HSV: int  # = 40
+COLOR_HSV2BGR: int  # = 54
 
-# --- چرخش ۹۰ درجه ---
-ROTATE_90_CLOCKWISE: int
-ROTATE_180: int
-ROTATE_90_COUNTERCLOCKWISE: int
+# --- چرخش ۹۰ درجه --- [Preprocess]
+ROTATE_90_CLOCKWISE: int  # = 0
+ROTATE_180: int  # = 1
+ROTATE_90_COUNTERCLOCKWISE: int  # = 2
 
-# --- پنجره ---
-WINDOW_NORMAL: int
-WINDOW_AUTOSIZE: int
-WINDOW_FULLSCREEN: int
-WINDOW_FREERATIO: int
-WINDOW_KEEPRATIO: int
-WND_PROP_VISIBLE: int
+# --- پنجره --- [Visualize]
+WINDOW_NORMAL: int  # = 0x00000000
+WINDOW_AUTOSIZE: int  # = 0x00000001
+WINDOW_FULLSCREEN: int  # = 1
+WINDOW_FREERATIO: int  # = 0x00000100
+WINDOW_KEEPRATIO: int  # = 0x00000000
+WND_PROP_VISIBLE: int  # = 0
 
-# --- Threshold ---
-THRESH_BINARY: int
-THRESH_BINARY_INV: int
-THRESH_TRUNC: int
-THRESH_TOZERO: int
-THRESH_TOZERO_INV: int
-THRESH_OTSU: int
-THRESH_TRIANGLE: int
+# --- Threshold --- [Preprocess]
+THRESH_BINARY: int  # = 0
+THRESH_BINARY_INV: int  # = 1
+THRESH_TRUNC: int  # = 2
+THRESH_TOZERO: int  # = 3
+THRESH_TOZERO_INV: int  # = 4
+THRESH_OTSU: int  # = 8
+THRESH_TRIANGLE: int  # = 16
 
-# --- Adaptive Threshold ---
-ADAPTIVE_THRESH_MEAN_C: int
-ADAPTIVE_THRESH_GAUSSIAN_C: int
+# --- Adaptive Threshold --- [Preprocess]
+ADAPTIVE_THRESH_MEAN_C: int  # = 0
+ADAPTIVE_THRESH_GAUSSIAN_C: int  # = 1
 
-# --- Interpolation ---
-INTER_LINEAR: int
-INTER_AREA: int
-INTER_CUBIC: int
-INTER_NEAREST: int
-INTER_LANCZOS4: int
+# --- Interpolation --- [Preprocess]
+INTER_LINEAR: int  # = 1
+INTER_AREA: int  # = 3
+INTER_CUBIC: int  # = 2
+INTER_NEAREST: int  # = 0
+INTER_LANCZOS4: int  # = 4
 
-# --- فونت ---
-FONT_HERSHEY_SIMPLEX: int
-FONT_HERSHEY_PLAIN: int
-FONT_HERSHEY_DUPLEX: int
-FONT_HERSHEY_COMPLEX: int
-FONT_HERSHEY_TRIPLEX: int
-FONT_HERSHEY_COMPLEX_SMALL: int
-FONT_HERSHEY_SCRIPT_SIMPLEX: int
-FONT_HERSHEY_SCRIPT_COMPLEX: int
-FONT_ITALIC: int
+# --- فونت --- [Visualize]
+FONT_HERSHEY_SIMPLEX: int  # = 0
+FONT_HERSHEY_PLAIN: int  # = 1
+FONT_HERSHEY_DUPLEX: int  # = 2
+FONT_HERSHEY_COMPLEX: int  # = 3
+FONT_HERSHEY_TRIPLEX: int  # = 4
+FONT_HERSHEY_COMPLEX_SMALL: int  # = 5
+FONT_HERSHEY_SCRIPT_SIMPLEX: int  # = 6
+FONT_HERSHEY_SCRIPT_COMPLEX: int  # = 7
+FONT_ITALIC: int  # = 16
 
-# --- خط ---
-LINE_AA: int
-LINE_4: int
-LINE_8: int
-FILLED: int
+# --- خط --- [Visualize]
+LINE_AA: int  # = 16
+LINE_4: int  # = 4
+LINE_8: int  # = 8
+FILLED: int  # = -1
 
-# --- Contour ---
-RETR_EXTERNAL: int
-RETR_LIST: int
-RETR_CCOMP: int
-RETR_TREE: int
-CHAIN_APPROX_NONE: int
-CHAIN_APPROX_SIMPLE: int
-CHAIN_APPROX_TC89_L1: int
-CHAIN_APPROX_TC89_KCOS: int
+# --- Contour --- [Analyze]
+RETR_EXTERNAL: int  # = 0
+RETR_LIST: int  # = 1
+RETR_CCOMP: int  # = 2
+RETR_TREE: int  # = 3
+CHAIN_APPROX_NONE: int  # = 1
+CHAIN_APPROX_SIMPLE: int  # = 2
+CHAIN_APPROX_TC89_L1: int  # = 3
+CHAIN_APPROX_TC89_KCOS: int  # = 4
 
-# --- Morphology ---
-MORPH_RECT: int
-MORPH_CROSS: int
-MORPH_ELLIPSE: int
-MORPH_OPEN: int
-MORPH_CLOSE: int
-MORPH_GRADIENT: int
-MORPH_TOPHAT: int
-MORPH_BLACKHAT: int
+# --- Morphology --- [Preprocess]
+MORPH_RECT: int  # = 0
+MORPH_CROSS: int  # = 1
+MORPH_ELLIPSE: int  # = 2
+MORPH_OPEN: int  # = 2
+MORPH_CLOSE: int  # = 3
+MORPH_GRADIENT: int  # = 4
+MORPH_TOPHAT: int  # = 5
+MORPH_BLACKHAT: int  # = 6
 
-# --- Norm ---
-NORM_MINMAX: int
-NORM_L1: int
-NORM_L2: int
-NORM_INF: int
+# --- Norm --- [Visualize]
+NORM_MINMAX: int  # = 32
+NORM_L1: int  # = 2
+NORM_L2: int  # = 4
+NORM_INF: int  # = 1
 
-# --- Border ---
-BORDER_CONSTANT: int
-BORDER_REFLECT: int
-BORDER_REPLICATE: int
-BORDER_WRAP: int
+# --- Border --- [Preprocess]
+BORDER_CONSTANT: int  # = 0
+BORDER_REFLECT: int  # = 2
+BORDER_REPLICATE: int  # = 1
+BORDER_WRAP: int  # = 3
 
-# --- Template Matching ---
-TM_SQDIFF: int
-TM_SQDIFF_NORMED: int
-TM_CCORR: int
-TM_CCORR_NORMED: int
-TM_CCOEFF: int
-TM_CCOEFF_NORMED: int
+# --- Template Matching --- [Analyze]
+TM_SQDIFF: int  # = 0
+TM_SQDIFF_NORMED: int  # = 1
+TM_CCORR: int  # = 2
+TM_CCORR_NORMED: int  # = 3
+TM_CCOEFF: int  # = 4
+TM_CCOEFF_NORMED: int  # = 5

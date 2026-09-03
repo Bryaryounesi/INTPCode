@@ -63,6 +63,24 @@ def zeros(shape: Any, dtype: Any = ...) -> Any:
     """
     ...
 
+def zeros_like(a: Any, dtype: Any = ..., order: str = ..., subok: bool = ..., shape: Any = ...) -> Any:
+    """
+    📌 فرمول رایج:
+    np.zeros_like(gray)                    ← آرایه صفر با شکل مشابه gray
+    np.zeros_like(gray, dtype=np.uint8)    ← با نوع داده مشخص
+
+    📌 پارامترها:
+    - a: آرایه مرجع — شکل و نوع داده از آن کپی می‌شود
+    - dtype (اختیاری): نوع داده خروجی — پیش‌فرض: نوع داده a
+    - order (اختیاری): 'C' یا 'F' — ترتیب حافظه
+    - subok (اختیاری): True = زیرکلاس حفظ شود
+    - shape (اختیاری): شکل متفاوت از a
+
+    📌 کاربرد در OpenCV:
+    mask = np.zeros_like(gray)  # ماسک هم‌شکل تصویر خاکستری
+    """
+    ...
+
 def ones(shape: Any, dtype: Any = ...) -> Any:
     """
     📌 فرمول رایج:
@@ -71,11 +89,25 @@ def ones(shape: Any, dtype: Any = ...) -> Any:
     """
     ...
 
+def ones_like(a: Any, dtype: Any = ..., order: str = ..., subok: bool = ..., shape: Any = ...) -> Any:
+    """
+    📌 فرمول رایج:
+    np.ones_like(gray)    ← آرایه یک با شکل مشابه gray
+    """
+    ...
+
 def full(shape: Any, fill_value: Any, dtype: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     np.full((m, n), value)
     np.full((m, n), 255, dtype=np.uint8)
+    """
+    ...
+
+def full_like(a: Any, fill_value: Any, dtype: Any = ..., order: str = ..., subok: bool = ..., shape: Any = ...) -> Any:
+    """
+    📌 فرمول رایج:
+    np.full_like(gray, 255)    ← آرایه پر از مقدار با شکل مشابه gray
     """
     ...
 
@@ -89,6 +121,13 @@ def eye(N: int, M: int = ..., k: int = ..., dtype: Any = ...) -> Any:
     - N: تعداد ردیف
     - M (اختیاری): تعداد ستون — پیش‌فرض = N
     - dtype (اختیاری): np.float64, np.int32
+    """
+    ...
+
+def identity(n: int, dtype: Any = ...) -> Any:
+    """
+    📌 فرمول رایج:
+    np.identity(n)    ← ماتریس همانی n×n
     """
     ...
 
@@ -140,6 +179,13 @@ def flatten(a: Any) -> Any:
     """
     ...
 
+def ravel(a: Any, order: str = ...) -> Any:
+    """
+    📌 فرمول رایج:
+    a.ravel()    ← تبدیل ماتریس به بردار (سریع‌تر از flatten)
+    """
+    ...
+
 # ============================================================
 # ۴. توابع آماری
 # ============================================================
@@ -167,6 +213,10 @@ def std(a: Any, axis: Any = ...) -> Any:
     📌 فرمول رایج:
     np.std(v)               ← انحراف معیار بردار
     np.std(m, axis=0)       ← انحراف معیار ستون‌ها
+
+    📌 کاربرد در غربالگری تصاویر:
+    if np.std(img) > 60:    # کنتراست خوب
+        # پردازش...
     """
     ...
 
@@ -319,6 +369,14 @@ def arctan(a: Any) -> Any:
     """📌 فرمول رایج: np.arctan(v)"""
     ...
 
+def radians(x: Any) -> Any:
+    """📌 فرمول رایج: np.radians(angle) ← درجه به رادیان"""
+    ...
+
+def degrees(x: Any) -> Any:
+    """📌 فرمول رایج: np.degrees(angle) ← رادیان به درجه"""
+    ...
+
 # ============================================================
 # ۸. جبر خطی
 # ============================================================
@@ -438,6 +496,9 @@ def vstack(tup: Any) -> Any:
     - tup: تاپل یا لیست آرایه‌ها — باید تعداد ستون یکسان داشته باشند
 
     📌 نکته: معادل np.concatenate((a1, a2), axis=0) برای ماتریس‌ها
+
+    📌 کاربرد در OpenCV:
+    comparison_v = np.vstack([img1, img2])  # مقایسه عمودی تصاویر
     """
     ...
 
@@ -450,6 +511,9 @@ def hstack(tup: Any) -> Any:
     - tup: تاپل یا لیست آرایه‌ها — باید تعداد سطر یکسان داشته باشند
 
     📌 نکته: معادل np.concatenate((a1, a2), axis=1) برای ماتریس‌ها
+
+    📌 کاربرد در OpenCV:
+    comparison = np.hstack([img1, img2, img3])  # مقایسه افقی تصاویر
     """
     ...
 
@@ -607,6 +671,13 @@ def maximum(x1: Any, x2: Any) -> Any:
     """
     ...
 
+def minimum(x1: Any, x2: Any) -> Any:
+    """
+    📌 فرمول رایج:
+    np.minimum(0, x)    ← منفی ReLU
+    """
+    ...
+
 def tanh(a: Any) -> Any:
     """📌 فرمول رایج: np.tanh(x) ← تانژانت هیپربولیک"""
     ...
@@ -622,6 +693,21 @@ def argmax(a: Any, axis: Any = ...) -> Any:
     """
     ...
 
+def argmin(a: Any, axis: Any = ...) -> Any:
+    """
+    📌 فرمول رایج:
+    np.argmin(a, axis=0)    ← ایندکس کمینه
+    """
+    ...
+
+def unique(a: Any, return_counts: bool = ...) -> Any:
+    """
+    📌 فرمول رایج:
+    np.unique(arr)                    ← مقادیر یکتا
+    np.unique(arr, return_counts=True) ← مقادیر و تعداد تکرار
+    """
+    ...
+
 # ============================================================
 # ۱۶. عملیات روی تصویر
 # ============================================================
@@ -633,6 +719,7 @@ def flip(m: Any, axis: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     np.flip(img, axis=0)    ← آینه عمودی
+    np.flip(img, axis=1)    ← آینه افقی
     """
     ...
 
@@ -640,6 +727,7 @@ def where(condition: Any, x: Any = ..., y: Any = ...) -> Any:
     """
     📌 فرمول رایج:
     np.where(gray > 127, 255, 0)    ← آستانه‌گذاری باینری
+    np.where(mask == 255)           ← پیدا کردن مختصات پیکسل‌های سفید
     """
     ...
 
@@ -647,6 +735,13 @@ def stack(arrays: Any, axis: int = ...) -> Any:
     """
     📌 فرمول رایج:
     np.stack([r, g, b], axis=-1)    ← ترکیب کانال‌ها
+    """
+    ...
+
+def dstack(tup: Any) -> Any:
+    """
+    📌 فرمول رایج:
+    np.dstack([r, g, b])    ← ترکیب کانال‌ها در بعد سوم
     """
     ...
 
