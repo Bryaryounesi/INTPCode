@@ -30,26 +30,32 @@ Read Image → Grayscale → Adaptive Threshold → Opening → Dilation → Fin
 ## 🧱 Code Structure
 
 **English:**
-The project is written in a function-based style rather than one long loop:
+The project is written in a function-based style with a clear separation of concerns:
 
 | Function | Description |
 |-|-|
 | `preprocess(img)` | Grayscale conversion, Adaptive Threshold, Opening, Dilation |
-| `find_objects(dilated)` | Contour detection and area-based filtering |
-| `draw_boxes(img, contours)` | Draws a bounding box per detected object and the total count on the image |
+| `find_contours(dilated)` | Contour detection and area-based filtering |
+| `draw_and_count_contours(img, contours)` | Draws a bounding box per detected object and the total count on the image |
+| `read_img(path)` | Reads an image from disk |
+| `save_img(path, img)` | Saves the processed image to disk |
+| `object_detect(img)` | Main pipeline function — chains all steps and returns the final result |
 
-The main loop only reads each image, calls the three functions above in order, and saves the result.
+The `object_detect` function is the reusable entry point of the pipeline. It receives an image and returns the annotated result, making it easy to use the pipeline on new images outside the main loop.
 
 **فارسی:**
-کد به‌صورت تابع‌محور نوشته شده، نه یک حلقه یک‌تکه:
+کد به‌صورت تابع‌محور با جداسازی واضح وظایف نوشته شده:
 
 | تابع | توضیح |
 ||-|
 | `preprocess(img)` | تبدیل به خاکستری، Adaptive Threshold، Opening، Dilation |
-| `find_objects(dilated)` | پیدا کردن کانتورها و فیلتر بر اساس مساحت |
-| `draw_boxes(img, contours)` | رسم یک Bounding Box برای هر شیء تشخیص‌داده‌شده به‌همراه عدد کل شمارش روی تصویر |
+| `find_contours(dilated)` | پیدا کردن کانتورها و فیلتر بر اساس مساحت |
+| `draw_and_count_contours(img, contours)` | رسم یک Bounding Box برای هر شیء تشخیص‌داده‌شده به‌همراه عدد کل شمارش روی تصویر |
+| `read_img(path)` | خواندن تصویر از دیسک |
+| `save_img(path, img)` | ذخیره تصویر پردازش‌شده |
+| `object_detect(img)` | تابع اصلی پایپ‌لاین — تمام مراحل را زنجیر کرده و نتیجه نهایی را برمی‌گرداند |
 
-حلقه اصلی فقط هر تصویر رو می‌خونه، سه تابع بالا رو به ترتیب صدا می‌زنه، و نتیجه رو ذخیره می‌کنه.
+تابع `object_detect` نقطه ورود قابل استفاده مجدد پایپ‌لاین است. یک تصویر می‌گیرد و نتیجه حاشیه‌نویسی‌شده را برمی‌گرداند؛ بنابراین استفاده از پایپ‌لاین روی تصاویر جدید خارج از حلقه اصلی راحت است.
 
 
 
@@ -58,7 +64,9 @@ The main loop only reads each image, calls the three functions above in order, a
 Simple_Object_Counting/
 ├── data/                    # Input images (.jpg)
 ├── output/                  # Processed comparison images
-├── main.py                  # Main script
+├── src/
+│   ├── config.py            # Configuration constants and paths
+│   └── main.py              # Main script with pipeline functions
 ├── README.md                # Project documentation
 └── soc_requirements.txt     # Required libraries
 
@@ -76,7 +84,7 @@ pip install -r soc_requirements.txt
 
 Run the main script:
 
-python main.py
+python src/main.py
 
 
 
@@ -151,7 +159,6 @@ Given that the objects in this dataset are fairly large and visually distinct, a
 - این پایپ‌لاین کاملاً بر پایه Threshold و Contour کلاسیک است؛ هیچ مکانیزمی برای جدا کردن اشیاء چسبیده یا روی‌هم‌افتاده نداره.
 - آستانه فیلتر حداقل مساحت به‌صورت دستی و مخصوص همین دیتاست تنظیم شده؛ یک پارامتر تطبیقی یا خودکار-تعمیم‌پذیر نیست.
 - شاخه `CLAHE` در `preprocess` فعلاً محاسبه می‌شه ولی استفاده نمی‌شه؛ بهبود کنتراست فعلاً روی مرحله نهایی Threshold تاثیری نداره.
-
 
 
 ## 📄 License
