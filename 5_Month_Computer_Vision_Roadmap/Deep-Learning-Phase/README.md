@@ -4,9 +4,13 @@
 
 ### Method 1: Automatic Installation (Recommended for Windows 64-bit + Python 3.12)
 
-1. Make sure `install.bat` and `wheels` folder are in the same directory.
-2. Double-click `install.bat`.
-3. All packages (including PyTorch) will be installed offline. No internet needed.
+1. Download the ZIP file from [Releases](https://github.com/Bryaryounesi/INTPCode/releases/tag/v1.0.0).
+2. Extract the ZIP file. You'll get a `wheels` folder.
+3. Put the `wheels` folder next to `install.bat`.
+4. Double-click `install.bat`.
+5. All packages (including PyTorch) will be installed offline. No internet needed.
+
+**Note:** The filename of the ZIP might be different. It doesn't matter. Just extract it and find the `wheels` folder inside.
 
 ### Method 2: Manual Installation (For Other Systems)
 
@@ -30,9 +34,13 @@ pip install -r requirements.txt
 
 ### روش اول: نصب خودکار (پیشنهادی برای ویندوز ۶۴ بیتی + پایتون ۳.۱۲)
 
-۱. مطمئن شو `install.bat` و پوشه `wheels` کنار هم هستن.
-۲. روی `install.bat` دابل‌کلیک کن.
-۳. همه کتابخانه‌ها (شامل پایتورچ) به صورت آفلاین نصب می‌شن. اینترنت لازم نیست.
+۱. فایل ZIP رو از [Releases](https://github.com/Bryaryounesi/INTPCode/releases/tag/v1.0.0) دانلود کن.
+۲. فایل ZIP رو Extract کن. یه پوشه `wheels` به دست میاری.
+۳. پوشه `wheels` رو کنار `install.bat` بذار.
+۴. روی `install.bat` دابل‌کلیک کن.
+۵. همه کتابخانه‌ها (شامل پایتورچ) به صورت آفلاین نصب می‌شن. اینترنت لازم نیست.
+
+**نکته:** اسم فایل ZIP ممکنه فرق کنه. مهم نیست. فقط Extractش کن و پوشه `wheels` رو از داخلش پیدا کن.
 
 ### روش دوم: نصب دستی (برای سیستم‌های دیگه)
 

@@ -23,6 +23,8 @@ venv/
 # Datasets
 dataset/
 Dataset/
+datasets/
+Datasets/
 
 # Python
 *.py[cod]
