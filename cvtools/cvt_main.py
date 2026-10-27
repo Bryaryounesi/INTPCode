@@ -128,7 +128,6 @@ from .cheatsheets.froms_cs import FromsCheatSheet
 from .cheatsheets.hints_cs import HintsCheatSheet
 from .cheatsheets.torch_cs import TorchUtils
 
-
 # ==============================================
 # CVTools Class
 # ==============================================
@@ -287,18 +286,27 @@ class CVTools:
     # ------------------------------------------
     def find_level(self, func_name):
         """
-        پیدا کردن سطح پردازشی یک تابع OpenCV
+        📌 [Tool] پیدا کردن سطح پردازشی یک تابع OpenCV.
 
-        Parameters:
-        - func_name: str - نام تابع مورد جستجو
+        📌 سطوح موجود: Config, Preprocess, Analyze, Visualize, Main
 
-        Returns:
-        - لیست نتایج یا 'Not Found'
+        📌 Parameters:
+        - func_name: نام تابع (str) یا لیست نام‌ها (list)
 
-        Example:
+        📌 Returns:
+        - لیست نتایج، یا 'Not Found' اگه پیدا نشد
+
+        📌 Example:
         cvt.find_level('drawContours')
+        # → ['Visualize: [drawContours]']
+
         cvt.find_level('CLAHE')
-        cvt.find_level('threshold')
+        # → ['Preprocess: [createCLAHE]']
+
+        cvt.find_level(['CLAHE', 'threshold', 'SIFT'])
+        # → نتایج برای هر سه
+
+        📌 کاربرد: تشخیص اینکه یه تابع OpenCV توی کدوم مرحله پایپ‌لاین قرار می‌گیره.
         """
         results = []
         for col in self._level_df.columns:
@@ -316,6 +324,24 @@ class CVTools:
     # imshow
     # ------------------------------------------
     def imshow(self, winname, img):
+        """
+        📌 [Tool] نمایش تصویر با قابلیت زوم با کیبورد.
+
+        📌 کلیدها:
+        - + یا = : بزرگ‌نمایی
+        - - یا _ : کوچک‌نمایی
+        - q یا ESC : بستن پنجره
+        - n : بستن پنجره و رفتن به تصویر بعدی
+
+        📌 Parameters:
+        - winname: نام پنجره نمایش
+        - img: تصویر ورودی (BGR یا خاکستری)
+
+        📌 Example:
+        cvt.imshow("win", img)
+
+        📌 نکته: این تابع تا زمانی که کلید q یا n زده نشه، اجرا متوقف می‌مونه.
+        """
         if img is None:
             print("Error: Invalid image")
             return
@@ -350,6 +376,26 @@ class CVTools:
     # rotate
     # ------------------------------------------
     def rotate(self, img, angle):
+        """
+        📌 [Tool] چرخش تصویر با زاویه دلخواه بدون بریدگی گوشه‌ها.
+
+        📌 Parameters:
+        - img: تصویر ورودی
+        - angle: زاویه چرخش (درجه)
+            - مثبت → پادساعتگرد
+            - منفی → ساعتگرد
+
+        📌 Returns:
+        - تصویر چرخیده‌شده با ابعاد جدید
+
+        📌 Example:
+        rotated = cvt.rotate(img, 45)
+        rotated = cvt.rotate(img, -30)
+
+        📌 نکته: ابعاد تصویر خروجی بزرگ‌تر از ورودی می‌شه تا گوشه‌ها
+        بریده نشن. برای چرخش‌های ۹۰/۱۸۰ درجه از cv2.rotate استفاده کن
+        که سریع‌تره.
+        """
         if img is None:
             print("Error: Invalid image")
             return None
@@ -369,6 +415,30 @@ class CVTools:
     # ------------------------------------------
     @staticmethod
     def resize(img, new_h=None, new_w=None, interpolation=None):
+        """
+        📌 [Tool] تغییر اندازه تصویر با دادن فقط یک بُعد.
+
+        📌 Parameters:
+        - img: تصویر ورودی
+        - new_h: ارتفاع جدید (اختیاری)
+        - new_w: عرض جدید (اختیاری)
+        - interpolation: روش درون‌یابی (اختیاری)
+            - None (پیش‌فرض): کوچک‌سازی → INTER_AREA، بزرگ‌نمایی → INTER_CUBIC
+            - cv2.INTER_NEAREST: سریع، برای ماسک و باینری
+            - cv2.INTER_LINEAR: پیش‌فرض OpenCV
+            - cv2.INTER_CUBIC: برای بزرگ‌نمایی بهتر
+            - cv2.INTER_AREA: برای کوچک‌سازی بهتر
+
+        📌 Returns:
+        - تصویر تغییر اندازه یافته
+
+        📌 Example:
+        resized = cvt.resize(img, new_w=800)              # عرض 800، ارتفاع خودکار
+        resized = cvt.resize(img, new_h=600)              # ارتفاع 600، عرض خودکار
+        resized = cvt.resize(img, new_w=800, interpolation=cv2.INTER_LINEAR)
+
+        📌 نکته: نسبت ابعاد تصویر حفظ می‌شه.
+        """
         h, w = img.shape[:2]
 
         if new_h is None and new_w is None:
@@ -396,21 +466,27 @@ class CVTools:
         self, folder_path, prefix="", start=1, mode="numeric", extensions=None
     ):
         """
-        Rename all images in a folder with sequential numbers or alphabetical names
+        📌 [Tool] تغییر نام تمام تصاویر یک پوشه با شماره یا حرف ترتیبی.
 
-        Parameters:
-        - folder_path: Path to the folder containing images
-        - prefix: Prefix before the number/letter (default: empty)
-        - start: Starting number for numeric mode (default: 1)
-        - mode: 'numeric' for numbers (1, 2, 3...) or 'alpha' for letters (a, b, c...)
-        - extensions: List of allowed extensions (default: jpg, jpeg, png, bmp, tiff)
+        📌 Parameters:
+        - folder_path: مسیر پوشه حاوی تصاویر
+        - prefix: پیشوند قبل از شماره/حرف — پیش‌فرض: "" (خالی)
+        - start: شماره شروع در حالت numeric — پیش‌فرض: 1
+        - mode: 'numeric' برای شماره (1, 2, 3...) یا 'alpha' برای حرف (a, b, c...)
+        - extensions: لیست پسوندهای مجاز — پیش‌فرض: jpg, jpeg, png, bmp, tiff
 
-        Example:
+        📌 Returns:
+        - تعداد فایل‌های تغییرنام‌یافته
+
+        📌 Example:
         cvt.rename_data("images/")                    # 1.jpg, 2.jpg, 3.jpg
         cvt.rename_data("images/", "img_")            # img_1.jpg, img_2.jpg
         cvt.rename_data("images/", start=0)           # 0.jpg, 1.jpg, 2.jpg
         cvt.rename_data("images/", mode='alpha')      # a.jpg, b.jpg, c.jpg
         cvt.rename_data("images/", "img_", mode='alpha')  # img_a.jpg, img_b.jpg
+
+        📌 نکته: اگه اسم جدید از قبل وجود داشته باشه، شماره اضافه می‌شه
+        (مثلاً 1_1.jpg). فایل‌ها اول بر اساس نام مرتب می‌شن، بعد تغییرنام.
         """
         if extensions is None:
             extensions = [".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif"]
@@ -474,19 +550,32 @@ class CVTools:
     # ------------------------------------------
     def scan_data(self, folder_path, contrast=50):
         """
-        Scan and separate bad images into subfolders
+        📌 [Tool] اسکن پوشه و جدا کردن تصاویر خراب به زیرپوشه‌ها.
 
-        Parameters:
-        - folder_path: Path to the data folder
-        - contrast: Contrast threshold (default: 50)
+        📌 Parameters:
+        - folder_path: مسیر پوشه حاوی تصاویر
+        - contrast: آستانه کنتراست — پیش‌فرض: 50 (پایین‌تر = حساس‌تر)
 
-        Output subfolders:
-        - bad_data/ → None, too small, bad ratio, duplicate, noisy images
-        - low_contrast/ → Images with contrast below threshold
+        📌 Returns:
+        - None (فایل‌ها رو جابه‌جا می‌کنه)
 
-        Example:
+        📌 زیرپوشه‌های خروجی:
+        - bad_data/ → تصاویر None، خیلی کوچک، نسبت ابعاد بد، تکراری، نویزی
+        - low_contrast/ → تصاویر با کنتراست زیر آستانه
+
+        📌 معیارهای تشخیص:
+        - img is None: فایل خراب
+        - ابعاد < 50x50: خیلی کوچک
+        - نسبت ابعاد > 5 یا < 0.2: نسبت غیرطبیعی
+        - MD5 تکراری: تصویر تکراری
+        - std لپلاسین > 200: نویز زیاد
+        - var لپلاسین < contrast: کنتراست کم
+
+        📌 Example:
         cvt.scan_data("dataset/")
         cvt.scan_data("dataset/", contrast=30)
+
+        📌 کاربرد: قبل از آموزش مدل، برای پاک‌سازی دیتاست.
         """
 
         folder_path = Path(folder_path)
@@ -553,23 +642,39 @@ class CVTools:
     # ------------------------------------------
     def slider(self, winname, img, thresh=None, edge=None, blur=None, contour=False):
         """
-        Display image with interactive sliders for various processing tasks
+        📌 [Tool] نمایش تعاملی تصویر با اسلایدر برای threshold، edge و blur.
 
-        Parameters:
-        - thresh: 'simple', 'otsu', 'adapt', None
-        - edge: 'canny', None
-        - blur: 'gaussian', 'median', None
-        - contour: True/False (default: False) - Save contour image alongside threshold
+        📌 Parameters:
+        - winname: نام پنجره
+        - img: تصویر ورودی (BGR یا خاکستری)
+        - thresh: نوع آستانه‌گذاری
+            - 'simple': آستانه ساده با اسلایدر T
+            - 'otsu': آستانه خودکار Otsu
+            - 'adapt': آستانه تطبیقی با اسلایدر Block و C
+            - None: بدون آستانه
+        - edge: تشخیص لبه
+            - 'canny': Canny با اسلایدر Low و High
+            - None: بدون لبه
+        - blur: نوع بلور
+            - 'gaussian': بلور گاوسی با اسلایدر Kernel و Sigma
+            - 'median': بلور میانه با اسلایدر Kernel
+            - None: بدون بلور
+        - contour: True برای ذخیره تصویر کانتور همراه آستانه — پیش‌فرض: False
 
-        Keys:
-        - +/- : Zoom
-        - s : Save processed image as jpg (press 's' only, not Ctrl+S)
-        - q/ESC : Quit
-        - n : Next image
+        📌 کلیدها:
+        - +/- : زوم
+        - s : ذخیره تصویر پردازش‌شده (فقط s، نه Ctrl+S)
+        - q یا ESC : خروج
+        - n : تصویر بعدی
 
-        Example:
+        📌 Example:
         cvt.slider("win", img, edge='canny')
         cvt.slider("win", img, thresh='simple', contour=True)
+        cvt.slider("win", img, blur='gaussian', edge='canny')
+
+        📌 نکته: تصاویر ذخیره‌شده توی پوشه 'slider/' کنار فایل caller
+        ذخیره می‌شن. اگه contour=True باشه، تصاویر کانتور توی
+        'slider/contour/' ذخیره می‌شن.
         """
 
         if img is None:
@@ -814,6 +919,24 @@ class CVTools:
     # search_path
     # ------------------------------------------
     def search_path(self, names):
+        """
+        📌 [Tool] جستجوی فایل یا پوشه در کل پروژه و درج مسیرش به شکل کامنت.
+
+        📌 Parameters:
+        - names: نام فایل/پوشه (str) یا لیستی از نام‌ها (list)
+
+        📌 Returns:
+        - None (نتیجه رو به فایل caller اضافه می‌کنه + چاپ در کنسول)
+
+        📌 Example:
+        cvt.search_path("pandas_cheatsheet.py")
+        cvt.search_path("my_image")
+        cvt.search_path(["utils.py", "data/", "models"])
+
+        📌 نکته: پوشه‌های مخفی، __pycache__، venv، env و node_modules
+        نادیده گرفته می‌شن. نتیجه به شکل کامنت با # به آخر فایلی که
+        تابع رو صدا زده اضافه می‌شه.
+        """
         caller_frame = inspect.stack()[1]
         caller_file = caller_frame.filename
         project_root = _self_dir.parent.resolve()

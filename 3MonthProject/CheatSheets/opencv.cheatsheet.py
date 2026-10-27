@@ -197,8 +197,27 @@ plt.imshow(rgb, cmap="gray")     # برای خاکستری cmap="gray"
 plt.title("Title")
 plt.axis("off")
 plt.show()
+# ------------------------------
+نمایش چند تصویر تکی با مت پلات لیب و حلقه:
 
+p = print
+folder = Path(r"E:\BEAUTIFULL\beautifull")
+paths = [str(i) for i in folder.glob("*.jpg")]
+names = [Path(p).stem for p in paths]
+
+for path,name in zip(paths,names):
+    img = cv2.imread(path)
+    img_rgb = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+    plt.imshow(img_rgb)
+    plt.axis("off")
+    plt.title(f"image name: {name}")
+    plt.show()
+    # ---------------------------------
 نمایش چند تصویر کنار هم (Subplot):
+البته برای نمایش چند تصویر بهتر است از حلقه استفاده شود
+روش بهتر در بخشِ
+# «نمایش بچ تصاویر با اپن سیوی و مت پلاتلیب»
+در آخر همین چیت شیت
 fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 axes[0].imshow(img1, cmap="gray")
 axes[0].set_title("Title 1")
@@ -1279,7 +1298,7 @@ def save_img(path, img):
 def object_detect(img):  #تابع اصلی پایپلاین(ریترن نتیجه کل پروژه)
     dilated = preprocess(img)
     best_contours = find_contours(dilated)
-    result = draw_and_count_contours(img, best_contours)
+    result = draw_result(img, best_contours)
     return result
 ----------------(main loop)لوپ اجرای دسته ای توابع پایپلاین برای دیباگ راحت تر بعدی----------
 for i in paths:
@@ -1386,5 +1405,62 @@ for i in paths:
 بعد از چند ماه) بتواند به‌راحتی پروژه را درک و اجرا کند.
 دوزبانه بودن (فارسی/انگلیسی) برای پروژه‌های آموزشی توصیه می‌شود.
 
-# =========
+# ====================================
+# «نمایش چند تصویر در فیگ‌های مجزا»
+# «نمایش بچ تصاویر با اپن سیوی و مت پلاتلیب»
+# نمایش چند تصویر با متپلات لیب
+
+from pathlib import Path
+import cv2
+import matplotlib.pyplot as plt
+
+folder = Path(r"C:\Users\venous pc\Desktop\beautifull")
+paths = [str(i) for i in folder.glob("*.jpg")]
+batch_size = 12
+for b in range(0, len(paths), batch_size):
+    batch = paths[b : b + batch_size]       #بچ جاری
+    # ------------------------------------------------
+# همچنین میتوان بچ ها رو با لیست کامپرهنشن بسازیم و روی لیست لیست های حاصله حلقه بزنیم
+batches = [paths[i : i + batch_size] for i in range(0, len(paths), batch_size)]
+
+for batch in batches:
+    fig, axs = plt.subplots(3, 5, constrained_layout=True)
+    # اکس،درواقع شبیه یک گونی از قاب عکس های خالی است که بعدا روی یک دیوار به نام فیگور نصب میشن
+    axs = axs.flatten()  #مسطح کردن گونی اکس
+    for idx, ax in enumerate(axs):
+        # ax همان آبجکت قاب عکس است
+        # هر قاب عکس فلت شده یک ایندکس و یک آبجکت دارد
+        if idx < len(batch):
+            # برای خالی نگه داشتن قاب های اضافه در بچ آخر و جلوگیری از ارور
+            img = cv2.imread(batch[idx])
+            # خواندن تصاویر هر بچ
+            if img is None:
+                continue    #اگر ناخوانا بود قاب رو خالی بگذار
+            img_rgb = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+            ax.imshow(img_rgb)
+        ax.axis("off")   #خاموش کردن گرید تمام قاب ها
+    plt.show()
+# ----------------------------------------------
+# خواندن دسته ای تصاویر با اپن سیوی
+
+from pathlib import Path
+import cv2
+import numpy as np
+from cvtools import cvt
+folder = Path(r"E:\BEAUTIFULL\beautifull")
+paths = [str(i) for i in folder.glob("*.jpg")]
+
+batch_size = 7
+
+# ساخت همه بچ‌ها به صورت یک لیست تودرتو
+batches = [paths[i : i + batch_size] for i in range(0, len(paths), batch_size)]
+
+for idx, batch in enumerate(batches):
+    imgs = [cv2.imread(im) for im in batch]    # خواندن همه تصاویر هر بچ
+    imgs_resized = [cv2.resize(im,(500,500)) for im in imgs if im is not None]
+    #ریسایز کردن آنها
+    comparison = np.hstack(imgs_resized)
+    cvt.imshow(f"batch :{idx} images", comparison)
+    # cv2.imwrite(output/f"batch_{idx}_images.jpg",comparison)
+
 '''

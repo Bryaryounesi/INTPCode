@@ -18,15 +18,19 @@ If your Python version or operating system is different:
 
 1. Install PyTorch separately:
 
-
 pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cpu
-
 
 2. Install other packages:
 
-
 pip install -r requirements.txt
 
+### 📂 Important Note for Mini-Projects
+
+All mini-projects inside the **`dl-mini-projects/`** directory share the same virtual environment and dependencies.
+
+You **do not** need to install packages separately for each project. Just follow the installation guide above **once** to set up your environment. After that, you are ready to run any project inside the `dl-mini-projects/` folder.
+
+*(If you are writing a README for a specific mini-project, simply mention: "For installation and setup instructions, please refer to the main README in the parent directory.")*
 
 ---
 
@@ -48,11 +52,14 @@ pip install -r requirements.txt
 
 ۱. پایتورچ رو جداگانه نصب کن:
 
-
 pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cpu
-
 
 ۲. بقیه کتابخانه‌ها رو نصب کن:
 
-
 pip install -r requirements.txt
+
+### 📂 نکته مهم درباره مینی‌پروژه‌ها
+
+تمام مینی‌پروژه‌های موجود در پوشه **`dl-mini-projects/`** از همین محیط مجازی (Virtual Environment) و همین کتابخانه‌های نصب‌شده استفاده می‌کنند.
+
+شما **نیازی نیست** برای هر پروژه جداگانه کتابخانه نصب کنید. فقط **یک بار** مراحل نصب بالا را طی کنید تا محیط شما آماده شود. بعد از آن، می‌توانید هر پروژه‌ای در پوشه `dl-mini-projects/` را به راحتی اجرا کنید.
